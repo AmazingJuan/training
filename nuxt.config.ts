@@ -72,11 +72,10 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  // Keep Vite's default CSS code splitting: with cssCodeSplit off, Nuxt loses
+  // track of which styles each page needs and pages render unstyled until reload.
   vite: {
     plugins: [tailwindcss()],
-    // One stylesheet, inlined into each page (features.inlineStyles): no
-    // render-blocking requests for the small per-component CSS files.
-    build: { cssCodeSplit: false },
   },
 
   app: {
@@ -108,7 +107,10 @@ export default defineNuxtConfig({
     ],
   },
 
+  // IPX on every host: on Vercel, Nuxt Image otherwise switches to Vercel's
+  // optimizer, which rejects widths outside its list (the 160px client logos).
   image: {
+    provider: 'ipx',
     quality: 78,
   },
 
