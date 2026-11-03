@@ -21,7 +21,8 @@ withDefaults(defineProps<{ inverse?: boolean }>(), { inverse: false })
 <style scoped>
 .logo {
   display: block;
-  width: 7.5rem;
+  /* Never wider than a third of a small phone, even at 150 % text. */
+  width: min(7.5rem, 34vw);
   height: auto;
 }
 

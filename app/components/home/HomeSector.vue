@@ -1,28 +1,39 @@
 <script setup lang="ts">
-import { clientsIn } from '~/data/clients'
+import { clientsIn, sectors } from '~/data/clients'
 
 // The power-sector client list is the company's clearest differentiator:
 // shown as type, not as a logo carousel.
 const utilities = clientsIn('energia').map((c) => c.name)
+const { tr, lang } = useLang()
+const copy = {
+  lede: {
+    es: 'Operadores de red, generadores, transmisores y el operador del mercado. Para estas empresas realizamos las verificaciones que exige la CREG, auditorías bajo ISO 55001 y la formación de sus equipos en calidad del servicio.',
+    en: 'Network operators, generators, transmission companies and the market operator. For these companies we carry out the verifications required by CREG, audits under ISO 55001 and the training of their teams in quality of service.',
+  },
+  list: { es: 'Empresas del sector eléctrico', en: 'Electricity sector companies' },
+} satisfies Record<string, Loc>
+const title = computed(() => (lang.value === 'en'
+  ? `${utilities.length} energy companies have worked with us`
+  : `${utilities.length} empresas de energía han confiado en nosotros`))
+const more = computed(() => (lang.value === 'en'
+  ? `View our clients in all ${sectors.length} sectors`
+  : `Consultar los clientes de los ${sectors.length} sectores`))
 </script>
 
 <template>
   <section class="sector section" aria-labelledby="sector-title">
     <div class="frame grid-page sector__grid">
       <div class="sector__intro">
-        <h2 id="sector-title" class="heading">{{ utilities.length }} empresas de energía han trabajado con nosotros</h2>
-        <p class="lede muted sector__lede">
-          Operadores de red, generadores, transmisores y el operador del mercado. Para ellas hacemos las verificaciones
-          que exige la CREG, auditorías bajo ISO 55001 y la formación de sus equipos en calidad del servicio.
-        </p>
+        <h2 id="sector-title" class="heading">{{ title }}</h2>
+        <p class="lede muted sector__lede">{{ tr(copy.lede) }}</p>
       </div>
 
-      <ul class="sector__names" aria-label="Empresas del sector eléctrico">
+      <ul class="sector__names" :aria-label="tr(copy.list)">
         <li v-for="name in utilities" :key="name">{{ name }}</li>
       </ul>
 
       <p class="sector__more">
-        <NuxtLink to="/clientes" class="link">Ver los clientes de los quince sectores</NuxtLink>
+        <NuxtLinkLocale to="/clientes" class="link">{{ more }}</NuxtLinkLocale>
       </p>
     </div>
   </section>

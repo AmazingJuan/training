@@ -12,15 +12,21 @@ const route = useRoute()
 const mode = findMode(String(route.params.modo))
 const lineSlug = route.params.linea ? String(route.params.linea) : undefined
 const line = lineSlug ? findService(lineSlug) : undefined
+const { tr, lang } = useLang()
 
 if (!mode || (lineSlug && !line)) {
-  throw createError({ statusCode: 404, statusMessage: 'Servicio no encontrado', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: tr({ es: 'Servicio no encontrado', en: 'Service not found' }), fatal: true })
 }
 
 const modeId = mode.id as ModeId
 const lines = services.map((s) => ({ ...s, count: countOffers(s, modeId) }))
 const total = lines.reduce((n, l) => n + l.count, 0)
-const lineName = (l: { short: string, name: string }) => (l.short === 'HSEQ' ? 'sistemas HSEQ' : l.name.toLowerCase())
+const mName = computed(() => tr(mode.name))
+const lineName = (l: { short: Loc, name: Loc }) => {
+  if (l.short.es === 'HSEQ') return lang.value === 'en' ? 'HSEQ systems' : 'sistemas HSEQ'
+  return tr(l.name).toLowerCase()
+}
+const modeIn = (l: { short: Loc, name: Loc }) => `${mName.value} ${lang.value === 'en' ? 'for' : 'en'} ${lineName(l)}`
 
 // Previous / next line, so the end of a list is never a dead end.
 const at = line ? lines.findIndex((l) => l.slug === line.slug) : -1
@@ -29,104 +35,139 @@ const next = at >= 0 && at < lines.length - 1 ? lines[at + 1] : undefined
 
 const quote = useQuote()
 
+const copy = {
+  services: { es: 'Servicios', en: 'Services' },
+  type: { es: 'Tipo de servicio', en: 'Type of service' },
+  choose: { es: 'Seleccione la línea', en: 'Choose a line' },
+  hint: { es: 'Agregue los que le interesen, de esta o de otras líneas, y envíelos en una sola solicitud.', en: 'Add the ones you are interested in, from this or other lines, and send them in a single request.' },
+  sendMine: { es: 'Enviar mi solicitud', en: 'Send my request' },
+  proposal: { es: 'Solicitar una propuesta', en: 'Request a proposal' },
+  all: { es: 'Todo sobre', en: 'All about' },
+  pdf: { es: 'Portafolio (PDF)', en: 'Portfolio (PDF, in Spanish)' },
+  otherLines: { es: 'Otras líneas', en: 'Other lines' },
+  previous: { es: 'Anterior', en: 'Previous' },
+  next: { es: 'Siguiente', en: 'Next' },
+} satisfies Record<string, Loc>
+const linesOf = computed(() => (lang.value === 'en' ? `${mName.value} lines` : `Líneas de ${mName.value.toLowerCase()}`))
+const panelTitle = computed(() => (line ? (lang.value === 'en' ? `${mName.value} services in ${tr(line.name)}` : `Servicios de ${mName.value.toLowerCase()} en ${tr(line.name)}`) : linesOf.value))
+const seeAll = (n: number) => (lang.value === 'en' ? (n === 1 ? 'View the service' : `View all ${n} services`) : (n === 1 ? 'Ver el servicio' : `Ver los ${n} servicios`))
+const shortName = (l: { short: Loc }) => (l.short.es === 'HSEQ' ? 'HSEQ' : tr(l.short).toLowerCase())
+
+const modeTitles: Record<ModeId, Loc> = {
+  auditoria: { es: 'Auditoría de sistemas de gestión ISO y CREG', en: 'ISO and CREG management system auditing' },
+  consultoria: { es: 'Consultoría en sistemas de gestión ISO', en: 'ISO management system consulting' },
+  formacion: { es: 'Cursos y formación de auditores internos ISO', en: 'ISO courses and internal auditor training' },
+}
+
+// Search title: unit, line and the standard people search for ("Auditoría en gestión de activos (ISO 55001)").
+const seoTitle = (l: { short: Loc, name: Loc, keyword: Loc }) => `${modeIn(l)} (${tr(l.keyword)})`
+const unitNoun: Record<ModeId, Loc> = {
+  auditoria: { es: 'auditoría', en: 'auditing' },
+  consultoria: { es: 'consultoría', en: 'consulting' },
+  formacion: { es: 'formación', en: 'training' },
+}
 usePageSeo(line
   ? {
-      title: `${mode.name} en ${line.short === 'HSEQ' ? 'sistemas HSEQ' : line.name.toLowerCase()}`,
-      description: `${servicesLabel(countOffers(line, modeId))} de ${mode.name.toLowerCase()} en ${line.name}: ${line.offers[modeId].flatMap((g) => g.items).slice(0, 3).join('; ')}.`,
+      title: seoTitle(line),
+      description: lang.value === 'en'
+        ? `${countOffers(line, modeId)} ${unitNoun[modeId].en} ${countOffers(line, modeId) === 1 ? 'service' : 'services'} for ${lineName(line)} (${line.keyword.en}): ${line.offers[modeId].flatMap((g) => g.items).slice(0, 3).map(tr).join('; ')}.`
+        : `${servicesLabel(countOffers(line, modeId))} de ${unitNoun[modeId].es} en ${lineName(line)} (${line.keyword.es}): ${line.offers[modeId].flatMap((g) => g.items).slice(0, 3).map(tr).join('; ')}.`,
     }
   : {
-      title: { auditoria: 'Auditoría de sistemas de gestión ISO y CREG', consultoria: 'Consultoría en sistemas de gestión ISO', formacion: 'Cursos y formación de auditores internos ISO' }[modeId] ?? mode.name,
-      description: `${mode.summary} ${total} servicios en HSEQ, gestión de activos, regulación del sector eléctrico, seguridad de la información y laboratorios.`,
+      title: tr(modeTitles[modeId]),
+      description: lang.value === 'en'
+        ? `${tr(mode.summary)} ${total} services in HSEQ, asset management, electricity sector regulation, information security and laboratories.`
+        : `${tr(mode.summary)} ${total} servicios en HSEQ, gestión de activos, regulación del sector eléctrico, seguridad de la información y laboratorios.`,
     })
 </script>
 
 <template>
   <div v-if="mode">
     <PageHeader
-      :title="line ? `${mode.name} en ${lineName(line)}` : mode.name"
-      :crumb="line ? line.short : mode.name"
-      :lede="line ? line.lede : mode.summary"
+      :title="line ? modeIn(line) : mName"
+      :crumb="line ? tr(line.short) : mName"
+      :lede="line ? tr(line.lede) : tr(mode.summary)"
       compact
       :crumbs="line
-        ? [{ label: 'Servicios', to: '/portafolio-de-servicios' }, { label: mode.name, to: servicePath(modeId) }]
-        : [{ label: 'Servicios', to: '/portafolio-de-servicios' }]"
+        ? [{ label: tr(copy.services), to: '/portafolio-de-servicios' }, { label: mName, to: servicePath(modeId) }]
+        : [{ label: tr(copy.services), to: '/portafolio-de-servicios' }]"
     >
     </PageHeader>
 
-    <nav class="modes" aria-label="Tipo de servicio">
+    <nav class="modes" :aria-label="tr(copy.type)">
       <div class="frame">
         <ul class="modes__list">
           <li v-for="m in modes" :key="m.id">
-            <NuxtLink
+            <NuxtLinkLocale
               :to="servicePath(m.id, lineSlug)"
               class="modes__link"
               :aria-current="m.id === modeId ? 'page' : undefined"
             >
-              {{ m.name }}
-              <span class="modes__unit">{{ m.unit }}</span>
-            </NuxtLink>
+              {{ tr(m.name) }}
+              <span class="modes__unit">{{ tr(m.unit) }}</span>
+            </NuxtLinkLocale>
           </li>
         </ul>
       </div>
     </nav>
 
     <div class="frame grid-page explorer">
-      <nav class="lines" :aria-label="`Líneas de ${mode.name.toLowerCase()}`">
-        <p class="lines__title">Elija la línea</p>
+      <nav class="lines" :aria-label="linesOf">
+        <p class="lines__title">{{ tr(copy.choose) }}</p>
         <ul class="lines__list">
           <li v-for="l in lines" :key="l.slug">
-            <NuxtLink
+            <NuxtLinkLocale
               :to="servicePath(modeId, l.slug)"
               class="lines__link"
               :aria-current="l.slug === lineSlug ? 'page' : undefined"
             >
-              <span class="lines__name"><span class="lines__long">{{ l.name }}</span><span class="lines__short">{{ l.short }}</span></span>
+              <span class="lines__name"><span class="lines__long">{{ tr(l.name) }}</span><span class="lines__short">{{ tr(l.short) }}</span></span>
               <span class="lines__count">{{ l.count }}</span>
-            </NuxtLink>
+            </NuxtLinkLocale>
           </li>
         </ul>
       </nav>
 
       <section v-if="line" class="panel" aria-labelledby="panel-title">
-        <h2 id="panel-title" class="visually-hidden">Servicios de {{ mode.name.toLowerCase() }} en {{ line.name }}</h2>
+        <h2 id="panel-title" class="visually-hidden">{{ panelTitle }}</h2>
         <p class="panel__hint">
-          {{ servicesLabel(countOffers(line, modeId)) }}. Agregue los que le interesen, de esta o de otras líneas, y envíelos juntos.
+          {{ servicesLabel(countOffers(line, modeId), lang) }}. {{ tr(copy.hint) }}
         </p>
-        <OfferList :mode="modeId" :line="line.slug" :line-name="line.name" :groups="line.offers[modeId]" class="panel__offers" />
+        <OfferList :mode="modeId" :line="line.slug" :line-name="tr(line.name)" :groups="line.offers[modeId]" class="panel__offers" />
         <div class="panel__actions">
           <UiButton v-if="quote.count.value" to="/contacto?asunto=cotizacion">
-            Enviar mi solicitud ({{ quote.count.value }})
+            {{ tr(copy.sendMine) }} ({{ quote.count.value }})
           </UiButton>
           <UiButton v-else :to="{ path: '/contacto', query: { asunto: modeId === 'formacion' ? 'formacion' : 'cotizacion', linea: line.slug } }">
-            Solicitar una propuesta
+            {{ tr(copy.proposal) }}
           </UiButton>
-          <NuxtLink :to="`/portafolio-de-servicios/${line.slug}`" class="link">Todo sobre {{ line.short === 'HSEQ' ? 'HSEQ' : line.short.toLowerCase() }}</NuxtLink>
-          <a :href="line.sourcePdf" class="link panel__pdf" target="_blank" rel="noopener"><FileText aria-hidden="true" />Portafolio (PDF)</a>
+          <NuxtLinkLocale :to="`/portafolio-de-servicios/${line.slug}`" class="link">{{ tr(copy.all) }} {{ shortName(line) }}</NuxtLinkLocale>
+          <a :href="line.sourcePdf" class="link panel__pdf" target="_blank" rel="noopener"><FileText aria-hidden="true" />{{ tr(copy.pdf) }}</a>
         </div>
-        <nav class="pager" aria-label="Otras líneas">
-          <NuxtLink v-if="prev" :to="servicePath(modeId, prev.slug)" class="pager__link" rel="prev">
+        <nav class="pager" :aria-label="tr(copy.otherLines)">
+          <NuxtLinkLocale v-if="prev" :to="servicePath(modeId, prev.slug)" class="pager__link" rel="prev">
             <ChevronLeft aria-hidden="true" />
-            <span><span class="pager__label">Anterior</span>{{ mode.name }} en {{ lineName(prev) }}</span>
-          </NuxtLink>
-          <NuxtLink v-if="next" :to="servicePath(modeId, next.slug)" class="pager__link pager__link--next" rel="next">
-            <span><span class="pager__label">Siguiente</span>{{ mode.name }} en {{ lineName(next) }}</span>
+            <span><span class="pager__label">{{ tr(copy.previous) }}</span>{{ modeIn(prev) }}</span>
+          </NuxtLinkLocale>
+          <NuxtLinkLocale v-if="next" :to="servicePath(modeId, next.slug)" class="pager__link pager__link--next" rel="next">
+            <span><span class="pager__label">{{ tr(copy.next) }}</span>{{ modeIn(next) }}</span>
             <ChevronRight aria-hidden="true" />
-          </NuxtLink>
+          </NuxtLinkLocale>
         </nav>
       </section>
 
       <section v-else class="panel" aria-labelledby="panel-title">
-        <h2 id="panel-title" class="visually-hidden">Líneas de {{ mode.name.toLowerCase() }}</h2>
+        <h2 id="panel-title" class="visually-hidden">{{ linesOf }}</h2>
         <ServiceSearch :mode="modeId" class="panel__search" />
         <ul class="overview">
           <li v-for="l in lines" :key="l.slug" class="overview__item">
-            <NuxtLink :to="servicePath(modeId, l.slug)" class="overview__link">
-              <span class="overview__name">{{ l.name }}</span>
+            <NuxtLinkLocale :to="servicePath(modeId, l.slug)" class="overview__link">
+              <span class="overview__name">{{ tr(l.name) }}</span>
               <ul class="overview__samples">
-                <li v-for="s in l.offers[modeId].flatMap((g) => g.items).slice(0, 3)" :key="s">{{ s }}</li>
+                <li v-for="s in l.offers[modeId].flatMap((g) => g.items).slice(0, 3)" :key="s.es">{{ tr(s) }}</li>
               </ul>
-              <span class="overview__more">{{ l.count === 1 ? 'Ver el servicio' : `Ver los ${l.count} servicios` }}</span>
-            </NuxtLink>
+              <span class="overview__more">{{ seeAll(l.count) }}</span>
+            </NuxtLinkLocale>
           </li>
         </ul>
       </section>
@@ -145,6 +186,7 @@ usePageSeo(line
 
 .modes__list {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.25rem;
 }
 
@@ -192,6 +234,15 @@ usePageSeo(line
 
 .modes__link[aria-current='page'] {
   color: var(--color-azul);
+}
+
+/* The first tab starts on the title's left edge. */
+.modes__list > li:first-child .modes__link {
+  padding-left: 0;
+}
+
+.modes__list > li:first-child .modes__link[aria-current='page']::after {
+  left: 0;
 }
 
 .modes__link[aria-current='page']::after {

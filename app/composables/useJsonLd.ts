@@ -1,5 +1,6 @@
 import { company, certifications, presence } from '~/data/company'
 import type { ServiceLine } from '~/data/services'
+import { findMode } from '~/data/services'
 import type { Course } from '~/data/courses'
 
 /** Adds one schema.org JSON-LD block to the page. `key` keeps it from being duplicated. */
@@ -21,6 +22,7 @@ export function useSchemaIds() {
  */
 export function useOrganizationJsonLd() {
   const { siteUrl, org, site } = useSchemaIds()
+  const { lang, tr } = useLang()
   const iso = certifications.filter((c) => c.code.startsWith('ISO'))
 
   useJsonLd('organizacion', {
@@ -30,10 +32,11 @@ export function useOrganizationJsonLd() {
         '@id': org,
         name: company.legalName,
         alternateName: company.shortName,
-        description: company.summary,
-        slogan: company.tagline,
+        description: tr(company.summary),
+        slogan: tr(company.tagline),
         url: `${siteUrl}/`,
-        logo: { '@type': 'ImageObject', url: `${siteUrl}/brand/logo-training-corporation.png`, width: 164, height: 93 },
+        // Square version (Google asks for at least 112 × 112 px).
+        logo: { '@type': 'ImageObject', url: `${siteUrl}/brand/logo-training-corporation-cuadrado.png`, width: 240, height: 240 },
         image: `${siteUrl}/images/fotos/edificio-colmena.jpg`,
         email: company.email,
         telephone: company.phones[0].href.replace('tel:', ''),
@@ -42,11 +45,11 @@ export function useOrganizationJsonLd() {
           telephone: p.href.replace('tel:', ''),
           contactType: 'customer service',
           areaServed: 'CO',
-          availableLanguage: 'es',
+          availableLanguage: ['es', 'en'],
         })),
         address: {
           '@type': 'PostalAddress',
-          streetAddress: `${company.address.street}, ${company.address.building}, ${company.address.office.toLowerCase()}`,
+          streetAddress: `${company.address.street}, ${company.address.building}, ${company.address.office.es.toLowerCase()}`,
           addressLocality: company.address.city,
           addressRegion: company.address.region,
           addressCountry: 'CO',
@@ -54,7 +57,7 @@ export function useOrganizationJsonLd() {
         hasMap: company.address.mapUrl,
         areaServed: [
           { '@type': 'Country', name: 'Colombia' },
-          ...presence.countries.map((name) => ({ '@type': 'Country', name })),
+          ...presence.countries.map((c) => ({ '@type': 'Country', name: tr(c.name) })),
         ],
         knowsAbout: [
           'ISO 9001', 'ISO 14001', 'ISO 45001', 'ISO 55001', 'ISO/IEC 27001', 'ISO/IEC 17025', 'ISO/IEC 17020',
@@ -62,7 +65,7 @@ export function useOrganizationJsonLd() {
         ],
         hasCredential: iso.map((c) => ({
           '@type': 'EducationalOccupationalCredential',
-          name: `${c.code} ${c.name}`,
+          name: `${c.code} ${tr(c.name)}`,
           credentialCategory: 'certification',
           recognizedBy: { '@type': 'Organization', name: c.issuer },
           url: `${siteUrl}${c.document}`,
@@ -76,7 +79,7 @@ export function useOrganizationJsonLd() {
         url: `${siteUrl}/`,
         name: company.shortName,
         alternateName: company.legalName,
-        inLanguage: 'es-CO',
+        inLanguage: langTag[lang.value],
         publisher: { '@id': org },
       },
     ],
@@ -84,29 +87,32 @@ export function useOrganizationJsonLd() {
 }
 
 /** A service line: what is offered, by whom and where, with its offers as a catalogue. */
-export function useServiceJsonLd(service: ServiceLine, path: string) {
+export function useServiceJsonLd(service: ServiceLine, sitePath: string) {
   const { siteUrl, org } = useSchemaIds()
+  const { tr, localePath } = useLang()
+  // The page's own address in the current language (English lives under /en).
+  const path = localePath(sitePath)
   const groups = Object.entries(service.offers) as [string, ServiceLine['offers'][keyof ServiceLine['offers']]][]
-  const unit: Record<string, string> = { auditoria: 'Auditoría', consultoria: 'Consultoría', formacion: 'Formación' }
+  const unit = (id: string) => { const m = findMode(id); return m ? tr(m.name) : id }
 
   useJsonLd('servicio', {
     '@type': 'Service',
     '@id': `${siteUrl}${path}#servicio`,
-    name: service.name,
-    serviceType: service.seo.title,
-    description: service.seo.description,
+    name: tr(service.name),
+    serviceType: tr(service.seo.title),
+    description: tr(service.seo.description),
     url: `${siteUrl}${path}`,
     provider: { '@id': org },
     areaServed: { '@type': 'Country', name: 'Colombia' },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: service.name,
+      name: tr(service.name),
       itemListElement: groups.filter(([, g]) => g.length).map(([mode, g]) => ({
         '@type': 'OfferCatalog',
-        name: unit[mode] ?? mode,
+        name: unit(mode),
         itemListElement: g.flatMap((x) => x.items).map((name) => ({
           '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name },
+          itemOffered: { '@type': 'Service', name: tr(name) },
         })),
       })),
     },
@@ -116,17 +122,18 @@ export function useServiceJsonLd(service: ServiceLine, path: string) {
 /** Diplomas: Course markup with the online, live format and the workload of the last edition. */
 export function useCoursesJsonLd(list: Course[]) {
   const { siteUrl, org } = useSchemaIds()
+  const { tr, localePath } = useLang()
   useJsonLd('cursos', {
     '@graph': list.map((c) => ({
       '@type': 'Course',
-      '@id': `${siteUrl}/cursos-y-formaciones#${c.slug}`,
-      name: c.name,
-      description: c.summary,
-      url: `${siteUrl}/cursos-y-formaciones#${c.slug}`,
+      '@id': `${siteUrl}${localePath('/cursos-y-formaciones')}#${c.slug}`,
+      name: tr(c.name),
+      description: tr(c.summary),
+      url: `${siteUrl}${localePath('/cursos-y-formaciones')}#${c.slug}`,
       inLanguage: 'es',
       provider: { '@id': org },
-      educationalCredentialAwarded: c.awards.join('; '),
-      teaches: c.modules.map((m) => m.title),
+      educationalCredentialAwarded: c.awards.map(tr).join('; '),
+      teaches: c.modules.map((m) => tr(m.title)),
       hasCourseInstance: {
         '@type': 'CourseInstance',
         courseMode: 'Online',

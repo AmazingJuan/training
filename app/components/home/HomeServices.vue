@@ -19,6 +19,14 @@ function onKey(e: KeyboardEvent, i: number) {
   tabs.value?.[next]?.focus()
 }
 
+const { tr, lang } = useLang()
+const copy = {
+  title: { es: '¿Qué necesita su organización?', en: 'What does your organization need?' },
+  lede: { es: 'Seleccione el tipo de servicio para conocer nuestra oferta en cada línea.', en: 'Select a type of service to see what we offer in each line.' },
+  tablist: { es: 'Tipo de servicio', en: 'Type of service' },
+  explore: { es: 'Explorar los servicios de', en: 'Explore all' },
+} satisfies Record<string, Loc>
+
 const samples = (slug: string, mode: ModeId) =>
   services.find((s) => s.slug === slug)!.offers[mode].flatMap((g) => g.items).slice(0, 2)
 </script>
@@ -27,11 +35,11 @@ const samples = (slug: string, mode: ModeId) =>
   <section class="services field-azul section" aria-labelledby="services-title">
     <div class="frame">
       <div class="services__head">
-        <h2 id="services-title" class="heading">¿Qué necesita su organización?</h2>
-        <p class="services__lede">Elija el tipo de servicio y vea lo que hacemos en cada línea.</p>
+        <h2 id="services-title" class="heading">{{ tr(copy.title) }}</h2>
+        <p class="services__lede">{{ tr(copy.lede) }}</p>
       </div>
 
-      <div class="tabs" role="tablist" aria-label="Tipo de servicio">
+      <div class="tabs" role="tablist" :aria-label="tr(copy.tablist)">
         <button
           v-for="(m, i) in modes"
           :id="`tab-${m.id}`"
@@ -46,8 +54,8 @@ const samples = (slug: string, mode: ModeId) =>
           @click="active = m.id"
           @keydown="onKey($event, i)"
         >
-          <span class="tab__name">{{ m.name }}</span>
-          <span class="tab__unit">{{ m.unit }}</span>
+          <span class="tab__name">{{ tr(m.name) }}</span>
+          <span class="tab__unit">{{ tr(m.unit) }}</span>
         </button>
       </div>
 
@@ -61,19 +69,19 @@ const samples = (slug: string, mode: ModeId) =>
         :hidden="active !== m.id"
         tabindex="0"
       >
-        <p class="panel__summary">{{ m.summary }}</p>
+        <p class="panel__summary">{{ tr(m.summary) }}</p>
         <ul class="lines">
           <li v-for="l in services" :key="l.slug">
-            <NuxtLink :to="servicePath(m.id, l.slug)" class="line">
-              <span class="line__name">{{ l.name }}</span>
+            <NuxtLinkLocale :to="servicePath(m.id, l.slug)" class="line">
+              <span class="line__name">{{ tr(l.name) }}</span>
               <span class="line__samples">
-                <span v-for="s in samples(l.slug, m.id)" :key="s">{{ s }}</span>
+                <span v-for="s in samples(l.slug, m.id)" :key="s.es">{{ tr(s) }}</span>
               </span>
-              <span class="line__count">{{ servicesLabel(countOffers(l, m.id)) }}</span>
-            </NuxtLink>
+              <span class="line__count">{{ servicesLabel(countOffers(l, m.id), lang) }}</span>
+            </NuxtLinkLocale>
           </li>
         </ul>
-        <NuxtLink :to="servicePath(m.id)" class="panel__all">Explorar {{ m.name.toLowerCase() }}</NuxtLink>
+        <NuxtLinkLocale :to="servicePath(m.id)" class="panel__all">{{ tr(copy.explore) }} {{ lang === 'en' ? `${tr(m.name).toLowerCase()} services` : tr(m.name).toLowerCase() }}</NuxtLinkLocale>
       </div>
     </div>
   </section>
@@ -100,6 +108,7 @@ const samples = (slug: string, mode: ModeId) =>
 }
 
 .tab {
+  min-width: 0;
   position: relative;
   display: grid;
   gap: 0.25rem;
@@ -134,6 +143,10 @@ const samples = (slug: string, mode: ModeId) =>
 }
 
 .tab__name {
+  /* Large text on a phone: "Formación" may hyphenate rather than overflow. */
+  hyphens: auto;
+  overflow-wrap: break-word;
+  min-width: 0;
   font-family: var(--font-display);
   font-size: clamp(1.0625rem, 0.55rem + 2.4vw, 2.75rem);
   line-height: 1.05;
@@ -171,14 +184,16 @@ const samples = (slug: string, mode: ModeId) =>
   height: 100%;
   padding: 1.25rem 1.25rem 1.5rem;
   border-radius: 10px;
-  background: var(--color-azul-hondo);
-  color: inherit;
+  background: var(--color-blanco);
+  color: var(--color-tinta);
   text-decoration: none;
-  transition: background-color var(--duration-fast) var(--ease-out);
+  transition: background-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
 }
 
+/* White cards on the blue field; hover tints them and draws the brand blue edge. */
 .line:hover {
-  background: var(--color-noche);
+  background: var(--color-nube);
+  box-shadow: inset 0 0 0 2px var(--color-azul-hondo);
 }
 
 .line__name {
@@ -186,15 +201,16 @@ const samples = (slug: string, mode: ModeId) =>
   font-size: var(--text-lg);
   line-height: 1.25;
   font-weight: 700;
+  color: var(--color-azul-hondo);
 }
 
 .line__samples {
   display: grid;
   align-content: start;
   gap: 0.5rem;
-  font-size: 0.9375rem;
+  font-size: var(--text-sm);
   line-height: 1.45;
-  color: rgb(255 255 255 / 0.88);
+  color: var(--color-pizarra);
 }
 
 .line__count {
@@ -202,6 +218,7 @@ const samples = (slug: string, mode: ModeId) =>
   padding-top: 0.5rem;
   font-weight: 700;
   font-size: var(--text-sm);
+  color: var(--color-azul-hondo);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -212,17 +229,18 @@ const samples = (slug: string, mode: ModeId) =>
   min-height: 3.25rem;
   margin-top: 1.75rem;
   padding: 0.75rem 1.5rem;
+  border: 2px solid var(--color-blanco);
   border-radius: var(--radius-control);
-  background: var(--color-blanco);
   font-family: var(--font-display);
   font-size: 0.9375rem;
   font-weight: 700;
-  color: var(--color-azul-hondo);
+  color: var(--color-blanco);
   text-decoration: none;
 }
 
 .panel__all:hover {
-  background: var(--color-nube);
+  background: var(--color-blanco);
+  color: var(--color-azul-hondo);
 }
 
 /* Name, examples and count line up across the cards of each row: three per

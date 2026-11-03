@@ -5,14 +5,16 @@ import type { CompanyDocument } from '~/data/company'
 /** A downloadable company document: icon says the file type, label says what it is. */
 const props = defineProps<{ doc: CompanyDocument }>()
 
+const { tr, lang } = useLang()
+const newTab = { es: ', se abre en una pestaña nueva', en: ', opens in a new tab' }
 const icon = computed(() => ({ pdf: FileText, xls: FileSpreadsheet, jpg: ImageIcon })[props.doc.kind])
 </script>
 
 <template>
   <a :href="doc.href" class="doc" target="_blank" rel="noopener">
     <component :is="icon" class="doc__type" aria-hidden="true" />
-    <span class="doc__title">{{ doc.title }}</span>
-    <span class="doc__kind">{{ doc.kind.toUpperCase() }}<span class="visually-hidden">, se abre en una pestaña nueva</span></span>
+    <span class="doc__title">{{ tr(doc.title) }}</span>
+    <span class="doc__kind">{{ doc.kind.toUpperCase() }}<template v-if="lang === 'en'">, in Spanish</template><span class="visually-hidden">{{ tr(newTab) }}</span></span>
     <Download class="doc__dl" aria-hidden="true" />
   </a>
 </template>

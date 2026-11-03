@@ -2,10 +2,25 @@
 import { modes, services, countOffers, servicePath } from '~/data/services'
 import { company } from '~/data/company'
 
+const { tr, lang } = useLang()
 usePageSeo({
-  title: 'Servicios de auditoría, consultoría y formación ISO',
-  description: 'Auditoría, consultoría y formación en HSEQ, gestión de activos ISO 55001, servicios regulatorios del sector eléctrico, seguridad de la información y laboratorios.',
+  title: tr({ es: 'Servicios de auditoría, consultoría y formación ISO', en: 'ISO auditing, consulting and training services' }),
+  description: tr({
+    es: 'Auditoría, consultoría y formación en HSEQ, gestión de activos ISO 55001, servicios regulatorios del sector eléctrico, seguridad de la información y laboratorios.',
+    en: 'Auditing, consulting and training in HSEQ, ISO 55001 asset management, electricity sector regulatory services, information security and laboratories.',
+  }),
 })
+const copy = {
+  title: { es: '¿Qué necesita su organización?', en: 'What does your organization need?' },
+  crumb: { es: 'Servicios', en: 'Services' },
+  search: { es: 'Buscar un servicio', en: 'Search for a service' },
+  byMode: { es: 'Consulte por tipo de servicio', en: 'Browse by type of service' },
+  byLine: { es: 'O por línea de servicio', en: 'Or by service line' },
+  byType: { es: 'por tipo de servicio', en: 'by type of service' },
+  bandTitle: { es: '¿No sabe por dónde empezar?', en: 'Not sure where to start?' },
+  bandText: { es: 'Indíquenos el requisito, la norma o la auditoría que debe atender y le orientaremos.', en: 'Tell us the requirement, standard or audit you need to address and we will advise you.' },
+} satisfies Record<string, Loc>
+const totalLabel = (n: number) => (lang.value === 'en' ? `${n} services across ${services.length} lines` : `${n} servicios en ${services.length} líneas`)
 
 const modeCards = modes.map((m) => ({
   ...m,
@@ -15,48 +30,48 @@ const modeCards = modes.map((m) => ({
 
 <template>
   <div>
-    <PageHeader title="¿Qué necesita su organización?" crumb="Servicios" :lede="company.method" />
+    <PageHeader :title="tr(copy.title)" :crumb="tr(copy.crumb)" :lede="tr(company.method)" />
 
-    <section id="buscar" class="frame find" aria-label="Buscar un servicio">
+    <section id="buscar" class="frame find" :aria-label="tr(copy.search)">
       <ServiceSearch />
     </section>
 
     <section class="frame choose" aria-labelledby="por-unidad">
-      <h2 id="por-unidad" class="subheading choose__title">Empiece por el tipo de servicio</h2>
+      <h2 id="por-unidad" class="subheading choose__title">{{ tr(copy.byMode) }}</h2>
       <ul class="modes">
         <li v-for="m in modeCards" :key="m.id">
-          <NuxtLink :to="servicePath(m.id)" class="mode">
-            <span class="mode__name">{{ m.name }}</span>
-            <span class="mode__summary">{{ m.summary }}</span>
-            <span class="mode__count">{{ m.total }} servicios en cinco líneas</span>
-          </NuxtLink>
+          <NuxtLinkLocale :to="servicePath(m.id)" class="mode">
+            <span class="mode__name">{{ tr(m.name) }}</span>
+            <span class="mode__summary">{{ tr(m.summary) }}</span>
+            <span class="mode__count">{{ totalLabel(m.total) }}</span>
+          </NuxtLinkLocale>
         </li>
       </ul>
     </section>
 
     <section class="section-list" aria-labelledby="por-linea">
       <div class="frame">
-        <h2 id="por-linea" class="subheading choose__title">O por línea</h2>
+        <h2 id="por-linea" class="subheading choose__title">{{ tr(copy.byLine) }}</h2>
         <article v-for="s in services" :key="s.slug" class="svc">
           <div class="svc__head">
             <h3 class="svc__name">
-              <NuxtLink :to="`/portafolio-de-servicios/${s.slug}`">{{ s.name }}</NuxtLink>
+              <NuxtLinkLocale :to="`/portafolio-de-servicios/${s.slug}`">{{ tr(s.name) }}</NuxtLinkLocale>
             </h3>
-            <p class="svc__lede">{{ s.lede }}</p>
+            <p class="svc__lede">{{ tr(s.lede) }}</p>
           </div>
-          <ul class="svc__modes" :aria-label="`${s.name} por tipo de servicio`">
+          <ul class="svc__modes" :aria-label="`${tr(s.name)} ${tr(copy.byType)}`">
             <li v-for="m in modes" :key="m.id">
-              <NuxtLink :to="servicePath(m.id, s.slug)" class="svc__mode">
-                <span>{{ m.name }}</span>
+              <NuxtLinkLocale :to="servicePath(m.id, s.slug)" class="svc__mode">
+                <span>{{ tr(m.name) }}</span>
                 <span class="svc__n">{{ countOffers(s, m.id) }}</span>
-              </NuxtLink>
+              </NuxtLinkLocale>
             </li>
           </ul>
         </article>
       </div>
     </section>
 
-    <ContactBand title="¿No sabe por dónde empezar?" text="Cuéntenos el requisito, la norma o la auditoría que tiene por delante y le orientamos." />
+    <ContactBand :title="tr(copy.bandTitle)" :text="tr(copy.bandText)" />
   </div>
 </template>
 
@@ -84,8 +99,15 @@ const modeCards = modes.map((m) => ({
   gap: 1rem;
 }
 
+.modes > li {
+  min-width: 0;
+}
+
 .mode {
   display: flex;
+  min-width: 0;
+  overflow-wrap: break-word;
+  hyphens: auto;
   flex-direction: column;
   gap: 0.75rem;
   height: 100%;
@@ -183,13 +205,21 @@ const modeCards = modes.map((m) => ({
   color: var(--color-azul);
 }
 
+/* Phones: the three units side by side, not three full-width rows per line. */
 @media (width < 40rem) {
   .svc__modes {
     display: grid;
+    /* Three across when they fit; fewer with large text or a very narrow screen. */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 6.75rem), 1fr));
   }
 
   .svc__mode {
     justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+    min-width: 0;
+    padding-inline: 0.625rem 0.375rem;
+    font-size: 0.875rem;
   }
 }
 

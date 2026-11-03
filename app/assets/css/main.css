@@ -12,16 +12,15 @@
   --color-azul: #0072af;        /* logo blue: large fields, buttons, links */
   --color-azul-hondo: #005a8c;  /* hover/pressed; small blue text on nube */
   --color-azul-vivo: #1391da;   /* the site's bright blue: ring strokes, large type only (3.4:1 on white) */
-  --color-cielo: #7fd0f5;       /* accents on noche (8.3:1) */
-  --color-noche: #0b2c47;       /* deep brand navy: footer, presence section */
+  --color-cielo: #7fd0f5;       /* light accent on the blue field, never text on light grounds */
 
   /* Neutrals, blue-tinted to sit with the logo */
   --color-tinta: #102a3f;       /* body text, 14.7:1 on white */
   --color-pizarra: #4a5a67;     /* secondary text, 7.1:1 on white */
   --color-gris-marca: #8f9392;  /* logo grey: graphics only, never text */
-  --color-niebla: #a9c6dc;      /* secondary text on noche, 8:1 */
-  --color-bruma: #93abc0;       /* tertiary text on noche, 6:1 */
   --color-nube: #eef4f8;        /* alternate ground */
+  --color-hielo: #e6f0f7;       /* footer ground: tinta 12.8:1, azul-hondo 6.4:1 */
+  --color-mapa: #c5d6e3;        /* unserved land on the presence map (azul on it: 3.5:1) */
   --color-linea: #d5e2eb;       /* rules and field borders on white */
   --color-blanco: #ffffff;
   --color-error: #b3261e;
@@ -92,9 +91,19 @@
     }
   }
 
+  /* Wide desktop adds the utility strip (language, accessibility, intranet),
+     which scrolls away: what stays stuck is the main bar. */
+  @media (width >= 84rem) {
+    :root {
+      --utility-h: 2.8125rem;
+    }
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: calc(var(--header-offset) + 1rem);
+    /* Keyboard focus and anchors never land under the floating WhatsApp button. */
+    scroll-padding-bottom: 5.5rem;
   }
 
   body {
@@ -115,6 +124,11 @@
 
   p, li {
     text-wrap: pretty;
+  }
+
+  /* Long addresses never push the page sideways (WCAG 1.4.10 reflow). */
+  a[href^='mailto:'] {
+    overflow-wrap: anywhere;
   }
 
   ::selection {
@@ -172,10 +186,9 @@
     --focus-ring: 3px solid var(--color-blanco);
   }
 
-  .field-noche {
-    background: var(--color-noche);
-    color: var(--color-blanco);
-    --focus-ring: 3px solid var(--color-cielo);
+  /* Light ice-blue ground: the footer. No dark navy grounds anywhere (client, 2026-11-02). */
+  .field-hielo {
+    background: var(--color-hielo);
   }
 
   .field-nube {
@@ -217,7 +230,6 @@
   }
 
   .field-azul .muted { color: var(--color-blanco); opacity: 1; }
-  .field-noche .muted { color: var(--color-niebla); }
 
   /* Inline text link: underlined; the underline thickens on hover. */
   .link {
@@ -235,8 +247,7 @@
     text-decoration-thickness: 2px;
   }
 
-  .field-azul .link,
-  .field-noche .link {
+  .field-azul .link {
     color: inherit;
   }
 
@@ -294,4 +305,95 @@
   .page-enter-active {
     transition: none;
   }
+}
+
+/* ------------------------------------------------------------------
+   Accessibility panel preferences (app/composables/useA11y.ts).
+   Classes on <html>, applied before first paint by app.vue.
+   ------------------------------------------------------------------ */
+
+/* High contrast: text to black, brand blue darkened to 9:1 on white,
+   dark fields to pure black with white text, borders that can be seen. */
+html.a11y-contrast {
+  --color-tinta: #000;
+  --color-pizarra: #000;
+  --color-azul: #00426a;
+  --color-azul-hondo: #002f4c;
+  --color-azul-vivo: #00426a;
+  --color-cielo: #fff;
+  --color-linea: #000;
+  --color-nube: #fff;
+  --color-hielo: #fff;
+  --color-mapa: #fff;
+  --focus-ring: 4px solid #000;
+}
+
+html.a11y-contrast .field-azul {
+  --focus-ring: 4px solid #ffd400;
+}
+
+/* Light grounds get a visible edge once their tint is gone. */
+html.a11y-contrast .field-nube,
+html.a11y-contrast .field-hielo {
+  border-top: 2px solid #000;
+}
+
+html.a11y-contrast img {
+  filter: contrast(1.1);
+}
+
+/* Underlined links, so they never depend on colour alone. */
+html.a11y-underline a:not(.btn) {
+  text-decoration-line: underline !important;
+  text-decoration-thickness: 0.08em !important;
+  text-underline-offset: 0.18em !important;
+}
+
+/* Text spacing at the values of WCAG 2.1, success criterion 1.4.12. */
+html.a11y-spacing body * {
+  line-height: 1.5 !important;
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+}
+
+html.a11y-spacing p {
+  margin-bottom: 2em !important;
+}
+
+/* Pause motion: no animations, transitions or smooth scrolling. */
+html.a11y-still *,
+html.a11y-still *::before,
+html.a11y-still *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* Scroll reveal (app/plugins/reveal.client.ts). The data-rv attribute is only
+   ever added by that script, so nothing is hidden without it. */
+html.motion [data-rv] {
+  opacity: 0;
+  transform: translateY(1.75rem);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html.motion [data-rv='in'] {
+  opacity: 1;
+  transform: none;
+}
+
+html.motion [data-rv-delay='90'] { transition-delay: 90ms; }
+html.motion [data-rv-delay='180'] { transition-delay: 180ms; }
+html.motion [data-rv-delay='270'] { transition-delay: 270ms; }
+html.motion [data-rv-delay='360'] { transition-delay: 360ms; }
+html.motion [data-rv-delay='450'] { transition-delay: 450ms; }
+html.motion [data-rv-delay='540'] { transition-delay: 540ms; }
+html.motion [data-rv-delay='630'] { transition-delay: 630ms; }
+
+html:not(.motion) [data-rv],
+html.a11y-still [data-rv] {
+  opacity: 1;
+  transform: none;
 }

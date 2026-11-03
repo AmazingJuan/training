@@ -13,7 +13,9 @@ export interface MotionTools {
 /**
  * Smooth scrolling (Lenis) driven by GSAP's ticker, so ScrollTrigger and Lenis
  * read the same scroll position. Nothing runs when the visitor asks for
- * reduced motion: native scrolling, no scroll-linked animation.
+ * reduced motion, in the system or with "pause motion" in the accessibility
+ * panel (app.vue then leaves html without the `motion` class): native
+ * scrolling, no scroll-linked animation.
  *
  * GSAP and Lenis are loaded as separate chunks, not in the entry bundle: the
  * page paints and hydrates first, the motion follows a moment later. Content
@@ -21,7 +23,7 @@ export interface MotionTools {
  * fallback that shows everything).
  */
 export default defineNuxtPlugin((nuxtApp) => {
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const reduced = !document.documentElement.classList.contains('motion')
 
   const motion: Promise<MotionTools | null> = reduced
     ? Promise.resolve(null)

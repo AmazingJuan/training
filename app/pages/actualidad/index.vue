@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { news } from '~/data/news'
+import { news, newsImageSizes } from '~/data/news'
 
+const { tr, lang } = useLang()
+const copy = {
+  title: { es: 'Actualidad', en: 'News' },
+  lede: { es: 'Proyectos, certificaciones y novedades desde 2020.', en: 'Projects, certifications and news since 2020.' },
+} satisfies Record<string, Loc>
 usePageSeo({
-  title: 'Actualidad',
-  description: 'Proyectos, certificaciones y novedades de Training Corporation: auditorías ISO 55001, programas de formación, reconocimientos y sostenibilidad.',
+  title: tr(copy.title),
+  description: tr({
+    es: 'Proyectos, certificaciones y novedades de Training Corporation: auditorías ISO 55001, programas de formación, reconocimientos y sostenibilidad.',
+    en: 'Training Corporation projects, certifications and news: ISO 55001 audits, training programs, recognitions and sustainability.',
+  }),
 })
 
 const excerpt = (text: string) => (text.length > 180 ? `${text.slice(0, 177).replace(/\s+\S*$/, '')}…` : text)
@@ -12,29 +20,29 @@ const [first, ...rest] = news
 
 <template>
   <div>
-    <PageHeader title="Actualidad" lede="Proyectos, certificaciones y novedades, desde 2020." />
+    <PageHeader :title="tr(copy.title)" :lede="tr(copy.lede)" />
 
     <div class="frame news">
       <article v-if="first" class="lead">
-        <NuxtLink :to="`/actualidad/${first.slug}`" class="lead__link">
+        <NuxtLinkLocale :to="`/actualidad/${first.slug}`" class="lead__link">
           <div v-if="first.image" class="lead__img">
-            <NuxtImg format="webp" :src="first.image" :alt="first.imageAlt ?? ''" sizes="xs:100vw sm:100vw lg:700px" />
+            <NuxtImg format="webp" :src="first.image" :alt="first.imageAlt ? tr(first.imageAlt) : ''" :width="newsImageSizes[first.image]?.[0]" :height="newsImageSizes[first.image]?.[1]" sizes="xs:100vw sm:100vw lg:700px" />
           </div>
           <div class="lead__text">
-            <time :datetime="first.date" class="date">{{ formatDate(first.date) }}</time>
-            <h2 class="subheading lead__title">{{ first.title }}</h2>
-            <p class="muted">{{ excerpt(first.blocks[0]?.text ?? '') }}</p>
+            <time :datetime="first.date" class="date">{{ formatDate(first.date, lang) }}</time>
+            <h2 class="subheading lead__title">{{ tr(first.title) }}</h2>
+            <p class="muted">{{ excerpt(first.blocks[0] ? tr(first.blocks[0].text) : '') }}</p>
           </div>
-        </NuxtLink>
+        </NuxtLinkLocale>
       </article>
 
       <ol class="list">
         <li v-for="n in rest" :key="n.slug" class="item">
-          <NuxtLink :to="`/actualidad/${n.slug}`" class="item__link">
-            <time :datetime="n.date" class="date">{{ formatDate(n.date) }}</time>
-            <h2 class="item__title">{{ n.title }}</h2>
-            <p class="muted item__excerpt">{{ excerpt(n.blocks[0]?.text ?? '') }}</p>
-          </NuxtLink>
+          <NuxtLinkLocale :to="`/actualidad/${n.slug}`" class="item__link">
+            <time :datetime="n.date" class="date">{{ formatDate(n.date, lang) }}</time>
+            <h2 class="item__title">{{ tr(n.title) }}</h2>
+            <p class="muted item__excerpt">{{ excerpt(n.blocks[0] ? tr(n.blocks[0].text) : '') }}</p>
+          </NuxtLinkLocale>
         </li>
       </ol>
     </div>

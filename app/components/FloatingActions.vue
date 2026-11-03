@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { MessageCircle, ClipboardList, X, ChevronUp } from '@lucide/vue'
 import { company } from '~/data/company'
-import { findMode, findService } from '~/data/services'
+import { findMode, findService, offerText, servicesLabel } from '~/data/services'
 
 /**
  * Bottom-right actions present on every page: WhatsApp, and — once the
@@ -13,8 +13,26 @@ const route = useRoute()
 const open = ref(false)
 const panel = useTemplateRef<HTMLElement>('panel')
 
-const onContact = computed(() => route.path === '/contacto')
+const { tr, lang, localePath } = useLang()
+const onContact = computed(() => route.path === localePath('/contacto'))
+const copy = {
+  region: { es: 'Acciones rápidas', en: 'Quick actions' },
+  yours: { es: 'Su solicitud', en: 'Your request' },
+  remove: { es: 'Retirar', en: 'Remove' },
+  clear: { es: 'Vaciar la solicitud', en: 'Clear the request' },
+  send: { es: 'Solicitar cotización', en: 'Request a quotation' },
+  sendShort: { es: 'Cotizar', en: 'Quote' },
+  wa: { es: `Escribir por WhatsApp al ${company.whatsapp.display}`, en: `Message us on WhatsApp at +57 ${company.whatsapp.display}` },
+} satisfies Record<string, Loc>
 const showQuote = computed(() => quote.count.value > 0 && !onContact.value)
+
+// WhatsApp waits until the visitor scrolls past the opening, so it never covers
+// the first screen (the hero's list on phones). Hidden means out of the tab order too.
+const { y } = useWindowScroll()
+const showWa = ref(false)
+onMounted(() => {
+  watchEffect(() => { showWa.value = y.value > window.innerHeight * 0.5 })
+})
 
 watch(() => route.fullPath, () => { open.value = false })
 
@@ -33,44 +51,48 @@ watch(quote.count, (n) => { if (!n) open.value = false })
 onClickOutside(panel, () => { open.value = false })
 onKeyStroke('Escape', () => { open.value = false })
 
-const label = (mode: string, line: string) => `${findMode(mode)?.name ?? ''}, ${findService(line)?.short ?? ''}`
+const label = (mode: string, line: string) => {
+  const m = findMode(mode)
+  const l = findService(line)
+  return `${m ? tr(m.name) : ''}, ${l ? tr(l.short) : ''}`
+}
 </script>
 
 <template>
-  <aside class="fab" :class="{ 'fab--quote': showQuote }" aria-label="Acciones rápidas">
+  <aside class="fab" :class="{ 'fab--quote': showQuote }" :aria-label="tr(copy.region)">
     <Transition name="pop">
       <div v-if="showQuote" ref="panel" class="quote">
         <div v-show="open" id="quote-list" class="quote__list">
-          <p class="quote__title">Su solicitud</p>
+          <p class="quote__title">{{ tr(copy.yours) }}</p>
           <ul>
             <li v-for="i in quote.items.value" :key="`${i.mode}${i.line}${i.text}`" class="quote__item">
               <span>
                 <span class="quote__meta">{{ label(i.mode, i.line) }}</span>
-                {{ i.text }}
+                {{ offerText(i.text, lang) }}
               </span>
               <button type="button" class="quote__remove" @click="quote.remove(i)">
-                <X aria-hidden="true" /><span class="visually-hidden">Quitar {{ i.text }}</span>
+                <X aria-hidden="true" /><span class="visually-hidden">{{ tr(copy.remove) }} {{ offerText(i.text, lang) }}</span>
               </button>
             </li>
           </ul>
-          <button type="button" class="quote__clear" @click="quote.clear()">Vaciar la solicitud</button>
+          <button type="button" class="quote__clear" @click="quote.clear()">{{ tr(copy.clear) }}</button>
         </div>
         <div class="quote__bar" :class="{ 'is-bump': bump }" @animationend="bump = false">
           <button type="button" class="quote__toggle" :aria-expanded="open" aria-controls="quote-list" @click="open = !open">
             <ClipboardList aria-hidden="true" />
-            <span><strong>{{ quote.count.value }}</strong> {{ quote.count.value === 1 ? 'servicio' : 'servicios' }}</span>
+            <span><strong>{{ quote.count.value }}</strong> {{ servicesLabel(quote.count.value, lang).replace(/^\d+ /, '') }}</span>
             <ChevronUp class="quote__chev" aria-hidden="true" />
           </button>
-          <NuxtLink to="/contacto?asunto=cotizacion" class="quote__send">
-            <span class="quote__send-long">Solicitar cotización</span><span class="quote__send-short" aria-hidden="true">Cotizar</span>
-          </NuxtLink>
+          <NuxtLinkLocale to="/contacto?asunto=cotizacion" class="quote__send">
+            <span class="quote__send-long">{{ tr(copy.send) }}</span><span class="quote__send-short" aria-hidden="true">{{ tr(copy.sendShort) }}</span>
+          </NuxtLinkLocale>
         </div>
       </div>
     </Transition>
 
     <p class="visually-hidden" aria-live="polite">{{ quote.announcement.value }}</p>
 
-    <a :href="company.whatsapp.href" class="wa" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp al 321 707 9467">
+    <a :href="company.whatsapp.href" class="wa" :class="{ 'wa--hidden': !showWa && !showQuote }" :inert="!showWa && !showQuote ? true : undefined" target="_blank" rel="noopener" :aria-label="tr(copy.wa)">
       <MessageCircle aria-hidden="true" />
     </a>
   </aside>
@@ -101,8 +123,14 @@ const label = (mode: string, line: string) => `${findMode(mode)?.name ?? ''}, ${
   border-radius: var(--radius-full);
   background: var(--color-azul);
   color: var(--color-blanco);
-  box-shadow: 0 10px 24px -10px rgb(11 44 71 / 0.6);
-  transition: transform var(--duration-base) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+  box-shadow: 0 10px 24px -10px rgb(0 90 140 / 0.5);
+  transition: opacity var(--duration-base) var(--ease-out), visibility var(--duration-base), transform var(--duration-base) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+}
+
+.wa--hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.75rem);
 }
 
 .wa:hover {
@@ -124,10 +152,11 @@ const label = (mode: string, line: string) => `${findMode(mode)?.name ?? ''}, ${
   display: flex;
   align-items: stretch;
   min-height: 3.5rem;
+  border: 1px solid var(--color-linea);
   border-radius: var(--radius-full);
-  background: var(--color-noche);
-  color: var(--color-blanco);
-  box-shadow: 0 10px 24px -10px rgb(11 44 71 / 0.6);
+  background: var(--color-blanco);
+  color: var(--color-tinta);
+  box-shadow: 0 12px 28px -12px rgb(0 90 140 / 0.45);
   overflow: hidden;
 }
 
@@ -151,6 +180,7 @@ const label = (mode: string, line: string) => `${findMode(mode)?.name ?? ''}, ${
 }
 
 .quote__toggle svg {
+  color: var(--color-azul);
   width: 1.25rem;
   height: 1.25rem;
   flex: none;

@@ -1,20 +1,26 @@
 <script setup lang="ts">
 /**
- * Right under the opening: the company holds the certifications it audits
- * others against. Real issuer, numbers and validity (CertificationList).
+ * Right under the opening: the company's own certifications and membership.
+ * Real issuer, numbers and validity (CertificationList).
  */
+const { tr } = useLang()
+const copy = {
+  title: { es: 'Nuestras certificaciones', en: 'Our certifications' },
+  intro: {
+    es: 'Nuestro sistema de gestión está certificado por Bureau Veritas, con un alcance que comprende los servicios de formación, consultoría y auditoría que ofrecemos.',
+    en: 'Our management system is certified by Bureau Veritas, with a scope that covers the training, consulting and auditing services we offer.',
+  },
+  link: { es: 'Consultar el Sistema de Gestión Integrado', en: 'View our Integrated Management System' },
+} satisfies Record<string, Loc>
 </script>
 
 <template>
   <section id="certificaciones" class="certs-band field-nube" aria-labelledby="certs-title">
     <div class="frame grid-page certs-band__grid">
-      <h2 id="certs-title" class="subheading certs-band__title">Certificados en lo que auditamos</h2>
+      <h2 id="certs-title" class="subheading certs-band__title">{{ tr(copy.title) }}</h2>
       <div class="certs-band__intro">
-        <p class="muted">
-          Nuestro propio sistema de gestión está certificado por Bureau Veritas, y el alcance cubre la formación,
-          la consultoría y la auditoría que ofrecemos.
-        </p>
-        <NuxtLink to="/empresa/sistema-de-gestion-integrado" class="link">Ver el Sistema de Gestión Integrado</NuxtLink>
+        <p class="muted">{{ tr(copy.intro) }}</p>
+        <NuxtLinkLocale to="/empresa/sistema-de-gestion-integrado" class="link">{{ tr(copy.link) }}</NuxtLinkLocale>
       </div>
       <CertificationList class="certs-band__list" />
     </div>
@@ -38,7 +44,7 @@
 
 .certs-band__title {
   max-width: 14ch;
-  color: var(--color-azul);
+  color: var(--color-tinta);
 }
 
 .certs-band__intro {

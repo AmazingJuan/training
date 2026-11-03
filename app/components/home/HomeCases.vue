@@ -1,36 +1,69 @@
 <script setup lang="ts">
 import { cases } from '~/data/company'
+import { services } from '~/data/services'
 
-/** Documented projects instead of testimonials, newest first: the year is real information. */
-const timeline = [...cases].sort((a, b) => b.year - a.year)
+/**
+ * Selected projects. The documented one (with year, scope and its own news post)
+ * leads with its photo; the rest are grouped by service line, showing only what
+ * the company has stated: client, when named, and what was done.
+ */
+const { tr } = useLang()
+
+const featured = cases.filter((c) => c.detail)
+const others = cases.filter((c) => !c.detail)
+const lineName = (slug: string) => {
+  const line = services.find((s) => s.slug === slug)
+  return line ? tr(line.name) : ''
+}
+
+const copy = {
+  title: { es: 'Experiencia destacada', en: 'Selected experience' },
+  lede: {
+    es: 'Proyectos de auditoría, consultoría y formación realizados para organizaciones del sector eléctrico, la industria y los laboratorios.',
+    en: 'Auditing, consulting and training projects for organizations in the electricity sector, industry and laboratories.',
+  },
+  formerly: { es: 'antes', en: 'formerly' },
+  read: { es: 'Leer la publicación', en: 'Read the article' },
+  about: { es: 'sobre', en: 'about' },
+  more: { es: 'Otros proyectos', en: 'Other projects' },
+} satisfies Record<string, Loc>
 </script>
 
 <template>
   <section class="cases section field-nube" aria-labelledby="cases-title">
     <div class="frame">
       <div class="cases__head">
-        <h2 id="cases-title" class="heading">Proyectos que podemos contar</h2>
-        <p class="lede muted cases__lede">Trabajos documentados en nuestras publicaciones, con su alcance y su equipo.</p>
+        <h2 id="cases-title" class="heading">{{ tr(copy.title) }}</h2>
+        <p class="lede muted cases__lede">{{ tr(copy.lede) }}</p>
       </div>
 
-      <ol class="cases__list">
-        <li v-for="c in timeline" :key="c.client" class="case">
-          <p class="case__year">{{ c.year }}</p>
-          <div v-if="c.image" class="case__thumb">
-            <BrandRing :src="c.image" :alt="c.imageAlt ?? ''" sizes="160px" :gap="20" :dot="false" />
-          </div>
-          <div class="case__body">
-            <p class="case__client">{{ c.client }}</p>
-            <h3 class="case__title">{{ c.title }}</h3>
-          </div>
-          <div class="case__more">
-            <p class="case__detail">{{ c.detail }}</p>
-            <NuxtLink :to="`/actualidad/${c.newsSlug}`" class="link">
-              Leer la publicación<span class="visually-hidden"> sobre {{ c.client }}</span>
-            </NuxtLink>
-          </div>
-        </li>
-      </ol>
+      <article v-for="c in featured" :key="c.client" class="lead-case">
+        <div v-if="c.image" class="lead-case__photo">
+          <BrandRing :src="c.image" :alt="c.imageAlt ? tr(c.imageAlt) : ''" sizes="xs:60vw md:280px" :gap="18" />
+        </div>
+        <div class="lead-case__text">
+          <p class="lead-case__client">
+            {{ c.client }}<span v-if="c.formerly" class="lead-case__formerly"> ({{ tr(copy.formerly) }} {{ c.formerly }})</span><template v-if="c.year">, {{ c.year }}</template>
+          </p>
+          <h3 class="lead-case__title">{{ tr(c.title) }}</h3>
+          <p v-if="c.detail" class="lead-case__detail">{{ tr(c.detail) }}</p>
+          <NuxtLinkLocale v-if="c.newsSlug" :to="`/actualidad/${c.newsSlug}`" class="link">
+            {{ tr(copy.read) }}<span class="visually-hidden"> {{ tr(copy.about) }} {{ c.client }}</span>
+          </NuxtLinkLocale>
+        </div>
+      </article>
+
+      <div v-if="others.length" class="more">
+        <h3 class="more__title">{{ tr(copy.more) }}</h3>
+        <!-- One even grid; each project names its service line. -->
+        <ul class="more__list">
+          <li v-for="c in others" :key="c.title.es" class="item">
+            <NuxtLinkLocale :to="`/portafolio-de-servicios/${c.line}`" class="item__line">{{ lineName(c.line) }}</NuxtLinkLocale>
+            <span class="item__title">{{ tr(c.title) }}</span>
+            <span v-if="c.client" class="item__client">{{ c.client }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 </template>
@@ -44,79 +77,109 @@ const timeline = [...cases].sort((a, b) => b.year - a.year)
   margin-top: 1.25rem;
 }
 
-.cases__list {
-  margin-top: 3rem;
-}
-
-.case {
+/* The documented project: photo in the ring, the record beside it. */
+.lead-case {
   display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  gap: 1rem 1.25rem;
-  padding-block: 2rem;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding-top: 2.5rem;
   border-top: 2px solid var(--color-azul);
 }
 
-.case__year {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 800;
-  letter-spacing: var(--tracking-tight);
-  color: var(--color-azul);
+.lead-case__photo {
+  width: min(60vw, 15rem);
 }
 
-.case__thumb {
-  grid-row: span 2;
-  width: 5.5rem;
-}
-
-.case__body,
-.case__more {
-  grid-column: 1 / -1;
-}
-
-.case__client {
+.lead-case__client {
   font-weight: 700;
   color: var(--color-azul-hondo);
 }
 
-.case__title {
-  margin-top: 0.375rem;
-  font-size: var(--text-xl);
-  line-height: var(--text-xl--line-height);
-  max-width: 28ch;
+.lead-case__formerly {
+  font-weight: 400;
+  color: var(--color-pizarra);
 }
 
-.case__detail {
+.lead-case__title {
+  margin-top: 0.5rem;
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+  max-width: 24ch;
+}
+
+.lead-case__detail {
   max-width: var(--container-measure);
+  margin-block: 1rem;
   color: var(--color-pizarra);
-  margin-bottom: 0.75rem;
+}
+
+/* The other projects: an index by service line. */
+.more {
+  margin-top: 3.5rem;
+}
+
+.more__title {
+  font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height);
+}
+
+.more__list {
+  display: grid;
+  gap: 0 var(--spacing-gutter);
+  margin-top: 1.25rem;
+}
+
+.item {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  padding-block: 1.25rem;
+  border-top: 1px solid var(--color-linea);
+}
+
+.item__line {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--color-azul-hondo);
+  text-decoration: none;
+}
+
+.item__line:hover {
+  text-decoration: underline;
+}
+
+.item__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--color-tinta);
+}
+
+.item__client {
+  color: var(--color-pizarra);
+}
+
+@media (width >= 48rem) {
+  .more__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (width >= 64rem) {
-  .case {
-    grid-template-columns: 7rem 9rem minmax(0, 5fr) minmax(0, 5fr);
+  .lead-case {
+    grid-template-columns: 17rem minmax(0, 1fr);
     column-gap: var(--spacing-gutter);
-    align-items: start;
-    padding-block: 2.5rem;
+    align-items: center;
   }
 
-  .case__year {
-    font-size: var(--text-2xl);
-    line-height: 1;
+  .lead-case__photo {
+    width: 15rem;
   }
 
-  .case__thumb {
-    grid-row: auto;
-    width: 8rem;
-    display: block;
-  }
-
-  .case__body {
-    grid-column: 3;
-  }
-
-  .case__more {
-    grid-column: 4;
+  .more__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 </style>

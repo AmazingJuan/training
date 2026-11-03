@@ -2,7 +2,9 @@
 import type { RouteLocationRaw } from 'vue-router'
 
 /**
- * Action element. Renders a NuxtLink when `to`/`href` is given, otherwise a <button>.
+ * Action element. `to` is a site path and is localized (NuxtLinkLocale); `href` is
+ * any other address (phone, file, external site) and is used as is; with neither
+ * it renders a <button>.
  * - primary: brand-blue fill. The main action of a view.
  * - outline: blue outline, for the second action.
  * - light:   white fill, for actions on blue or navy fields.
@@ -22,7 +24,7 @@ const props = withDefaults(
 )
 
 const isLink = computed(() => !!(props.to || props.href))
-const tag = computed(() => (isLink.value ? resolveComponent('NuxtLink') : 'button'))
+const tag = computed(() => (props.to ? resolveComponent('NuxtLinkLocale') : props.href ? resolveComponent('NuxtLink') : 'button'))
 const attrs = computed(() =>
   isLink.value
     ? { to: props.to ?? props.href, external: props.external || undefined, target: props.external ? '_blank' : undefined, rel: props.external ? 'noopener' : undefined }
