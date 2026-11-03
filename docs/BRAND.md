@@ -41,12 +41,12 @@ Medidos en el logo (`#0072AF`, `#8F9392`) y en el CSS y las capturas del sitio a
 | `azul` | `#0072AF` | Azul del logo. Campos de color, botones, enlaces, titulares. | 5,2:1 con blanco |
 | `azul-hondo` | `#005A8C` | Hover; texto azul pequeño sobre `nube`. | 7,4:1 con blanco |
 | `azul-vivo` | `#1391DA` | Azul de los bloques del sitio actual. Trazo del anillo; texto solo grande. | 3,4:1 (no para texto pequeño) |
-| `cielo` | `#7FD0F5` | Acentos sobre `noche`. | 8,3:1 sobre noche |
-| `noche` | `#0B2C47` | Pie de página, sección de presencia. Sustituye al casi negro. | — |
+| `cielo` | `#7FD0F5` | Acento claro sobre el campo azul. Nunca texto sobre fondos claros. | — |
 | `tinta` | `#102A3F` | Texto principal. | 14,7:1 con blanco |
 | `pizarra` | `#4A5A67` | Texto secundario. | 7,1:1 con blanco |
 | `gris-marca` | `#8F9392` | Gris del logo. Solo gráficos. | 3,1:1 (nunca texto) |
-| `niebla` / `bruma` | `#A9C6DC` / `#93ABC0` | Texto secundario / terciario sobre `noche`. | 8:1 / 6:1 |
+| `hielo` | `#E6F0F7` | Fondo del pie de página. | tinta 12,8:1; azul-hondo 6,4:1 |
+| `mapa` | `#C5D6E3` | Territorio sin servicios en el mapa. | azul sobre él 3,5:1 (gráfico) |
 | `nube` | `#EEF4F8` | Fondo alterno. | — |
 | `linea` | `#D5E2EB` | Filetes y bordes de campo. | — |
 | `error` | `#B3261E` | Errores de formulario. | — |
@@ -54,7 +54,16 @@ Medidos en el logo (`#0072AF`, `#8F9392`) y en el CSS y las capturas del sitio a
 Se retiran el cian `#00BCD4` y los grises de TheGem (`#3C3950`, `#99A9B5`…): son del
 tema de WordPress, no de la marca. Sin degradados.
 
-**Ritmo de campos**: blanco → azul → blanco → nube → noche → blanco → nube → azul → noche.
+**Color de los títulos** (regla única, 2 de noviembre de 2026): el H1 de cada página en
+`azul`; los títulos de sección (H2) y de bloque (H3) en `tinta`; las etiquetas pequeñas
+(rótulos de columna, línea de servicio de un proyecto) en `azul-hondo`. Los enlaces conservan
+su color de enlace.
+
+**Ritmo de campos**: blanco → nube → azul → blanco → nube → blanco → … → azul → hielo.
+
+> **Sin fondos azul oscuro** (decisión del cliente, 2 de noviembre de 2026): se retiró `noche`
+> (`#0B2C47`) y con él `niebla` y `bruma`. El único campo de color fuerte es el azul del logo;
+> el pie de página va sobre `hielo` con el logo en sus colores reales.
 Los campos azules plenos son herencia directa del sitio actual (bloques «Somos Training»
 y «Nuestros servicios»).
 
@@ -93,7 +102,7 @@ Escala fluida (`clamp`): `xs` 14 · `sm` 16 · `base` 18 · `lg` 19→22 · `xl`
 ## Acciones, enlaces y formularios
 
 - `UiButton`: `primary` (azul pleno, la acción principal), `outline` (segunda acción),
-  `light` (sobre campos azules o noche). Sin flecha decorativa; los iconos solo cuando
+  `light` (sobre campos azules). Sin flecha decorativa; los iconos solo cuando
   dicen algo (teléfono, descarga).
 - Enlace en texto: `.link`, siempre subrayado.
 - `UiDocLink`: documento descargable, con icono según el tipo de archivo.
