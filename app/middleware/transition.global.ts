@@ -4,6 +4,6 @@
  * and so does every change when the visitor asks for reduced motion.
  */
 export default defineNuxtRouteMiddleware((to, from) => {
-  const reduced = import.meta.client && useNuxtApp().$reducedMotion
+  const reduced = import.meta.client && (useNuxtApp().$reducedMotion || document.documentElement.classList.contains('a11y-still'))
   if (reduced || to.name === from.name) to.meta.pageTransition = false
 })

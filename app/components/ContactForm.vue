@@ -1,12 +1,52 @@
 <script setup lang="ts">
 import { CircleCheck, CircleAlert, X } from '@lucide/vue'
-import { services, findMode, findService, servicePath } from '~/data/services'
+import { services, findMode, findService, servicePath, offerText } from '~/data/services'
 import { courses } from '~/data/courses'
-import { company } from '~/data/company'
+import { company, dataPolicy } from '~/data/company'
 
 const route = useRoute()
 const quote = useQuote()
-const quoteLabel = (mode: string, line: string) => `${findMode(mode)?.name ?? ''}, ${findService(line)?.short ?? ''}`
+const { tr, lang } = useLang()
+const quoteLabel = (mode: string, line: string, l: Lang = lang.value) => {
+  const m = findMode(mode)
+  const s = findService(line)
+  return `${m ? m.name[l] : ''}, ${s ? s.short[l] : ''}`
+}
+
+const copy = {
+  sentQuote: { es: 'Solicitud enviada', en: 'Request sent' },
+  sentMsg: { es: 'Mensaje enviado', en: 'Message sent' },
+  reply: { es: 'Le responderemos a', en: 'We will reply to' },
+  urgent: { es: 'Si es urgente, comuníquese al', en: 'If it is urgent, please call' },
+  failedTitle: { es: 'No fue posible enviar el mensaje desde el sitio', en: 'The message could not be sent from the website' },
+  writeTo: { es: 'Escríbanos a', en: 'Please write to' },
+  orCall: { es: 'o comuníquese al', en: 'or call' },
+  kept: { es: 'Sus datos se conservan en el formulario.', en: 'Your details are still in the form.' },
+  need: { es: '¿Qué necesita?', en: 'What do you need?' },
+  picked: { es: 'Servicios de su solicitud', en: 'Services in your request' },
+  remove: { es: 'Retirar', en: 'Remove' },
+  addMore: { es: 'Agregar más servicios', en: 'Add more services' },
+  name: { es: 'Nombre', en: 'Name' },
+  org: { es: 'Organización', en: 'Organization' },
+  email: { es: 'Correo electrónico', en: 'Email' },
+  phone: { es: 'Teléfono', en: 'Phone' },
+  line: { es: 'Línea de servicio', en: 'Service line' },
+  message: { es: 'Mensaje', en: 'Message' },
+  hintPqr: { es: 'Incluya la fecha y el servicio al que se refiere.', en: 'Please include the date and the service it concerns.' },
+  hint: { es: 'Indicar la norma, el alcance o la fecha prevista nos permite responder con mayor precisión.', en: 'Mentioning the standard, scope or expected date helps us reply more precisely.' },
+  honeypot: { es: 'No llenar', en: 'Leave blank' },
+  consentA: { es: 'Autorizo el tratamiento de mis datos personales para atender esta solicitud, conforme a la', en: 'I authorize the processing of my personal data to handle this request, in accordance with the' },
+  consentLink: { es: 'manual de protección de datos personales', en: 'personal data protection manual (in Spanish)' },
+  sending: { es: 'Enviando…', en: 'Sending…' },
+  sendQuote: { es: 'Enviar solicitud', en: 'Send request' },
+  sendMsg: { es: 'Enviar mensaje', en: 'Send message' },
+} satisfies Record<string, Loc>
+const reviewTitle = computed(() => {
+  const n = Object.keys(errors.value).length
+  return lang.value === 'en'
+    ? `Please review ${n === 1 ? 'one field' : `${n} fields`} before sending`
+    : `Revise ${n === 1 ? 'un campo' : `${n} campos`} antes de enviar`
+})
 
 const form = reactive<ContactRequest>({
   nombre: '',
@@ -18,6 +58,7 @@ const form = reactive<ContactRequest>({
   mensaje: '',
   servicios: [],
   datos: false,
+  idioma: 'es',
   web: '',
 })
 
@@ -31,7 +72,11 @@ onMounted(() => {
   else if (q.linea) form.tipo = 'cotizacion'
   if (services.some((s) => s.slug === q.linea)) form.linea = String(q.linea)
   else if (programa?.line) form.linea = programa.line
-  if (programa) form.mensaje = `Quisiera información sobre la próxima cohorte del ${programa.name.toLowerCase()}.`
+  if (programa) {
+    form.mensaje = lang.value === 'en'
+      ? `I would like information about the next cohort of the ${programa.name.en.toLowerCase()}.`
+      : `Quisiera recibir información sobre la próxima cohorte del ${programa.name.es.toLowerCase()}.`
+  }
 })
 
 // Services marked while browsing make this a quote request.
@@ -49,11 +94,13 @@ function focusField(name: string) {
 }
 const done = useTemplateRef<HTMLElement>('done')
 
-const lineOptions = services.map((s) => ({ value: s.slug, label: s.name }))
+const lineOptions = computed(() => services.map((s) => ({ value: s.slug, label: tr(s.name) })))
 
 async function submit() {
-  form.servicios = quote.items.value.map((i) => `${quoteLabel(i.mode, i.line)}: ${i.text}`)
-  errors.value = validateContact(form)
+  // The company receives the services in Spanish, whatever language the visitor uses.
+  form.servicios = quote.items.value.map((i) => `${quoteLabel(i.mode, i.line, 'es')}: ${i.text}`)
+  form.idioma = lang.value
+  errors.value = validateContact(form, lang.value)
   if (Object.keys(errors.value).length) {
     await nextTick()
     summary.value?.focus()
@@ -80,8 +127,8 @@ async function submit() {
     <div v-if="status === 'sent'" ref="done" class="notice notice--ok" tabindex="-1" role="status">
       <CircleCheck aria-hidden="true" />
       <div>
-        <p class="notice__title">{{ form.servicios.length ? 'Solicitud enviada' : 'Mensaje enviado' }}</p>
-        <p>Le responderemos a {{ form.correo }}. Si es urgente, llámenos al {{ company.phones[0].display }}.</p>
+        <p class="notice__title">{{ form.servicios.length ? tr(copy.sentQuote) : tr(copy.sentMsg) }}</p>
+        <p>{{ tr(copy.reply) }} {{ form.correo }}. {{ tr(copy.urgent) }} {{ tr({ es: company.phones[0].display, en: company.phones[0].intl }) }}.</p>
       </div>
     </div>
 
@@ -90,84 +137,84 @@ async function submit() {
         <div v-if="Object.keys(errors).length" class="notice notice--error" role="alert">
           <CircleAlert aria-hidden="true" />
           <div>
-            <p class="notice__title">Revise {{ Object.keys(errors).length === 1 ? 'un campo' : `${Object.keys(errors).length} campos` }} antes de enviar</p>
+            <p class="notice__title">{{ reviewTitle }}</p>
             <ul><li v-for="(msg, key) in errors" :key="key"><a :href="`#${key}`" class="link" @click.prevent="focusField(key)">{{ msg }}</a></li></ul>
           </div>
         </div>
         <div v-else-if="status === 'failed'" class="notice notice--error" role="alert">
           <CircleAlert aria-hidden="true" />
           <div>
-            <p class="notice__title">El mensaje no se pudo enviar desde el sitio</p>
+            <p class="notice__title">{{ tr(copy.failedTitle) }}</p>
             <p>
-              Escríbanos a <a :href="`mailto:${company.email}`" class="link">{{ company.email }}</a>
-              o llame al <a :href="company.phones[0].href" class="link">{{ company.phones[0].display }}</a>. Sus datos siguen en el formulario.
+              {{ tr(copy.writeTo) }} <a :href="`mailto:${company.email}`" class="link">{{ company.email }}</a>
+              {{ tr(copy.orCall) }} <a :href="company.phones[0].href" class="link">{{ tr({ es: company.phones[0].display, en: company.phones[0].intl }) }}</a>. {{ tr(copy.kept) }}
             </p>
           </div>
         </div>
       </div>
 
       <fieldset class="kinds">
-        <legend class="kinds__legend">¿Qué necesita?</legend>
+        <legend class="kinds__legend">{{ tr(copy.need) }}</legend>
         <div class="kinds__options" :aria-describedby="errors.tipo ? 'tipo-error' : undefined">
           <label v-for="k in requestKinds" :key="k.value" class="kind">
             <input v-model="form.tipo" type="radio" name="tipo" :value="k.value" class="kind__input">
-            <span class="kind__label">{{ k.label }}</span>
+            <span class="kind__label">{{ tr(k.label) }}</span>
           </label>
         </div>
         <p v-if="errors.tipo" id="tipo-error" class="kinds__error">{{ errors.tipo }}</p>
       </fieldset>
 
       <section v-if="quote.count.value" class="picked" aria-labelledby="picked-title">
-        <h2 id="picked-title" class="picked__title">Servicios de su solicitud ({{ quote.count.value }})</h2>
+        <h2 id="picked-title" class="picked__title">{{ tr(copy.picked) }} ({{ quote.count.value }})</h2>
         <ul class="picked__list">
           <li v-for="i in quote.items.value" :key="`${i.mode}${i.line}${i.text}`" class="picked__item">
             <span>
-              <NuxtLink :to="servicePath(i.mode, i.line)" class="picked__meta">{{ quoteLabel(i.mode, i.line) }}</NuxtLink>
-              {{ i.text }}
+              <NuxtLinkLocale :to="servicePath(i.mode, i.line)" class="picked__meta">{{ quoteLabel(i.mode, i.line) }}</NuxtLinkLocale>
+              {{ offerText(i.text, lang) }}
             </span>
             <button type="button" class="picked__remove" @click="quote.remove(i)">
-              <X aria-hidden="true" /><span class="visually-hidden">Quitar {{ i.text }}</span>
+              <X aria-hidden="true" /><span class="visually-hidden">{{ tr(copy.remove) }} {{ offerText(i.text, lang) }}</span>
             </button>
           </li>
         </ul>
-        <NuxtLink to="/portafolio-de-servicios" class="link picked__more">Agregar más servicios</NuxtLink>
+        <NuxtLinkLocale to="/portafolio-de-servicios" class="link picked__more">{{ tr(copy.addMore) }}</NuxtLinkLocale>
       </section>
 
       <div class="grid2">
-        <UiField v-model="form.nombre" label="Nombre" name="nombre" required autocomplete="name" :error="errors.nombre" />
-        <UiField v-model="form.empresa" label="Organización" name="empresa" autocomplete="organization" />
-        <UiField v-model="form.correo" label="Correo electrónico" name="correo" type="email" required autocomplete="email" :error="errors.correo" />
-        <UiField v-model="form.telefono" label="Teléfono" name="telefono" type="tel" autocomplete="tel" :error="errors.telefono" />
+        <UiField v-model="form.nombre" :label="tr(copy.name)" name="nombre" required autocomplete="name" :error="errors.nombre" />
+        <UiField v-model="form.empresa" :label="tr(copy.org)" name="empresa" autocomplete="organization" />
+        <UiField v-model="form.correo" :label="tr(copy.email)" name="correo" type="email" required autocomplete="email" :error="errors.correo" />
+        <UiField v-model="form.telefono" :label="tr(copy.phone)" name="telefono" type="tel" autocomplete="tel" :error="errors.telefono" />
       </div>
 
-      <UiField v-if="form.tipo !== 'pqr' && !quote.count.value" v-model="form.linea" label="Línea de servicio" name="linea" type="select" :options="lineOptions" />
+      <UiField v-if="form.tipo !== 'pqr' && !quote.count.value" v-model="form.linea" :label="tr(copy.line)" name="linea" type="select" :options="lineOptions" />
       <UiField
         v-model="form.mensaje"
-        label="Mensaje"
+        :label="tr(copy.message)"
         name="mensaje"
         type="textarea"
         :required="!quote.count.value"
-        :hint="form.tipo === 'pqr' ? 'Incluya la fecha y el servicio al que se refiere.' : 'La norma, el alcance o la fecha que tiene en mente nos ayudan a responder mejor.'"
+        :hint="form.tipo === 'pqr' ? tr(copy.hintPqr) : tr(copy.hint)"
         :error="errors.mensaje"
       />
 
       <div class="hp" aria-hidden="true">
-        <label>No llenar <input v-model="form.web" type="text" name="web" tabindex="-1" autocomplete="off"></label>
+        <label>{{ tr(copy.honeypot) }} <input v-model="form.web" type="text" name="web" tabindex="-1" autocomplete="off"></label>
       </div>
 
       <div class="consent" :class="{ 'consent--error': errors.datos }">
         <label class="consent__label">
           <input v-model="form.datos" type="checkbox" name="datos" :aria-invalid="errors.datos ? true : undefined" :aria-describedby="errors.datos ? 'datos-error' : undefined">
           <span>
-            Autorizo el tratamiento de mis datos para responder esta solicitud, según la
-            <a href="/docs/Proteccion-datos.pdf" class="link" target="_blank" rel="noopener">política de protección de datos</a>.
+            {{ tr(copy.consentA) }}
+            <a :href="dataPolicy" class="link" target="_blank" rel="noopener">{{ tr(copy.consentLink) }}</a>.
           </span>
         </label>
         <p v-if="errors.datos" id="datos-error" class="kinds__error">{{ errors.datos }}</p>
       </div>
 
       <UiButton type="submit" :disabled="status === 'sending'">
-        {{ status === 'sending' ? 'Enviando…' : quote.count.value ? 'Enviar solicitud' : 'Enviar mensaje' }}
+        {{ status === 'sending' ? tr(copy.sending) : quote.count.value ? tr(copy.sendQuote) : tr(copy.sendMsg) }}
       </UiButton>
     </form>
   </div>
@@ -188,7 +235,7 @@ form {
 .picked__title {
   font-size: var(--text-lg);
   letter-spacing: 0;
-  color: var(--color-azul);
+  color: var(--color-azul-hondo);
 }
 
 .picked__list {

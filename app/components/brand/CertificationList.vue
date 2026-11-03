@@ -7,23 +7,29 @@ import { certifications } from '~/data/company'
  * who certifies it, number and validity, and the certificate itself.
  * Inherits colours from its field (white, nube or azul).
  */
+const { tr } = useLang()
+const copy = {
+  view: { es: 'Ver el certificado', en: 'View the certificate' },
+  newTab: { es: 'se abre en una pestaña nueva', en: 'opens in a new tab' },
+  spanish: { es: '', en: ' (in Spanish)' },
+} satisfies Record<string, Loc>
 </script>
 
 <template>
   <ul class="certs">
     <li v-for="c in certifications" :key="c.code" class="cert">
       <p class="cert__code">{{ c.code }}</p>
-      <p class="cert__name">{{ c.name }}</p>
+      <p class="cert__name">{{ tr(c.name) }}</p>
       <p class="cert__issuer">
         <BadgeCheck aria-hidden="true" />
         <span>{{ c.issuer }}</span>
       </p>
       <p class="cert__record">
-        {{ c.number }}<br>
-        {{ c.until ?? c.since }}
+        {{ tr(c.number) }}<br>
+        {{ tr(c.until ?? c.since) }}
       </p>
       <a :href="c.document" class="link cert__doc" target="_blank" rel="noopener">
-        Ver el certificado<span class="visually-hidden"> {{ c.code }}, se abre en una pestaña nueva</span>
+        {{ tr(copy.view) }}<span class="visually-hidden"> {{ c.code }}{{ tr(copy.spanish) }}, {{ tr(copy.newTab) }}</span>
       </a>
     </li>
   </ul>

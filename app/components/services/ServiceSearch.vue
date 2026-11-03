@@ -12,18 +12,34 @@ const props = withDefaults(defineProps<{ mode?: ModeId, tone?: 'blanco' | 'azul'
 
 const fold = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
+const { tr, lang } = useLang()
+
+// Searchable in both languages: a visitor may type "auditoría" on the English page.
+const all = (l: Loc) => `${l.es} ${l.en}`
 const index = services.flatMap((line) =>
   modes.flatMap((m) => line.offers[m.id].flatMap((g) => g.items.map((text) => ({
     mode: m.id,
     line: line.slug,
-    lineName: line.short === 'HSEQ' ? 'HSEQ' : line.name,
+    lineName: line.short.es === 'HSEQ' ? line.short : line.name,
     area: g.area,
     text,
-    haystack: fold(`${text} ${g.area ?? ''} ${line.name} ${line.short} ${m.name}`),
+    haystack: fold(`${all(text)} ${g.area ? all(g.area) : ''} ${all(line.name)} ${all(line.short)} ${all(m.name)}`),
   })))),
 )
 
-const suggestions = ['45001', '55001', '27001', '17025', 'CREG', 'MIPG', 'auditores internos', 'seguridad vial']
+const suggestions: Loc<string[]> = {
+  es: ['45001', '55001', '27001', '17025', 'CREG', 'MIPG', 'auditores internos', 'seguridad vial'],
+  en: ['45001', '55001', '27001', '17025', 'CREG', 'MIPG', 'internal auditor', 'road safety'],
+}
+
+const copy = {
+  none: { es: 'Ningún servicio coincide. Pruebe con el número de la norma o una sola palabra.', en: 'No service matches. Try the standard’s number or a single word.' },
+  searchAll: { es: 'Buscar un servicio', en: 'Search for a service' },
+  placeholder: { es: 'Norma, tema o palabra', en: 'Standard, topic or keyword' },
+  clear: { es: 'Borrar la búsqueda', en: 'Clear the search' },
+  try: { es: 'Pruebe:', en: 'Try:' },
+  in: { es: 'en', en: 'in' },
+} satisfies Record<string, Loc>
 
 const id = useId()
 const query = ref('')
@@ -45,8 +61,11 @@ const status = ref('')
 const describe = () => {
   if (!words.value.length) return ''
   const n = matches.value.length
-  if (!n) return 'Ningún servicio coincide. Pruebe con el número de la norma o una sola palabra.'
-  return `${n} ${n === 1 ? 'servicio' : 'servicios'}${n > shown.value.length ? `; se muestran los primeros ${shown.value.length}` : ''}`
+  if (!n) return tr(copy.none)
+  const more = n > shown.value.length
+  return lang.value === 'en'
+    ? `${n} ${n === 1 ? 'service' : 'services'}${more ? `; showing the first ${shown.value.length}` : ''}`
+    : `${n} ${n === 1 ? 'servicio' : 'servicios'}${more ? `; se muestran los primeros ${shown.value.length}` : ''}`
 }
 const announce = useDebounceFn(() => { status.value = describe() }, 400)
 watch([words, shown], () => (words.value.length ? announce() : (status.value = '')))
@@ -77,6 +96,16 @@ async function expand() {
   list.value?.querySelectorAll<HTMLAnchorElement>('.result__where')[LIMIT]?.focus()
 }
 
+const searchIn = computed(() => {
+  const name = props.mode ? tr(findMode(props.mode)!.name).toLowerCase() : ''
+  return lang.value === 'en' ? `Search ${name} services` : `Buscar en ${name}`
+})
+const moreLabel = computed(() => {
+  const rest = matches.value.length - shown.value.length
+  if (lang.value === 'en') return rest === 1 ? 'Show the remaining one' : `Show the remaining ${rest}`
+  return rest === 1 ? 'Ver el restante' : `Ver los ${rest} restantes`
+})
+
 function use(s: string) {
   query.value = s
   input.value?.focus()
@@ -86,7 +115,7 @@ function use(s: string) {
 <template>
   <div class="search" :class="`search--${tone}`">
     <label :for="`${id}-q`" class="search__label">
-      {{ mode ? `Buscar en ${findMode(mode)?.name.toLowerCase()}` : 'Buscar un servicio' }}
+      {{ mode ? searchIn : tr(copy.searchAll) }}
     </label>
     <div class="search__box">
       <Search class="search__icon" aria-hidden="true" />
@@ -96,39 +125,39 @@ function use(s: string) {
         v-model="query"
         type="search"
         class="search__input"
-        placeholder="Norma, tema o palabra"
+        :placeholder="tr(copy.placeholder)"
         autocomplete="off"
         :aria-describedby="`${id}-status`"
         enterkeyhint="search"
         @keydown.esc="query = ''"
       >
       <button v-if="query" type="button" class="search__clear" @click="use('')">
-        <X aria-hidden="true" /><span class="visually-hidden">Borrar la búsqueda</span>
+        <X aria-hidden="true" /><span class="visually-hidden">{{ tr(copy.clear) }}</span>
       </button>
     </div>
 
     <div v-if="!query" class="search__suggest">
-      <span class="search__hint">Pruebe:</span>
-      <button v-for="s in suggestions" :key="s" type="button" class="search__chip" @click="use(s)">{{ s }}</button>
+      <span class="search__hint">{{ tr(copy.try) }}</span>
+      <button v-for="s in tr(suggestions)" :key="s" type="button" class="search__chip" @click="use(s)">{{ s }}</button>
     </div>
 
     <p :id="`${id}-status`" class="search__status" aria-live="polite">{{ status }}</p>
 
     <ul v-if="shown.length" ref="list" class="results">
-      <li v-for="r in shown" :key="`${r.mode}${r.line}${r.text}`" class="result">
+      <li v-for="r in shown" :key="`${r.mode}${r.line}${r.text.es}`" class="result">
         <div class="result__body">
           <p class="result__meta">
-            <NuxtLink :to="servicePath(r.mode, r.line)" class="result__where">
-              {{ findMode(r.mode)?.name }} en {{ r.lineName }}<template v-if="r.area">, {{ r.area.toLowerCase() }}</template>
-            </NuxtLink>
+            <NuxtLinkLocale :to="servicePath(r.mode, r.line)" class="result__where">
+              {{ tr(findMode(r.mode)!.name) }} {{ tr(copy.in) }} {{ tr(r.lineName) }}<template v-if="r.area">, {{ tr(r.area).toLowerCase() }}</template>
+            </NuxtLinkLocale>
           </p>
-          <p class="result__text">{{ r.text }}</p>
+          <p class="result__text">{{ tr(r.text) }}</p>
         </div>
-        <QuoteToggle :mode="r.mode" :line="r.line" :text="r.text" />
+        <QuoteToggle :mode="r.mode" :line="r.line" :text="r.text.es" />
       </li>
     </ul>
     <button v-if="matches.length > shown.length" type="button" class="search__more" @click="expand">
-      {{ matches.length - shown.length === 1 ? 'Ver el restante' : `Ver los ${matches.length - shown.length} restantes` }}
+      {{ moreLabel }}
     </button>
   </div>
 </template>

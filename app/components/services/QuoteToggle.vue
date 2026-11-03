@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { Plus, Check } from '@lucide/vue'
 import type { ModeId } from '~/data/services'
+import { offerText } from '~/data/services'
 
-/** Adds one service to the visitor's quote request, or takes it out. */
+/** Adds one service to the visitor's quote request, or takes it out. `text` is the offer's Spanish text (the stored key). */
 const props = defineProps<{ mode: ModeId, line: string, text: string }>()
+const { tr, lang } = useLang()
+const copy = {
+  added: { es: 'Agregado', en: 'Added' },
+  add: { es: 'Agregar', en: 'Add' },
+  to: { es: 'a la solicitud', en: 'to your request' },
+} satisfies Record<string, Loc>
 
 const quote = useQuote()
 const item = computed(() => ({ mode: props.mode, line: props.line, text: props.text }))
@@ -14,8 +21,8 @@ const added = computed(() => quote.has(item.value))
   <button type="button" class="qt" :aria-pressed="added" @click="quote.toggle(item)">
     <Check v-if="added" aria-hidden="true" />
     <Plus v-else aria-hidden="true" />
-    <span class="qt__label">{{ added ? 'Agregado' : 'Agregar' }}</span>
-    <span class="visually-hidden"> a la solicitud: {{ text }}</span>
+    <span class="qt__label">{{ added ? tr(copy.added) : tr(copy.add) }}</span>
+    <span class="visually-hidden"> {{ tr(copy.to) }}: {{ offerText(text, lang) }}</span>
   </button>
 </template>
 

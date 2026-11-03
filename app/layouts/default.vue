@@ -1,11 +1,13 @@
 <script setup lang="ts">
 // The organisation and website markup, on every page.
 useOrganizationJsonLd()
+const { tr } = useLang()
+const skip = { es: 'Saltar al contenido', en: 'Skip to content' }
 </script>
 
 <template>
   <div class="flex min-h-dvh flex-col">
-    <a href="#contenido" class="skip-link">Saltar al contenido</a>
+    <a href="#contenido" class="skip-link">{{ tr(skip) }}</a>
     <SiteHeader />
     <main id="contenido" tabindex="-1" class="flex-1 focus:outline-none">
       <slot />

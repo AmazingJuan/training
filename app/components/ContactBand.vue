@@ -6,20 +6,23 @@ import { company } from '~/data/company'
  * Closing call to action. Phones, e-mail and address live in the footer right
  * below, so this block only asks the question and offers the two fastest routes.
  */
-withDefaults(defineProps<{ title?: string, text?: string }>(), {
-  title: 'Cuéntenos qué norma o requisito necesita resolver',
-  text: 'Respondemos con una propuesta de asesoría, auditoría o formación ajustada a su organización.',
-})
+const props = defineProps<{ title?: string, text?: string }>()
+const { tr } = useLang()
+const copy = {
+  title: { es: 'Indíquenos qué norma o requisito necesita atender', en: 'Tell us which standard or requirement you need to address' },
+  text: { es: 'Le responderemos con una propuesta de consultoría, auditoría o formación ajustada a su organización.', en: 'We will reply with a consulting, auditing or training proposal tailored to your organization.' },
+  write: { es: 'Escribir un mensaje', en: 'Send a message' },
+} satisfies Record<string, Loc>
 </script>
 
 <template>
   <section class="band field-azul" aria-labelledby="band-title">
     <div class="frame grid-page band__grid">
-      <h2 id="band-title" class="heading band__title">{{ title }}</h2>
+      <h2 id="band-title" class="heading band__title">{{ props.title ?? tr(copy.title) }}</h2>
       <div class="band__side">
-        <p class="lede">{{ text }}</p>
+        <p class="lede">{{ props.text ?? tr(copy.text) }}</p>
         <div class="band__actions">
-          <UiButton to="/contacto" variant="light">Escribir un mensaje</UiButton>
+          <UiButton to="/contacto" variant="light">{{ tr(copy.write) }}</UiButton>
           <UiButton :href="company.whatsapp.href" variant="ghost" external>
             <template #icon><MessageCircle aria-hidden="true" /></template>
             WhatsApp

@@ -8,17 +8,21 @@ import { Play } from '@lucide/vue'
  */
 const props = withDefaults(defineProps<{
   id?: string
-  title?: string
   duration?: string
   poster?: string
 }>(), {
   id: '1045805123',
-  title: 'Video corporativo de Training Corporation',
   duration: '3:16',
   poster: '/images/empresa/video-corporativo.jpg',
 })
 
 const playing = ref(false)
+const { tr } = useLang()
+const copy = {
+  title: { es: 'Video corporativo de Training Corporation', en: 'Training Corporation corporate video (in Spanish)' },
+  watch: { es: 'Ver el video', en: 'Watch the video' },
+  minutes: { es: 'minutos. Se reproduce desde Vimeo.', en: 'minutes. Plays from Vimeo.' },
+} satisfies Record<string, Loc>
 const src = computed(() => `https://player.vimeo.com/video/${props.id}?autoplay=1&dnt=1&title=0&byline=0&portrait=0&color=0072af`)
 </script>
 
@@ -28,15 +32,15 @@ const src = computed(() => `https://player.vimeo.com/video/${props.id}?autoplay=
       v-if="playing"
       class="video__frame"
       :src="src"
-      :title="title"
+      :title="tr(copy.title)"
       allow="autoplay; fullscreen; picture-in-picture"
       allowfullscreen
     />
     <button v-else type="button" class="video__poster" @click="playing = true">
       <NuxtImg :src="poster" alt="" width="1280" height="720" sizes="xs:100vw lg:880px" class="video__img" loading="lazy" />
       <span class="video__play" aria-hidden="true"><Play /></span>
-      <span class="video__label">Ver el video <span class="video__time">{{ duration }}</span></span>
-      <span class="visually-hidden">: {{ title }}, {{ duration }} minutos. Se reproduce desde Vimeo.</span>
+      <span class="video__label">{{ tr(copy.watch) }} <span class="video__time">{{ duration }}</span></span>
+      <span class="visually-hidden">: {{ tr(copy.title) }}, {{ duration }} {{ tr(copy.minutes) }}</span>
     </button>
   </div>
 </template>

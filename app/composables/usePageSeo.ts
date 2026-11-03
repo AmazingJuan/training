@@ -7,6 +7,8 @@ interface PageSeo {
   description: string
   image?: string
   noindex?: boolean
+  /** News posts: Open Graph article with its publication date. */
+  article?: { published: string }
 }
 
 /** Cuts at a word boundary so search results never show a word broken in half. */
@@ -22,9 +24,10 @@ function clip(text: string, max: number) {
  * the brand suffix is dropped when it would push the title past that, and
  * descriptions are clipped on a word.
  */
-export function usePageSeo({ title, fullTitle: exactTitle, description: rawDescription, image, noindex = false }: PageSeo) {
+export function usePageSeo({ title, fullTitle: exactTitle, description: rawDescription, image, noindex = false, article }: PageSeo) {
   const route = useRoute()
   const { siteUrl } = useRuntimeConfig().public
+  const { lang } = useLang()
   const canonical = `${siteUrl}${route.path === '/' ? '/' : route.path.replace(/\/$/, '')}`
   const branded = `${title} | ${company.shortName}`
   const fullTitle = exactTitle ?? (branded.length <= 60 ? branded : title)
@@ -37,12 +40,15 @@ export function usePageSeo({ title, fullTitle: exactTitle, description: rawDescr
     description,
     ogTitle: fullTitle,
     ogDescription: description,
-    ogType: 'website',
+    ogType: article ? 'article' : 'website',
+    articlePublishedTime: article?.published,
     ogUrl: canonical,
     ogSiteName: company.shortName,
-    ogLocale: 'es_CO',
+    ogLocale: ogLocale[lang.value],
     ogImage,
-    ogImageAlt: image ? title : 'Training Corporation: auditoría, formación y consultoría bajo norma',
+    ogImageAlt: image ? title : lang.value === 'en'
+      ? 'Training Corporation: auditing, consulting and training in management systems'
+      : 'Training Corporation: auditoría, consultoría y formación en sistemas de gestión',
     twitterImage: ogImage,
     twitterCard: 'summary_large_image',
     robots: noindex ? 'noindex, nofollow' : 'index, follow',

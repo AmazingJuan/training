@@ -1,9 +1,12 @@
 <script setup lang="ts">
+const { tr } = useLang()
 usePageSeo({
-  title: 'Auditoría, consultoría y formación ISO',
-  fullTitle: 'Training Corporation | Auditoría, consultoría y formación ISO',
-  description:
-    'Auditoría, consultoría y formación en ISO 9001, 45001, 55001 y 27001 y regulación CREG del sector eléctrico. Desde Medellín para toda Colombia.',
+  title: tr({ es: 'Auditoría, consultoría y formación ISO', en: 'ISO auditing, consulting and training' }),
+  fullTitle: tr({ es: 'Training Corporation: auditoría y formación ISO en Medellín', en: 'Training Corporation: ISO auditing and training in Colombia' }),
+  description: tr({
+    es: 'Auditoría, consultoría y formación en ISO 9001, 45001, 55001 y 27001 y en regulación CREG del sector eléctrico. Desde Medellín para Colombia y Centroamérica.',
+    en: 'Auditing, consulting and training in ISO 9001, 45001, 55001 and 27001 and in CREG electricity regulation. From Medellín for Colombia and Central America.',
+  }),
 })
 </script>
 

@@ -12,6 +12,31 @@ import { presence } from '~/data/company'
 const topNorms = ['ISO 9001', 'ISO 14001', 'ISO 45001', 'ISO 55001', 'ISO/IEC 27001', 'ISO/IEC 17025']
 const bottomNorms = ['CREG 015', 'RETIE', 'RETILAP', 'Decreto 1072', 'MIPG', 'GTC-ISO 19011']
 const utilities = clientsIn('energia').length
+const { tr, lang } = useLang()
+
+const countries = computed(() =>
+  new Intl.ListFormat(langTag[lang.value], { type: 'conjunction' }).format(presence.countries.map((c) => tr(c.name))),
+)
+
+const copy = {
+  title: {
+    es: 'Auditoría, consultoría y formación en sistemas de gestión y regulación',
+    en: 'Auditing, consulting and training in management systems and regulation',
+  },
+  lede: {
+    es: 'Sistemas de gestión ISO y regulación del sector eléctrico colombiano, con sede en Medellín.',
+    en: 'ISO management systems and Colombian electricity sector regulation, from our offices in Medellín.',
+  },
+  quote: { es: 'Solicitar una cotización', en: 'Request a quotation' },
+  services: { es: 'Conocer los servicios', en: 'Explore our services' },
+  backing: { es: 'Respaldo', en: 'Credentials' },
+  certified: { es: 'Certificados en ISO 9001:2015 e ISO 45001:2018', en: 'Certified to ISO 9001:2015 and ISO 45001:2018' },
+  iam: { es: 'Miembro corporativo de The Institute of Asset Management', en: 'Corporate member of The Institute of Asset Management' },
+} satisfies Record<string, Loc>
+const utilitiesFact = computed(() => (lang.value === 'en' ? `${utilities} energy companies among our clients` : `${utilities} empresas de energía entre nuestros clientes`))
+const presenceFact = computed(() => (lang.value === 'en'
+  ? `Services in ${presence.departments.length} Colombian departments and in ${countries.value}`
+  : `Servicios en ${presence.departments.length} departamentos de Colombia y en ${countries.value}`))
 
 const root = useTemplateRef<HTMLElement>('root')
 
@@ -32,24 +57,24 @@ useMotion(root, ({ gsap }) => {
         <BrandSeal :top="topNorms" :bottom="bottomNorms" class="hero__ring" />
         <div class="hero__inner">
           <h1 id="hero-title" class="hero__title">
-            Auditoría, formación y consultoría para organizaciones que trabajan bajo norma
+            {{ tr(copy.title) }}
           </h1>
         </div>
       </div>
 
       <div class="hero__side">
         <p class="hero__lede hero__line">
-          Sistemas de gestión ISO y regulación del sector eléctrico colombiano. Trabajamos desde Medellín.
+          {{ tr(copy.lede) }}
         </p>
-        <div class="hero__actions hero__line">
-          <UiButton to="/contacto">Solicitar una cotización</UiButton>
-          <UiButton to="/portafolio-de-servicios" variant="outline">Ver los servicios</UiButton>
+        <div class="hero__actions">
+          <UiButton to="/contacto">{{ tr(copy.quote) }}</UiButton>
+          <UiButton to="/portafolio-de-servicios" variant="outline">{{ tr(copy.services) }}</UiButton>
         </div>
-        <ul class="hero__facts" aria-label="Respaldo">
-          <li class="hero__fact"><a href="#certificaciones">Certificados en ISO 9001:2015 e ISO 45001:2018</a></li>
-          <li class="hero__fact">Miembro corporativo del Institute of Asset Management</li>
-          <li class="hero__fact"><a href="#sector-title">{{ utilities }} empresas de energía entre nuestros clientes</a></li>
-          <li class="hero__fact">Servicios en {{ presence.departments.length }} departamentos, {{ presence.countries.join(' y ') }}</li>
+        <ul class="hero__facts" :aria-label="tr(copy.backing)">
+          <li class="hero__fact"><a href="#certificaciones">{{ tr(copy.certified) }}</a></li>
+          <li class="hero__fact">{{ tr(copy.iam) }}</li>
+          <li class="hero__fact"><a href="#sector-title">{{ utilitiesFact }}</a></li>
+          <li class="hero__fact"><a href="#presence-title">{{ presenceFact }}</a></li>
         </ul>
       </div>
     </div>

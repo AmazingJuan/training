@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import { team } from '~/data/company'
 
-const lead = team[0]!
+const { tr } = useLang()
+const copy = {
+  title: { es: 'Profesionales responsables de cada servicio', en: 'The professionals responsible for each service' },
+  cta: { es: 'Conocer al equipo', en: 'Meet the team' },
+  portrait: { es: 'Retrato de', en: 'Portrait of' },
+} satisfies Record<string, Loc>
 </script>
 
 <template>
-  <section class="team section" aria-labelledby="team-title">
+  <section class="team section field-nube" aria-labelledby="team-title">
     <div class="frame grid-page team__grid">
       <div class="team__words">
-        <h2 id="team-title" class="heading">Quién responde por cada servicio</h2>
-        <blockquote class="team__quote">
-          <p>«{{ lead.statement }}»</p>
-          <footer>{{ lead.name }}, {{ lead.role.toLowerCase() }}</footer>
-        </blockquote>
-        <UiButton to="/empresa/equipo" variant="outline">Conocer al equipo</UiButton>
+        <h2 id="team-title" class="heading">{{ tr(copy.title) }}</h2>
+        <UiButton to="/empresa/equipo" variant="outline">{{ tr(copy.cta) }}</UiButton>
       </div>
 
       <ul class="team__people">
         <li v-for="p in team" :key="p.slug" class="person">
-          <NuxtLink :to="`/empresa/equipo#${p.slug}`" class="person__link">
-            <BrandRing :src="p.photo" :alt="`Retrato de ${p.name}`" focus="50% 18%" sizes="xs:40vw sm:40vw md:200px" :gap="22" :dot="false" />
-            <span class="person__name">{{ p.name.split(' ').slice(0, 2).join(' ') }}</span>
-            <span class="person__role">{{ p.role }}</span>
-          </NuxtLink>
+          <NuxtLinkLocale :to="`/empresa/equipo#${p.slug}`" class="person__link">
+            <BrandRing :src="p.photo" :alt="`${tr(copy.portrait)} ${p.name}`" focus="50% 50%" sizes="xs:40vw sm:40vw md:200px" :gap="22" :dot="false" />
+            <span class="person__name">{{ p.name }}</span>
+            <span class="person__role">{{ tr(p.role) }}</span>
+          </NuxtLinkLocale>
         </li>
       </ul>
     </div>
@@ -39,22 +40,8 @@ const lead = team[0]!
   grid-column: 1 / -1;
 }
 
-.team__quote {
-  margin-block: 2rem 2.25rem;
-  padding-left: 1.25rem;
-  border-left: 3px solid var(--color-azul-vivo);
-}
-
-.team__quote p {
-  font-size: var(--text-lg);
-  line-height: var(--text-lg--line-height);
-  max-width: 34rem;
-}
-
-.team__quote footer {
-  margin-top: 1rem;
-  font-weight: 700;
-  color: var(--color-azul-hondo);
+.team__words .heading {
+  margin-bottom: 2rem;
 }
 
 .team__people {
@@ -94,7 +81,7 @@ const lead = team[0]!
 }
 
 .person__role {
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
   color: var(--color-pizarra);
 }
 

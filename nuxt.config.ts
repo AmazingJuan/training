@@ -18,6 +18,12 @@ const legacyRedirects = {
   '/portafolio-de-servicios/auditoria-y-evaluacion': permanent('/servicios/auditoria'),
   '/portafolio-de-servicios/gestion-organizacional': permanent('/servicios/consultoria'),
   '/gestion-de-activos': permanent('/portafolio-de-servicios/gestion-de-activos'),
+  // Documents replaced by the versions the company sent on 2026-11-02.
+  '/docs/licenciaSST.pdf': permanent('/docs/licencia-sst-2025.pdf'),
+  '/docs/Proteccion-datos.pdf': permanent('/docs/manual-proteccion-datos-personales.pdf'),
+  '/docs/REGLAMENTO DE HIGIENE Y SEGURIDAD - 2024.pdf': permanent('/docs/reglamento-higiene-seguridad-2026.pdf'),
+  '/wp-content/uploads/2024/07/Formato-Cuenta-de-Cobro-Ext-TC.xls': permanent('/docs/formato-cuenta-de-cobro.xls'),
+  '/wp-content/uploads/2024/12/Manual de contratistas y proveedores V1 (2).pdf': permanent('/docs/manual-contratistas-proveedores.pdf'),
   // WordPress category archives.
   '/category/actualidad': permanent('/actualidad'),
   '/category/sin-categoria': permanent('/actualidad'),
@@ -32,7 +38,7 @@ const legacyRedirects = {
  */
 function htaccess() {
   const host = new URL(siteUrl).host
-  const esc = (path: string) => path.slice(1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const esc = (path: string) => path.slice(1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\ ')
   const legacy = Object.entries(legacyRedirects)
     .map(([from, rule]) => `RewriteRule ^${esc(from)}/?$ ${rule.redirect.to} [R=301,L]`)
   return [
@@ -65,7 +71,21 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-08-01',
   devtools: { enabled: true },
 
-  modules: ['@nuxt/fonts', '@nuxt/image', '@vueuse/nuxt'],
+  modules: ['@nuxt/fonts', '@nuxt/image', '@vueuse/nuxt', '@nuxtjs/i18n'],
+
+  // Spanish at the root (the original), English under /en. Page paths keep their
+  // Spanish slugs in both languages, so every page has one stable address per
+  // language. No automatic redirect by browser language: the visitor chooses.
+  i18n: {
+    locales: [
+      { code: 'es', language: 'es-CO', name: 'Español' },
+      { code: 'en', language: 'en-US', name: 'English' },
+    ],
+    defaultLocale: 'es',
+    strategy: 'prefix_except_default',
+    detectBrowserLanguage: false,
+    baseUrl: siteUrl,
+  },
 
   // Components are named by file (UiButton, BrandRing…), not by folder.
   components: [{ path: '~/components', pathPrefix: false }],
@@ -83,7 +103,6 @@ export default defineNuxtConfig({
     // A short fade between pages; the new page's header then plays its own entrance.
     pageTransition: { name: 'page', mode: 'out-in' },
     head: {
-      htmlAttrs: { lang: 'es-CO' },
       link: [
         { rel: 'icon', href: '/favicon.ico', sizes: '48x48' },
         { rel: 'icon', href: '/icon.svg', type: 'image/svg+xml' },
@@ -96,14 +115,20 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Where contact submissions are forwarded (e.g. a Make/Zapier/Formspree webhook).
     contactWebhook: '',
-    public: { siteUrl },
+    public: {
+      siteUrl,
+      // Staff tools linked from /intranet. Set at build time with
+      // NUXT_PUBLIC_INTRANET_LICITDATA, _COTIZADOR and _PRESUPUESTOS.
+      intranet: { licitdata: '', cotizador: '', presupuestos: '' },
+    },
   },
 
   // The brand's own families, self-hosted at build time.
   fonts: {
     defaults: { subsets: ['latin', 'latin-ext'] },
     families: [
-      { name: 'Montserrat', provider: 'google', weights: ['500 800'] },
+      // Headlines: preloaded so the largest text never swaps late (latin subset only).
+      { name: 'Montserrat', provider: 'google', weights: ['500 800'], preload: true, subsets: ['latin'] },
       { name: 'Source Sans 3', provider: 'google', weights: ['400 700'], styles: ['normal', 'italic'] },
     ],
   },
@@ -124,7 +149,7 @@ export default defineNuxtConfig({
   features: { inlineStyles: true },
 
   nitro: {
-    prerender: { crawlLinks: true, routes: ['/', '/sitemap.xml'] },
+    prerender: { crawlLinks: true, routes: ['/', '/en', '/sitemap.xml'] },
     // Ship .gz and .br copies of HTML, CSS and JS; the server picks the smallest.
     compressPublicAssets: { gzip: true, brotli: true },
   },

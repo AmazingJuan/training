@@ -1,9 +1,24 @@
 <script setup lang="ts">
 import { team } from '~/data/company'
 
+const { tr } = useLang()
+const copy = {
+  title: { es: 'Nuestro equipo', en: 'Our team' },
+  lede: {
+    es: 'Auditores líderes con certificación internacional, formadores y profesionales que atienden directamente a cada organización cliente.',
+    en: 'Internationally certified lead auditors, trainers and professionals who work directly with each client organization.',
+  },
+  company: { es: 'Nosotros', en: 'About us' },
+  portrait: { es: 'Retrato de', en: 'Portrait of' },
+  creds: { es: 'Formación y certificaciones de', en: 'Education and certifications of' },
+  band: { es: 'Comuníquese directamente con nuestro equipo', en: 'Get in touch with our team directly' },
+} satisfies Record<string, Loc>
 usePageSeo({
-  title: 'Nuestro equipo',
-  description: 'Las personas de Training Corporation: gerencia, asesoría experta, dirección administrativa, aseguramiento del modelo de gestión, gestión del conocimiento e innovación.',
+  title: tr(copy.title),
+  description: tr({
+    es: 'El equipo de Training Corporation: gerencia, asesoría experta, dirección administrativa y financiera, aseguramiento del modelo de gestión, gestión del conocimiento e innovación.',
+    en: 'The Training Corporation team: management, senior advisory, administration and finance, management model assurance, knowledge management and innovation.',
+  }),
   image: '/images/equipo/nancy-rodriguez.jpg',
 })
 </script>
@@ -11,9 +26,9 @@ usePageSeo({
 <template>
   <div>
     <PageHeader
-      title="Nuestro equipo"
-      lede="Auditores líderes con certificación internacional, formadores y profesionales que responden directamente ante cada organización cliente."
-      :crumbs="[{ label: 'Empresa', to: '/empresa' }]"
+      :title="tr(copy.title)"
+      :lede="tr(copy.lede)"
+      :crumbs="[{ label: tr(copy.company), to: '/empresa' }]"
     />
 
     <div class="frame people">
@@ -21,24 +36,24 @@ usePageSeo({
         <div class="person__ring">
           <BrandRing
             :src="p.photo"
-            :alt="`Retrato de ${p.name}`"
-            focus="50% 20%"
+            :alt="`${tr(copy.portrait)} ${p.name}`"
+            focus="50% 50%"
             sizes="xs:60vw sm:280px"
             :loading="i < 2 ? 'eager' : 'lazy'"
           />
         </div>
         <div class="person__text">
           <h2 class="person__name">{{ p.name }}</h2>
-          <p class="person__role">{{ p.role }}</p>
-          <p class="person__statement">{{ p.statement }}</p>
-          <ul v-if="p.credentials" class="person__creds" :aria-label="`Formación y certificaciones de ${p.name}`">
-            <li v-for="c in p.credentials" :key="c">{{ c }}</li>
+          <p class="person__role">{{ tr(p.role) }}</p>
+          <p class="person__statement">{{ tr(p.profile) }}</p>
+          <ul v-if="p.credentials" class="person__creds" :aria-label="`${tr(copy.creds)} ${p.name}`">
+            <li v-for="c in p.credentials" :key="c.es">{{ tr(c) }}</li>
           </ul>
         </div>
       </article>
     </div>
 
-    <ContactBand title="Hable directamente con nuestro equipo" />
+    <ContactBand :title="tr(copy.band)" />
   </div>
 </template>
 

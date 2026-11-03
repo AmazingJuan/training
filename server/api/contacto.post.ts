@@ -17,13 +17,14 @@ export default defineEventHandler(async (event) => {
     mensaje: String(body?.mensaje ?? '').slice(0, 4000),
     servicios: Array.isArray(body?.servicios) ? body.servicios.slice(0, 61).map((x) => String(x).slice(0, 300)) : [],
     datos: body?.datos === true,
+    idioma: body?.idioma === 'en' ? 'en' : 'es',
     web: String(body?.web ?? ''),
   }
 
   // Bots fill the hidden field; accept silently and drop.
   if (request.web) return { ok: true }
 
-  const errors = validateContact(request)
+  const errors = validateContact(request, request.idioma)
   if (Object.keys(errors).length) {
     throw createError({ statusCode: 422, statusMessage: 'Datos incompletos', data: { errors } })
   }

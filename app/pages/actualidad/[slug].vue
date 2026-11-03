@@ -4,20 +4,29 @@ import type { NewsBlock } from '~/data/news'
 
 const route = useRoute()
 const post = findPost(String(route.params.slug))
+const { tr, lang, localePath } = useLang()
 
 if (!post) {
-  throw createError({ statusCode: 404, statusMessage: 'Publicación no encontrada', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: tr({ es: 'Publicación no encontrada', en: 'Article not found' }), fatal: true })
 }
+
+const copy = {
+  news: { es: 'Actualidad', en: 'News' },
+  others: { es: 'Otras publicaciones', en: 'Other articles' },
+  previous: { es: 'Anterior', en: 'Previous' },
+  next: { es: 'Siguiente', en: 'Next' },
+} satisfies Record<string, Loc>
 
 // Consecutive list items become one <ul>.
 type Chunk = { type: 'p' | 'h', text: string } | { type: 'ul', items: string[] }
 const chunks = post.blocks.reduce<Chunk[]>((acc, b: NewsBlock) => {
   const last = acc.at(-1)
+  const text = tr(b.text)
   if (b.type === 'li') {
-    if (last?.type === 'ul') last.items.push(b.text)
-    else acc.push({ type: 'ul', items: [b.text] })
+    if (last?.type === 'ul') last.items.push(text)
+    else acc.push({ type: 'ul', items: [text] })
   }
-  else acc.push({ type: b.type, text: b.text })
+  else acc.push({ type: b.type, text })
   return acc
 }, [])
 
@@ -27,8 +36,9 @@ const index = news.findIndex((n) => n.slug === post.slug)
 const newer = news[index - 1]
 const older = news[index + 1]
 
-const description = post.blocks[0]?.text ?? post.title
-usePageSeo({ title: post.title, description, image: post.image })
+const title = tr(post.title)
+const description = post.blocks[0] ? tr(post.blocks[0].text) : title
+usePageSeo({ title, description, image: post.image, article: { published: post.date } })
 
 // Lets search engines read the item as a dated news article by the company.
 const { siteUrl } = useRuntimeConfig().public
@@ -38,12 +48,13 @@ useHead({
     innerHTML: JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'NewsArticle',
-      'headline': post.title.slice(0, 110),
+      'headline': title.slice(0, 110),
       'datePublished': post.date,
+      'inLanguage': langTag[lang.value],
       'image': post.image ? [`${siteUrl}${post.image}`] : [`${siteUrl}/og-image.png`],
-      'mainEntityOfPage': `${siteUrl}/actualidad/${post.slug}`,
+      'mainEntityOfPage': `${siteUrl}${localePath(`/actualidad/${post.slug}`)}`,
       'author': { '@type': 'Organization', 'name': 'Training Corporation S.A.S.', 'url': siteUrl },
-      'publisher': { '@id': `${siteUrl}/#organizacion`, '@type': 'Organization', 'name': 'Training Corporation S.A.S.', 'logo': { '@type': 'ImageObject', 'url': `${siteUrl}/brand/logo-training-corporation.png` } },
+      'publisher': { '@id': `${siteUrl}/#organizacion`, '@type': 'Organization', 'name': 'Training Corporation S.A.S.', 'logo': { '@type': 'ImageObject', 'url': `${siteUrl}/brand/logo-training-corporation-cuadrado.png`, 'width': 240, 'height': 240 } },
     }),
   }],
 })
@@ -51,13 +62,13 @@ useHead({
 
 <template>
   <article v-if="post" class="post">
-    <PageHeader :title="post.title" :crumbs="[{ label: 'Actualidad', to: '/actualidad' }]">
-      <time :datetime="post.date" class="post__date">{{ formatDate(post.date) }}</time>
+    <PageHeader :title="title" :crumbs="[{ label: tr(copy.news), to: '/actualidad' }]">
+      <time :datetime="post.date" class="post__date">{{ formatDate(post.date, lang) }}</time>
     </PageHeader>
 
     <div class="frame grid-page post__grid">
       <figure v-if="post.image" class="post__figure">
-        <NuxtImg format="webp" :src="post.image" :alt="post.imageAlt ?? ''" :width="imageSize?.[0]" :height="imageSize?.[1]" sizes="xs:100vw sm:100vw lg:900px" fetchpriority="high" class="post__img" />
+        <NuxtImg format="webp" :src="post.image" :alt="post.imageAlt ? tr(post.imageAlt) : ''" :width="imageSize?.[0]" :height="imageSize?.[1]" :style="imageSize ? { '--natural-w': `${imageSize[0]}px` } : undefined" sizes="xs:100vw sm:100vw lg:900px" fetchpriority="high" class="post__img" />
       </figure>
 
       <div class="prose post__body">
@@ -70,13 +81,13 @@ useHead({
         </template>
       </div>
 
-      <nav class="post__nav" aria-label="Otras publicaciones">
-        <NuxtLink v-if="older" :to="`/actualidad/${older.slug}`" class="post__navlink">
-          <span class="post__navlabel">Anterior</span>{{ older.title }}
-        </NuxtLink>
-        <NuxtLink v-if="newer" :to="`/actualidad/${newer.slug}`" class="post__navlink post__navlink--next">
-          <span class="post__navlabel">Siguiente</span>{{ newer.title }}
-        </NuxtLink>
+      <nav class="post__nav" :aria-label="tr(copy.others)">
+        <NuxtLinkLocale v-if="older" :to="`/actualidad/${older.slug}`" class="post__navlink">
+          <span class="post__navlabel">{{ tr(copy.previous) }}</span>{{ tr(older.title) }}
+        </NuxtLinkLocale>
+        <NuxtLinkLocale v-if="newer" :to="`/actualidad/${newer.slug}`" class="post__navlink post__navlink--next">
+          <span class="post__navlabel">{{ tr(copy.next) }}</span>{{ tr(newer.title) }}
+        </NuxtLinkLocale>
       </nav>
     </div>
   </article>
@@ -104,10 +115,12 @@ useHead({
 }
 
 .post__img {
-  width: 100%;
+  /* Shown whole and never wider than the file itself, so small originals stay sharp. */
+  display: block;
+  width: auto;
+  max-width: min(100%, var(--natural-w, 100%));
   height: auto;
   max-height: 34rem;
-  object-fit: cover;
 }
 
 .post__h {
@@ -143,9 +156,10 @@ useHead({
 }
 
 @media (width >= 64rem) {
+  /* One left edge for title, photo, text and navigation. */
   .post__figure { grid-column: 1 / span 9; }
-  .post__body { grid-column: 3 / span 7; }
-  .post__nav { grid-column: 3 / span 8; grid-template-columns: 1fr 1fr; }
+  .post__body { grid-column: 1 / span 8; }
+  .post__nav { grid-column: 1 / span 9; grid-template-columns: 1fr 1fr; }
   .post__navlink--next { text-align: right; grid-column: 2; }
 }
 </style>

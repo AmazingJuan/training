@@ -1,28 +1,43 @@
 <script setup lang="ts">
 import { sectors, clientsIn } from '~/data/clients'
 
+const { tr, lang } = useLang()
 usePageSeo({
-  title: 'Clientes',
-  description: 'Organizaciones que han confiado en nuestro trabajo: empresas de energía y servicios públicos, gobierno, educación, industria, laboratorios y más, en quince sectores.',
+  title: tr({ es: 'Clientes', en: 'Clients' }),
+  description: tr({
+    es: 'Organizaciones que han confiado en nuestro trabajo: empresas de energía y servicios públicos, gobierno, educación, industria y laboratorios, en Colombia y Centroamérica.',
+    en: 'Organizations that have trusted our work: energy and utility companies, government, education, industry and laboratories, in Colombia and Central America.',
+  }),
 })
 
 // Duplicates across sectors (EPM, CENS appear under laboratories too) are kept, as on the source page.
 const groups = sectors.map((s) => ({ ...s, clients: clientsIn(s.id) })).filter((g) => g.clients.length)
 const total = new Set(groups.flatMap((g) => g.clients.map((c) => c.name))).size
+
+const copy = {
+  title: { es: 'Clientes que han confiado en nuestro trabajo', en: 'Clients who have trusted our work' },
+  sectors: { es: 'Sectores', en: 'Sectors' },
+  formerly: { es: 'antes', en: 'formerly' },
+} satisfies Record<string, Loc>
+const lede = computed(() => (lang.value === 'en'
+  ? `${total} organizations in ${groups.length} sectors. Most of our experience is in the Colombian electricity sector.`
+  : `${total} organizaciones en ${groups.length} sectores. La mayor parte de nuestra experiencia se concentra en el sector eléctrico colombiano.`))
+const alt = (c: { name: string, fullName?: string, formerly?: string }) =>
+  [c.fullName ? `${c.name}, ${c.fullName}` : c.name, c.formerly && `(${tr(copy.formerly)} ${c.formerly})`].filter(Boolean).join(' ')
 </script>
 
 <template>
   <div>
     <PageHeader
-      title="Clientes que han confiado en nuestro trabajo"
-      :lede="`${total} organizaciones en ${groups.length} sectores. La mayor parte de nuestra experiencia está en el sector eléctrico colombiano.`"
+      :title="tr(copy.title)"
+      :lede="lede"
     />
 
-    <nav class="jump" aria-label="Sectores">
+    <nav class="jump" :aria-label="tr(copy.sectors)">
       <div class="frame">
         <ul class="jump__list">
           <li v-for="g in groups" :key="g.id">
-            <a :href="`#${g.id}`">{{ g.name }} <span>{{ g.clients.length }}</span></a>
+            <a :href="`#${g.id}`">{{ tr(g.name) }} <span>{{ g.clients.length }}</span></a>
           </li>
         </ul>
       </div>
@@ -30,10 +45,11 @@ const total = new Set(groups.flatMap((g) => g.clients.map((c) => c.name))).size
 
     <div class="frame sectors">
       <section v-for="g in groups" :id="g.id" :key="g.id" class="sector" :class="{ 'sector--lead': g.id === 'energia' }" :aria-labelledby="`${g.id}-t`">
-        <h2 :id="`${g.id}-t`" class="sector__title">{{ g.name }}</h2>
+        <h2 :id="`${g.id}-t`" class="sector__title">{{ tr(g.name) }}</h2>
         <ul class="logos">
           <li v-for="c in g.clients" :key="c.name" class="logo">
-            <NuxtImg format="webp" :src="c.logo" :alt="c.name" sizes="160px" loading="lazy" class="logo__img" />
+            <NuxtImg v-if="c.logo" format="webp" :src="c.logo" :alt="alt(c)" sizes="160px" loading="lazy" class="logo__img" />
+            <span v-else class="logo__name"><strong>{{ c.name }}</strong><span v-if="c.fullName">{{ c.fullName }}</span></span>
           </li>
         </ul>
       </section>
@@ -116,7 +132,7 @@ const total = new Set(groups.flatMap((g) => g.clients.map((c) => c.name))).size
 .sector__title {
   font-size: var(--text-xl);
   line-height: var(--text-xl--line-height);
-  color: var(--color-azul);
+  color: var(--color-tinta);
 }
 
 .sector--lead .sector__title {
@@ -131,6 +147,7 @@ const total = new Set(groups.flatMap((g) => g.clients.map((c) => c.name))).size
 }
 
 .logo {
+  position: relative;
   display: grid;
   place-items: center;
   aspect-ratio: 4 / 3;
@@ -140,9 +157,28 @@ const total = new Set(groups.flatMap((g) => g.clients.map((c) => c.name))).size
   border-radius: var(--radius-control);
 }
 
+.logo__name {
+  display: grid;
+  gap: 0.125rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.25;
+  color: var(--color-pizarra);
+}
+
+.logo__name strong {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--color-tinta);
+}
+
 .logo__img {
-  max-width: 100%;
-  max-height: 100%;
+  /* Out of flow, so tall source images never stretch their row. */
+  position: absolute;
+  inset: 0.75rem;
+  width: calc(100% - 1.5rem);
+  height: calc(100% - 1.5rem);
   object-fit: contain;
   mix-blend-mode: multiply;
 }

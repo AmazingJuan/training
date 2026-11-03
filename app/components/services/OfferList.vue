@@ -6,16 +6,17 @@ const props = defineProps<{ mode: ModeId, line: string, groups: OfferGroup[], li
 
 const quote = useQuote()
 const added = (text: string) => quote.has({ mode: props.mode, line: props.line, text })
+const { tr } = useLang()
 </script>
 
 <template>
   <div class="offers">
-    <div v-for="g in groups" :key="g.area ?? 'all'" class="offers__group">
-      <h3 v-if="g.area" class="offers__area">{{ g.area }}</h3>
+    <div v-for="g in groups" :key="g.area?.es ?? 'all'" class="offers__group">
+      <h3 v-if="g.area" class="offers__area">{{ tr(g.area) }}</h3>
       <ul class="offers__list">
-        <li v-for="text in g.items" :key="text" class="offer" :class="{ 'is-added': added(text) }">
-          <span class="offer__text">{{ text }}</span>
-          <QuoteToggle :mode="mode" :line="line" :text="text" />
+        <li v-for="item in g.items" :key="item.es" class="offer" :class="{ 'is-added': added(item.es) }">
+          <span class="offer__text">{{ tr(item) }}</span>
+          <QuoteToggle :mode="mode" :line="line" :text="item.es" />
         </li>
       </ul>
     </div>

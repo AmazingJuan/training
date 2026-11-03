@@ -18,6 +18,8 @@ const props = withDefaults(
 )
 
 const model = defineModel<string>({ default: '' })
+const { tr } = useLang()
+const choose = { es: 'Seleccione una opción', en: 'Select an option' }
 const id = useId()
 const describedBy = computed(() =>
   [props.hint && `${id}-hint`, props.error && `${id}-error`].filter(Boolean).join(' ') || undefined,
@@ -35,11 +37,11 @@ const shared = computed(() => ({
   <div class="field" :class="{ 'field--error': error }">
     <label :for="id" class="field__label">
       {{ label }}
-      <span v-if="!required" class="field__optional">(opcional)</span>
+      <span v-if="!required" class="field__optional">{{ tr({ es: "(opcional)", en: "(optional)" }) }}</span>
     </label>
     <textarea v-if="type === 'textarea'" v-model="model" v-bind="shared" rows="6" class="field__control" />
     <select v-else-if="type === 'select'" v-model="model" v-bind="shared" class="field__control field__select">
-      <option value="">Seleccione una opción</option>
+      <option value="">{{ tr(choose) }}</option>
       <option v-for="o in options" :key="o.value" :value="o.value">{{ o.label }}</option>
     </select>
     <input v-else v-model="model" v-bind="shared" :type="type" :autocomplete="autocomplete" class="field__control">

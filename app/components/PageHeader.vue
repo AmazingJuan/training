@@ -21,6 +21,11 @@ const props = withDefaults(
 
 const { siteUrl } = useRuntimeConfig().public
 const route = useRoute()
+const { tr, localePath } = useLang()
+const copy = {
+  home: { es: 'Inicio', en: 'Home' },
+  crumbs: { es: 'Ruta de navegación', en: 'Breadcrumb' },
+} satisfies Record<string, Loc>
 
 // Arriving from another page, the header replays the home seal's language in
 // short: the title rises line by line, the photo's ring draws and its dot lands.
@@ -59,7 +64,7 @@ useHead({
     innerHTML: JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
-      itemListElement: [{ label: 'Inicio', to: '/' }, ...props.crumbs, { label: props.crumb ?? props.title, to: route.path }].map((c, i) => ({
+      itemListElement: [{ label: tr(copy.home), to: localePath('/') }, ...props.crumbs.map((c) => ({ ...c, to: localePath(c.to) })), { label: props.crumb ?? props.title, to: route.path }].map((c, i) => ({
         '@type': 'ListItem',
         position: i + 1,
         name: c.label,
@@ -74,12 +79,12 @@ useHead({
   <header ref="root" class="page-head" :class="[tone === 'azul' ? 'field-azul' : '', { 'page-head--bare': !$slots.aside, 'page-head--compact': compact }]">
     <div class="frame grid-page page-head__grid">
       <div class="page-head__text">
-        <nav aria-label="Ruta de navegación" class="crumbs">
+        <nav :aria-label="tr(copy.crumbs)" class="crumbs" :class="{ 'crumbs--top': !crumbs.length }">
           <ol>
-            <li><NuxtLink to="/">Inicio</NuxtLink></li>
+            <li><NuxtLinkLocale to="/">{{ tr(copy.home) }}</NuxtLinkLocale></li>
             <li v-for="c in crumbs" :key="c.to">
               <ChevronRight aria-hidden="true" />
-              <NuxtLink :to="c.to">{{ c.label }}</NuxtLink>
+              <NuxtLinkLocale :to="c.to">{{ c.label }}</NuxtLinkLocale>
             </li>
             <li aria-current="page">
               <ChevronRight aria-hidden="true" />
@@ -158,6 +163,11 @@ useHead({
    in the trail only wraps it onto a second line. */
 @media (width < 40rem) {
   .crumbs li[aria-current] {
+    display: none;
+  }
+
+  /* A first-level page would show "Inicio" alone, which reads as broken: hide the trail. */
+  .crumbs--top {
     display: none;
   }
 }

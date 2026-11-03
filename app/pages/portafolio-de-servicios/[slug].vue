@@ -6,36 +6,74 @@ import { courses } from '~/data/courses'
 
 const route = useRoute()
 const service = findService(String(route.params.slug))
+const { tr, lang } = useLang()
 
 if (!service) {
-  throw createError({ statusCode: 404, statusMessage: 'Servicio no encontrado', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: tr({ es: 'Servicio no encontrado', en: 'Service not found' }), fatal: true })
 }
+
+const copy = {
+  services: { es: 'Servicios', en: 'Services' },
+  proposal: { es: 'Solicitar una propuesta', en: 'Request a proposal' },
+  frameworks: { es: 'Marco normativo', en: 'Regulatory framework' },
+  pdf: { es: 'Portafolio completo (PDF)', en: 'Full portfolio (PDF, in Spanish)' },
+  scope: { es: 'Alcance', en: 'Scope' },
+  jump: { es: 'Ir a un tipo de servicio', en: 'Go to a type of service' },
+  benefits: { es: 'Beneficios para su organización', en: 'Benefits for your organization' },
+  practice: { es: 'En la práctica', en: 'In practice' },
+  read: { es: 'Leer la publicación', en: 'Read the article' },
+  training: { es: 'Formación', en: 'Training' },
+  program: { es: 'Ver el programa', en: 'View the program' },
+  others: { es: 'Otras líneas de servicio', en: 'Other service lines' },
+  formerly: { es: 'antes', en: 'formerly' },
+} satisfies Record<string, Loc>
+// H1 with the standard people search for, unless the name already says it.
+const pageTitle = computed(() => {
+  const name = tr(service.name)
+  const kw = tr(service.keyword)
+  return name.includes(kw) ? name : `${name} ${kw}`
+})
+const otherLines = (m: { name: Loc }) => (lang.value === 'en'
+  ? `See ${tr(m.name).toLowerCase()} in other lines`
+  : `Ver ${tr(m.name).toLowerCase()} en otras líneas`)
+const courseFacts = computed(() => {
+  if (!course) return ''
+  const awards = course.awards.map(tr).join('; ')
+  return lang.value === 'en'
+    ? `${course.hours} hours, ${tr(course.mode).toLowerCase()}. Credentials: ${awards}.`
+    : `${course.hours} horas, ${tr(course.mode).toLowerCase()}. Certifica: ${awards}.`
+})
+const bandTitle = computed(() => {
+  const name = service.short.es === 'HSEQ' ? 'HSEQ' : tr(service.short).toLowerCase()
+  return lang.value === 'en' ? `Request a proposal for ${name}` : `Solicite una propuesta en ${name}`
+})
 
 const related = cases.filter((c) => c.line === service.slug)
 const course = courses.find((c) => c.line === service.slug)
 const others = services.filter((s) => s.slug !== service.slug)
 
-usePageSeo({ title: service.seo.title, description: service.seo.description })
+usePageSeo({ title: tr(service.seo.title), description: tr(service.seo.description) })
 useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
 </script>
 
 <template>
   <div v-if="service">
     <PageHeader
-      :title="service.name"
-      :lede="service.lede"
+      :title="pageTitle"
+      :crumb="tr(service.name)"
+      :lede="tr(service.lede)"
       tone="azul"
-      :crumbs="[{ label: 'Servicios', to: '/portafolio-de-servicios' }]"
+      :crumbs="[{ label: tr(copy.services), to: '/portafolio-de-servicios' }]"
     >
-      <UiButton :to="{ path: '/contacto', query: { linea: service.slug } }" variant="light">Solicitar una propuesta</UiButton>
+      <UiButton :to="{ path: '/contacto', query: { linea: service.slug } }" variant="light">{{ tr(copy.proposal) }}</UiButton>
       <template #aside>
         <aside class="norms" aria-labelledby="normas">
-          <h2 id="normas" class="norms__title">Marco normativo</h2>
+          <h2 id="normas" class="norms__title">{{ tr(copy.frameworks) }}</h2>
           <ul>
-            <li v-for="f in service.frameworks" :key="f">{{ f }}</li>
+            <li v-for="f in service.frameworks" :key="f.es">{{ tr(f) }}</li>
           </ul>
           <a :href="service.sourcePdf" class="link norms__pdf" target="_blank" rel="noopener">
-            <Download aria-hidden="true" />Portafolio completo (PDF)
+            <Download aria-hidden="true" />{{ tr(copy.pdf) }}
           </a>
         </aside>
       </template>
@@ -44,26 +82,26 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
     <section class="section" aria-labelledby="alcance">
       <div class="frame grid-page detail">
         <div class="detail__context">
-          <h2 id="alcance" class="subheading">Alcance</h2>
-          <p class="lede">{{ service.context }}</p>
+          <h2 id="alcance" class="subheading">{{ tr(copy.scope) }}</h2>
+          <p class="lede">{{ tr(service.context) }}</p>
         </div>
 
-        <nav class="jump" aria-label="Ir a un tipo de servicio">
+        <nav class="jump" :aria-label="tr(copy.jump)">
           <a v-for="m in modes" :key="m.id" :href="`#${m.id}`" class="jump__link">
-            {{ m.name }} <span class="jump__n">{{ countOffers(service, m.id) }}</span>
+            {{ tr(m.name) }} <span class="jump__n">{{ countOffers(service, m.id) }}</span>
           </a>
         </nav>
 
         <div class="by-mode">
           <section v-for="m in modes" :id="m.id" :key="m.id" class="mode-block" :aria-labelledby="`${m.id}-t`">
             <header class="mode-block__head">
-              <h3 :id="`${m.id}-t`" class="mode-block__title">{{ m.name }}</h3>
-              <p class="muted">{{ m.summary }}</p>
-              <NuxtLink :to="servicePath(m.id, service.slug)" class="link mode-block__link">
-                Ver {{ m.name.toLowerCase() }} en otras líneas
-              </NuxtLink>
+              <h3 :id="`${m.id}-t`" class="mode-block__title">{{ tr(m.name) }}</h3>
+              <p class="muted">{{ tr(m.summary) }}</p>
+              <NuxtLinkLocale :to="servicePath(m.id, service.slug)" class="link mode-block__link">
+                {{ otherLines(m) }}
+              </NuxtLinkLocale>
             </header>
-            <OfferList :mode="m.id" :line="service.slug" :line-name="service.name" :groups="service.offers[m.id]" />
+            <OfferList :mode="m.id" :line="service.slug" :line-name="tr(service.name)" :groups="service.offers[m.id]" />
           </section>
         </div>
       </div>
@@ -71,31 +109,31 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
 
     <section class="section field-nube" aria-labelledby="beneficios">
       <div class="frame grid-page benefits">
-        <h2 id="beneficios" class="heading benefits__title">Lo que gana su organización</h2>
+        <h2 id="beneficios" class="heading benefits__title">{{ tr(copy.benefits) }}</h2>
         <ul class="benefits__list">
-          <li v-for="b in service.benefits" :key="b">{{ b }}</li>
+          <li v-for="b in service.benefits" :key="b.es">{{ tr(b) }}</li>
         </ul>
       </div>
     </section>
 
     <section v-if="related.length || course" class="section" aria-labelledby="evidencia">
       <div class="frame">
-        <h2 id="evidencia" class="heading evidence__title">En la práctica</h2>
+        <h2 id="evidencia" class="heading evidence__title">{{ tr(copy.practice) }}</h2>
         <div class="evidence">
-          <article v-for="c in related" :key="c.client" class="ev">
+          <article v-for="c in related" :key="c.title.es" class="ev">
             <div v-if="c.image" class="ev__ring">
-              <BrandRing :src="c.image" :alt="c.imageAlt ?? ''" sizes="200px" :gap="20" :dot="false" />
+              <BrandRing :src="c.image" :alt="c.imageAlt ? tr(c.imageAlt) : ''" sizes="200px" :gap="20" :dot="false" />
             </div>
-            <p class="ev__meta">{{ c.year }}, {{ c.client }}</p>
-            <h3 class="ev__title">{{ c.title }}</h3>
-            <p class="muted">{{ c.detail }}</p>
-            <NuxtLink :to="`/actualidad/${c.newsSlug}`" class="link">Leer la publicación</NuxtLink>
+            <p v-if="c.year || c.client" class="ev__meta">{{ [c.year, c.client].filter(Boolean).join(', ') }}</p>
+            <h3 class="ev__title">{{ tr(c.title) }}</h3>
+            <p v-if="c.detail" class="muted">{{ tr(c.detail) }}</p>
+            <NuxtLinkLocale v-if="c.newsSlug" :to="`/actualidad/${c.newsSlug}`" class="link">{{ tr(copy.read) }}</NuxtLinkLocale>
           </article>
           <article v-if="course" class="ev ev--course">
-            <p class="ev__meta">Formación</p>
-            <h3 class="ev__title">{{ course.name }}</h3>
-            <p class="muted">{{ course.hours }} horas, {{ course.mode.toLowerCase() }}. Certifica: {{ course.awards.join('; ') }}.</p>
-            <NuxtLink to="/cursos-y-formaciones" class="link">Ver el programa</NuxtLink>
+            <p class="ev__meta">{{ tr(copy.training) }}</p>
+            <h3 class="ev__title">{{ tr(course.name) }}</h3>
+            <p class="muted">{{ courseFacts }}</p>
+            <NuxtLinkLocale to="/cursos-y-formaciones" class="link">{{ tr(copy.program) }}</NuxtLinkLocale>
           </article>
         </div>
       </div>
@@ -103,16 +141,16 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
 
     <nav class="others field-nube" aria-labelledby="otras">
       <div class="frame">
-        <h2 id="otras" class="others__title">Otras líneas de servicio</h2>
+        <h2 id="otras" class="others__title">{{ tr(copy.others) }}</h2>
         <ul class="others__list">
           <li v-for="o in others" :key="o.slug">
-            <NuxtLink :to="`/portafolio-de-servicios/${o.slug}`">{{ o.name }}</NuxtLink>
+            <NuxtLinkLocale :to="`/portafolio-de-servicios/${o.slug}`">{{ tr(o.name) }}</NuxtLinkLocale>
           </li>
         </ul>
       </div>
     </nav>
 
-    <ContactBand :title="`Solicite una propuesta en ${service.short === 'HSEQ' ? 'HSEQ' : service.short.toLowerCase()}`" />
+    <ContactBand :title="bandTitle" />
   </div>
 </template>
 
@@ -217,7 +255,7 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
 .mode-block__title {
   font-size: var(--text-2xl);
   line-height: var(--text-2xl--line-height);
-  color: var(--color-azul);
+  color: var(--color-tinta);
 }
 
 .mode-block__head .muted {
@@ -318,12 +356,13 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
 }
 
 @media (width >= 48rem) {
-  .ev {
+  /* Photo column only when there is a photo; otherwise the text keeps the left edge. */
+  .ev:has(.ev__ring) {
     grid-template-columns: 8rem minmax(0, 1fr);
     column-gap: var(--spacing-gutter);
   }
 
-  .ev > * {
+  .ev:has(.ev__ring) > * {
     grid-column: 2;
   }
 

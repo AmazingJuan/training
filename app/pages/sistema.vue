@@ -9,12 +9,13 @@ const colors = [
   { token: 'azul', hex: '#0072AF', use: 'Azul del logo. Campos de color, botones, enlaces, titulares.' },
   { token: 'azul-hondo', hex: '#005A8C', use: 'Hover y texto azul pequeño sobre nube.' },
   { token: 'azul-vivo', hex: '#1391DA', use: 'Azul vivo del sitio actual. Trazos del anillo; texto solo grande.' },
-  { token: 'cielo', hex: '#7FD0F5', use: 'Acentos sobre noche.' },
-  { token: 'noche', hex: '#0B2C47', use: 'Pie de página y secciones oscuras.' },
+  { token: 'cielo', hex: '#7FD0F5', use: 'Acento claro sobre el campo azul. Nunca texto sobre fondos claros.' },
   { token: 'tinta', hex: '#102A3F', use: 'Texto principal.' },
   { token: 'pizarra', hex: '#4A5A67', use: 'Texto secundario.' },
   { token: 'gris-marca', hex: '#8F9392', use: 'Gris del logo. Solo gráficos.' },
   { token: 'nube', hex: '#EEF4F8', use: 'Fondo alterno.' },
+  { token: 'hielo', hex: '#E6F0F7', use: 'Fondo del pie de página.' },
+  { token: 'mapa', hex: '#C5D6E3', use: 'Territorio sin servicios en el mapa de presencia.' },
   { token: 'linea', hex: '#D5E2EB', use: 'Filetes y bordes de campo.' },
 ]
 
@@ -52,7 +53,7 @@ const sample = ref('')
     <section class="frame block">
       <h2 class="subheading">El anillo</h2>
       <div class="rings">
-        <BrandRing src="/images/equipo/john-fredy-moreno.jpg" alt="Retrato de John Fredy Moreno" focus="50% 20%" sizes="240px" />
+        <BrandRing src="/images/equipo/john-fredy-moreno.jpg" alt="Retrato de John Fredy Moreno Velásquez" focus="50% 50%" sizes="240px" />
         <BrandRing src="/images/fotos/ebsa.jpg" alt="Sede de EBSA" sizes="240px" :gap="24" :dot="false" />
       </div>
     </section>
@@ -71,7 +72,7 @@ const sample = ref('')
         <UiButton to="/portafolio-de-servicios" variant="outline">Ver los servicios</UiButton>
         <UiButton href="tel:+576045742590"><template #icon><Phone aria-hidden="true" /></template>Llamar</UiButton>
       </div>
-      <p class="prose spaced">Un enlace en texto corrido: consulte el <NuxtLink to="/empresa/sistema-de-gestion-integrado" class="link">Sistema de Gestión Integrado</NuxtLink>.</p>
+      <p class="prose spaced">Un enlace en texto corrido: consulte el <NuxtLinkLocale to="/empresa/sistema-de-gestion-integrado" class="link">Sistema de Gestión Integrado</NuxtLinkLocale>.</p>
       <div class="spaced"><UiDocLink :doc="sgiDocuments[0]!" /></div>
     </section>
 
