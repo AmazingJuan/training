@@ -1,4 +1,7 @@
 User-agent: *
-Disallow: /sistema
+Allow: /
+
+# Internal pages (/sistema, /intranet) are excluded with a noindex meta tag,
+# which crawlers can only read if the pages are not blocked here.
 
 Sitemap: https://www.trainingcorporation.com.co/sitemap.xml
