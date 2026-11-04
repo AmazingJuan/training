@@ -59,6 +59,6 @@ const other = computed(() => (lang.value === 'es'
 
 .lang--compact {
   padding-inline: 0.5rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 </style>

@@ -97,7 +97,7 @@ const [first, ...rest] = news
 
 .date {
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 

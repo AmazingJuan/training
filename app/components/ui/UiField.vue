@@ -57,7 +57,7 @@ const shared = computed(() => ({
 }
 
 .field__label {
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .field__optional {
@@ -107,7 +107,7 @@ const shared = computed(() => ({
 
 .field__error {
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-error);
 }
 </style>

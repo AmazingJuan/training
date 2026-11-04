@@ -129,7 +129,7 @@ const modeCards = modes.map((m) => ({
   font-family: var(--font-display);
   font-size: var(--text-3xl);
   line-height: var(--text-3xl--line-height);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: var(--tracking-tight);
 }
 
@@ -141,7 +141,7 @@ const modeCards = modes.map((m) => ({
 .mode__count {
   margin-top: auto;
   padding-top: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -194,7 +194,7 @@ const modeCards = modes.map((m) => ({
   border-radius: var(--radius-control);
   font-family: var(--font-display);
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-tinta);
   text-decoration: none;
   transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);

@@ -254,7 +254,7 @@ form {
 .picked__meta {
   display: block;
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
@@ -327,7 +327,7 @@ form {
 }
 
 .notice__title {
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 0.25rem;
 }
 
@@ -348,7 +348,7 @@ form {
 
 .kinds__legend {
   margin-bottom: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .kinds__options {
@@ -396,7 +396,7 @@ form {
 .kinds__error {
   margin-top: 0.5rem;
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-error);
 }
 

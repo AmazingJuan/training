@@ -39,7 +39,7 @@ const added = computed(() => quote.has(item.value))
   border-radius: var(--radius-full);
   font-family: var(--font-display);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
   white-space: nowrap;
   cursor: pointer;

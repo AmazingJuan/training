@@ -100,7 +100,7 @@ const alt = (c: { name: string, fullName?: string, formerly?: string }) =>
   padding-block: 0.375rem;
   white-space: nowrap;
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-tinta);
   text-decoration: none;
 }
@@ -169,7 +169,7 @@ const alt = (c: { name: string, fullName?: string, formerly?: string }) =>
 .logo__name strong {
   font-family: var(--font-display);
   font-size: var(--text-lg);
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-tinta);
 }
 

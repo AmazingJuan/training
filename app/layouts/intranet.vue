@@ -75,7 +75,7 @@ const copy = {
   padding: 0.75rem 1rem;
   background: var(--color-azul);
   color: var(--color-blanco);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .skip-link:focus {
@@ -116,7 +116,7 @@ const copy = {
   border-left: 1px solid var(--color-linea);
   font-family: var(--font-display);
   font-size: var(--text-lg);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: var(--tracking-snug);
   color: var(--color-azul);
 }

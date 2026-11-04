@@ -101,7 +101,7 @@ usePageSeo({
   border-radius: var(--radius-control);
   font-family: var(--font-display);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
   text-decoration: none;
 }
@@ -154,7 +154,7 @@ usePageSeo({
 
 .channels__label {
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .channels__value {

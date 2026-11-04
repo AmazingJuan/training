@@ -91,7 +91,7 @@ const copy = {
 }
 
 .lead-case__client {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
@@ -140,7 +140,7 @@ const copy = {
 .item__line {
   font-family: var(--font-display);
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
   text-decoration: none;
 }
@@ -153,7 +153,7 @@ const copy = {
   font-family: var(--font-display);
   font-size: var(--text-lg);
   line-height: 1.3;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-tinta);
 }
 

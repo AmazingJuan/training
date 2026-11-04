@@ -121,7 +121,7 @@ useMotion(root, ({ gsap }) => {
   font-family: var(--font-display);
   font-size: 6.4cqi;
   line-height: 1.08;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: var(--tracking-tight);
   color: var(--color-tinta);
   text-wrap: balance;

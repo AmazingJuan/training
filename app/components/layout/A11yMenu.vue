@@ -188,7 +188,7 @@ watch(() => route.fullPath, () => close(false))
 .a11y__title {
   font-family: var(--font-display);
   font-size: var(--text-base);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .a11y__close {
@@ -226,7 +226,7 @@ watch(() => route.fullPath, () => close(false))
 }
 
 .a11y__sizes legend {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.9375rem;
 }
 
@@ -258,7 +258,7 @@ watch(() => route.fullPath, () => close(false))
   display: grid;
   place-items: center;
   min-height: 2.75rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
 }
 
@@ -336,7 +336,7 @@ watch(() => route.fullPath, () => close(false))
   padding: 0.5rem 1rem;
   border: 1px solid var(--color-azul);
   border-radius: var(--radius-control);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
   cursor: pointer;
 }

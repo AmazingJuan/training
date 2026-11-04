@@ -170,7 +170,7 @@ const copy = {
 }
 
 .channels dt {
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .statement__date {

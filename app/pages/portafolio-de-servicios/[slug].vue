@@ -217,7 +217,7 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
   border: 2px solid var(--color-azul);
   border-radius: var(--radius-control);
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
   text-decoration: none;
 }
@@ -312,7 +312,7 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
 }
 
 .ev__meta {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
@@ -342,7 +342,7 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
   margin-top: 1rem;
   font-family: var(--font-display);
   font-size: var(--text-lg);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .others__list a {

@@ -202,7 +202,7 @@ const label = (mode: string, line: string) => {
   background: var(--color-azul);
   font-family: var(--font-display);
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-blanco);
   text-decoration: none;
   white-space: nowrap;
@@ -229,7 +229,7 @@ const label = (mode: string, line: string) => {
 .quote__title {
   margin-bottom: 0.5rem;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .quote__item {
@@ -243,7 +243,7 @@ const label = (mode: string, line: string) => {
 
 .quote__meta {
   display: block;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
@@ -270,7 +270,7 @@ const label = (mode: string, line: string) => {
 .quote__clear {
   margin-top: 0.75rem;
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-pizarra);
   text-decoration: underline;
   text-underline-offset: 0.2em;
