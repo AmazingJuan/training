@@ -15,7 +15,7 @@ const copy = {
 usePageSeo({
   title: tr(copy.title),
   description: tr({
-    es: 'Formato de cuenta de cobro y manual de proveedores y contratistas de Training Corporation.',
+    es: 'Formato de cuenta de cobro y manual de contratistas y proveedores de Training Corporation.',
     en: 'Training Corporation’s invoice template and suppliers and contractors manual.',
   }),
 })

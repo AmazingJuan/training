@@ -5,8 +5,8 @@ const { tr } = useLang()
 const copy = {
   title: { es: 'Sistema de Gestión Integrado', en: 'Integrated Management System' },
   lede: {
-    es: 'Aplicamos a nuestra propia operación los mismos estándares que auditamos: sistemas de gestión de la calidad y de seguridad y salud en el trabajo certificados, con documentos públicos para clientes, contratistas y proveedores.',
-    en: 'We apply to our own operations the same standards we audit: certified quality and occupational health and safety management systems, with public documents for clients, contractors and suppliers.',
+    es: 'Nuestros sistemas de gestión de la calidad y de seguridad y salud en el trabajo están certificados. Aquí publicamos los certificados y los documentos para clientes, contratistas y proveedores.',
+    en: 'Our quality and occupational health and safety management systems are certified. Here we publish the certificates and the documents for clients, contractors and suppliers.',
   },
   company: { es: 'Nosotros', en: 'About us' },
   certs: { es: 'Certificaciones', en: 'Certifications' },
@@ -16,8 +16,8 @@ const copy = {
 usePageSeo({
   title: tr(copy.title),
   description: tr({
-    es: 'Certificados ISO 9001:2015 e ISO 45001:2018, membresía corporativa del IAM, licencia de SST, política de protección de datos y boletines informativos.',
-    en: 'ISO 9001:2015 and ISO 45001:2018 certificates, IAM corporate membership, OHS license, data protection policy and newsletters.',
+    es: 'Certificados ISO 9001:2015 e ISO 45001:2018, membresía corporativa del IAM, licencia de SST, manual de protección de datos personales y boletines informativos.',
+    en: 'ISO 9001:2015 and ISO 45001:2018 certificates, IAM corporate membership, OHS license, personal data protection manual and newsletters.',
   }),
 })
 

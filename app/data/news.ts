@@ -78,11 +78,11 @@ export const news: NewsPost[] = [
     title: { es: 'Camino hacia la sostenibilidad', en: 'Our path toward sustainability' },
     blocks: [
       p(
-        'Como parte de su plataforma estratégica 2024-2030, Training Corporation S.A.S. busca fortalecer el posicionamiento de su marca por medio de la línea de sostenibilidad, orientada a alcanzar la carbono neutralidad. Entre sus estrategias se destacan:',
+        'Como parte de su plataforma estratégica 2024-2030, Training Corporation S.A.S. busca fortalecer el posicionamiento de su marca por medio de la línea de sostenibilidad, orientada a alcanzar la neutralidad de carbono. Entre sus estrategias se destacan:',
         'As part of its 2024–2030 strategic framework, Training Corporation S.A.S. seeks to strengthen its brand positioning through its sustainability line, aimed at achieving carbon neutrality. Its strategies include:',
       ),
       li(
-        'El cálculo de la huella de carbono corporativa, para definir estrategias de reducción y compensación de las emisiones de nuestras actividades, con el objetivo de alcanzar y certificar la carbono neutralidad.',
+        'El cálculo de la huella de carbono corporativa, para definir estrategias de reducción y compensación de las emisiones de nuestras actividades, con el objetivo de alcanzar y certificar la neutralidad de carbono.',
         'Calculating the corporate carbon footprint, in order to define strategies to reduce and offset the emissions from our activities, with the goal of achieving and certifying carbon neutrality.',
       ),
       li(
@@ -174,7 +174,7 @@ export const news: NewsPost[] = [
     imageAlt: { es: 'Sede de la Empresa de Energía de Boyacá EBSA', en: 'Headquarters of Empresa de Energía de Boyacá (EBSA)' },
     blocks: [
       p(
-        'Los sistemas de gestión de activos son un requisito regulatorio para las empresas operadoras de energía en Colombia. Esto ha exigido que, como prestadores de servicios de auditoría, dispongamos en Training Corporation de toda la capacidad humana y técnica para ofrecer a nuestros clientes un servicio de calidad. Así, acompañamos a la Empresa de Energía de Boyacá, EBSA S.A. E.S.P., en su primera auditoría interna al sistema de gestión de activos bajo la norma ISO 55001:2015. El ejercicio se desarrolló durante dos semanas continuas, con la participación de cuatro profesionales, en modalidad híbrida (virtual y presencial).',
+        'Los sistemas de gestión de activos son un requisito regulatorio para las empresas operadoras de energía en Colombia. Esto ha exigido que, como prestadores de servicios de auditoría, dispongamos en Training Corporation de toda la capacidad humana y técnica para ofrecer a nuestros clientes un servicio de calidad. Así, acompañamos a la Empresa de Energía de Boyacá, EBSA S.A. E.S.P., en su primera auditoría interna al sistema de gestión de activos según la norma ISO 55001:2015. El ejercicio se desarrolló durante dos semanas continuas, con la participación de cuatro profesionales, en modalidad híbrida (virtual y presencial).',
         'Asset management systems are a regulatory requirement for electricity companies in Colombia. As an audit service provider, this has required Training Corporation to have the full human and technical capacity to offer our clients a quality service. Accordingly, we supported Empresa de Energía de Boyacá, EBSA S.A. E.S.P., in its first internal audit of its asset management system under ISO 55001:2015. The audit took place over two consecutive weeks, with four professionals, in a hybrid format (online and on site).',
       ),
       p(
@@ -224,7 +224,7 @@ export const news: NewsPost[] = [
         'Consolidating evidence rigorously to build solid findings of cross-cutting relevance, so that improvement actions benefit the entire management system and make the best use of effort.',
       ),
       p(
-        'En cuatro años de acompañamiento hemos realizado las auditorías internas integrales bajo las normas NTC-ISO 9001, 14001, 45001, 55001 y 27001, con alcance a todos los centros de transmisión de energía (Noroccidente, Suroccidente, Centro y Oriente) y a los proyectos en sus diferentes fases, en modalidad presencial y virtual.',
+        'En cuatro años de acompañamiento hemos realizado las auditorías internas integrales a las normas NTC-ISO 9001, 14001, 45001, 55001 y 27001, con alcance a todos los centros de transmisión de energía (Noroccidente, Suroccidente, Centro y Oriente) y a los proyectos en sus diferentes fases, en modalidad presencial y virtual.',
         'Over four years of support, we have conducted integrated internal audits under NTC-ISO 9001, 14001, 45001, 55001 and 27001, covering all of the energy transmission centers (Northwest, Southwest, Center and East) and projects at their various stages, both on site and online.',
       ),
       p(
@@ -240,7 +240,7 @@ export const news: NewsPost[] = [
     title: { es: 'Certificación de nuestro sistema de gestión de seguridad y salud en el trabajo', en: 'Certification of our occupational health and safety management system' },
     blocks: [
       p(
-        'Training Corporation S.A.S. se complace en compartir la certificación de su sistema de gestión de seguridad y salud en el trabajo, otorgada por Bureau Veritas bajo la norma NTC-ISO 45001:2018. Este logro forma parte de nuestro compromiso con la mejora de la calidad de vida de nuestros grupos de interés.',
+        'Training Corporation S.A.S. se complace en compartir la certificación de su sistema de gestión de seguridad y salud en el trabajo, otorgada por Bureau Veritas conforme a la norma NTC-ISO 45001:2018. Este logro forma parte de nuestro compromiso con la mejora de la calidad de vida de nuestros grupos de interés.',
         'Training Corporation S.A.S. is pleased to announce the certification of its occupational health and safety management system, granted by Bureau Veritas under NTC-ISO 45001:2018. This achievement is part of our commitment to improving the quality of life of our stakeholders.',
       ),
       p(

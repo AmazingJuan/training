@@ -233,7 +233,7 @@ export const services: ServiceLine[] = [
     name: { es: 'Gestión de activos', en: 'Asset management' },
     short: { es: 'Gestión de activos', en: 'Asset management' },
     lede: {
-      es: 'Sistemas de gestión de activos bajo ISO 55001 para el sector eléctrico y el alumbrado público.',
+      es: 'Sistemas de gestión de activos según ISO 55001 para el sector eléctrico y el alumbrado público.',
       en: 'ISO 55001 asset management systems for the electricity sector and public lighting.',
     },
     context: {
@@ -244,7 +244,7 @@ export const services: ServiceLine[] = [
       auditoria: [
         {
           items: [
-            { es: 'Auditoría interna al sistema de gestión de activos bajo NTC-ISO 55001', en: 'Internal audit of the asset management system against NTC-ISO 55001' },
+            { es: 'Auditoría interna al sistema de gestión de activos según NTC-ISO 55001', en: 'Internal audit of the asset management system against NTC-ISO 55001' },
           ],
         },
       ],
@@ -385,7 +385,7 @@ export const services: ServiceLine[] = [
     name: { es: 'Seguridad de la información y ciberseguridad', en: 'Information security and cybersecurity' },
     short: { es: 'Seguridad de la información', en: 'Information security' },
     lede: {
-      es: 'Seguridad de la información, privacidad y ciberseguridad bajo ISO/IEC 27001.',
+      es: 'Seguridad de la información, privacidad y ciberseguridad según ISO/IEC 27001.',
       en: 'Information security, privacy and cybersecurity under ISO/IEC 27001.',
     },
     context: {
@@ -408,7 +408,7 @@ export const services: ServiceLine[] = [
           items: [
             { es: 'Diagnóstico e implementación de ISO/IEC 27001:2022', en: 'ISO/IEC 27001:2022 gap analysis and implementation' },
             { es: 'Transición de ISO/IEC 27001:2013 a la versión 2022', en: 'Transition from ISO/IEC 27001:2013 to the 2022 version' },
-            { es: 'Diagnóstico para la acreditación digital bajo CEA-3.0-07', en: 'Readiness assessment for digital accreditation under CEA-3.0-07' },
+            { es: 'Diagnóstico para la acreditación digital según CEA-3.0-07', en: 'Readiness assessment for digital accreditation under CEA-3.0-07' },
             { es: 'Sistema de gestión de privacidad de la información según la Ley 1581 de 2012', en: 'Privacy information management system under Law 1581 of 2012' },
             { es: 'Planes de acción, mantenimiento, mejora y revisión por la dirección', en: 'Action plans, maintenance, improvement and management review' },
           ],
@@ -450,7 +450,7 @@ export const services: ServiceLine[] = [
     name: { es: 'Laboratorios', en: 'Laboratories' },
     short: { es: 'Laboratorios', en: 'Laboratories' },
     lede: {
-      es: 'Laboratorios de ensayo y calibración y organismos de inspección bajo ISO/IEC 17025 y 17020.',
+      es: 'Laboratorios de ensayo y calibración y organismos de inspección según ISO/IEC 17025 y 17020.',
       en: 'Testing and calibration laboratories and inspection bodies under ISO/IEC 17025 and 17020.',
     },
     context: {

@@ -7,7 +7,7 @@ const utilities = clientsIn('energia').map((c) => c.name)
 const { tr, lang } = useLang()
 const copy = {
   lede: {
-    es: 'Operadores de red, generadores, transmisores y el operador del mercado. Para estas empresas realizamos las verificaciones que exige la CREG, auditorías bajo ISO 55001 y la formación de sus equipos en calidad del servicio.',
+    es: 'Operadores de red, generadores, transmisores y el operador del mercado. Para estas empresas realizamos las verificaciones que exige la CREG, auditorías según ISO 55001 y la formación de sus equipos en calidad del servicio.',
     en: 'Network operators, generators, transmission companies and the market operator. For these companies we carry out the verifications required by CREG, audits under ISO 55001 and the training of their teams in quality of service.',
   },
   list: { es: 'Empresas del sector eléctrico', en: 'Electricity sector companies' },

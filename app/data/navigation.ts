@@ -57,7 +57,7 @@ export const intranetNav: NavItem = { label: { es: 'Intranet', en: 'Intranet' },
 export const contractorsNav: NavItem = {
   label: { es: 'Contratistas y proveedores', en: 'Contractors and suppliers' },
   to: '/contratistas',
-  hint: { es: 'Formato de cuenta de cobro y manual de proveedores', en: 'Invoice template and suppliers manual' },
+  hint: { es: 'Formato de cuenta de cobro y manual de contratistas y proveedores', en: 'Invoice template and suppliers manual' },
 }
 
 export const accessibilityNav: NavItem = { label: { es: 'Declaración de accesibilidad', en: 'Accessibility statement' }, to: '/accesibilidad' }
