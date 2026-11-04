@@ -639,10 +639,35 @@ onKeyStroke('Escape', () => {
   transform: translateY(-0.75rem);
 }
 
+/* Tablets and laptops (768–1343 px) use the compact menu, but the main action stays in sight. */
+@media (width >= 48rem) {
+  .header__cta {
+    display: flex;
+    margin-left: auto;
+  }
+
+  .header__compact {
+    margin-left: 0.5rem;
+  }
+}
+
 @media (width >= 84rem) {
   .header__nav,
   .header__cta {
     display: flex;
+  }
+
+  .header__cta {
+    margin-left: 0;
+  }
+
+  /* Logo, full menu and «Solicitar cotización» share one row: it never wraps the button below. */
+  .header__bar {
+    flex-wrap: nowrap;
+  }
+
+  .header__link {
+    padding-inline: 0.5rem;
   }
 
   .header__utility {
@@ -653,6 +678,17 @@ onKeyStroke('Escape', () => {
   .header__compact,
   .sheet {
     display: none !important;
+  }
+}
+
+/* Narrow desktops (1344–1535 px): the full menu needs a little less room. */
+@media (84rem <= width < 96rem) {
+  .header__link {
+    font-size: 0.875rem;
+  }
+
+  .header__brand :deep(.logo) {
+    width: 8.75rem;
   }
 }
 </style>
