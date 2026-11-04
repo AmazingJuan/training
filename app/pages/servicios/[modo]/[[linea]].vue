@@ -196,7 +196,7 @@ usePageSeo(line
   padding: 1rem clamp(0.5rem, 0.2rem + 1.5vw, 1.25rem);
   font-family: var(--font-display);
   font-size: clamp(0.9375rem, 0.8rem + 0.65vw, 1.375rem);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-pizarra);
   text-decoration: none;
   white-space: nowrap;
@@ -268,7 +268,7 @@ usePageSeo(line
 
 .lines__title {
   margin-bottom: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-pizarra);
 }
 
@@ -292,7 +292,7 @@ usePageSeo(line
   border: 2px solid var(--color-linea);
   border-radius: var(--radius-control);
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-tinta);
   text-decoration: none;
   transition: border-color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
@@ -331,7 +331,6 @@ usePageSeo(line
 
 .panel__hint {
   margin-bottom: 1.5rem;
-  font-weight: 600;
   color: var(--color-pizarra);
 }
 
@@ -353,7 +352,7 @@ usePageSeo(line
   border: 2px solid var(--color-linea);
   border-radius: 10px;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
   text-decoration: none;
   transition: border-color var(--duration-fast) var(--ease-out);
@@ -428,7 +427,7 @@ usePageSeo(line
   font-family: var(--font-display);
   font-size: var(--text-xl);
   line-height: var(--text-xl--line-height);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
 }
 
@@ -442,7 +441,7 @@ usePageSeo(line
 
 .overview__more {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
   text-decoration: underline;
   text-decoration-thickness: 1px;

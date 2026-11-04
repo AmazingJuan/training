@@ -71,8 +71,9 @@ y «Nuestros servicios»).
 
 Las dos familias que ya usa el sitio (confirmado en su CSS publicado):
 
-- **Montserrat** (titulares, botones, navegación): 800 para títulos de sección, 700 para
-  subtítulos, 600 para navegación. Siempre en minúsculas con tracking cerrado
+- **Montserrat** (titulares, botones, navegación): 700 para títulos de sección, 600 para
+  subtítulos y navegación. Sin 800 (acta del 20/10/2026: evitar negrillas fuertes y sostenidas).
+  En el texto corrido, los enlaces van en 500 y los párrafos nunca en negrilla. Siempre en minúsculas con tracking cerrado
   (`-0.03em`). Se abandona el uso actual en mayúsculas espaciadas, que es lo que hacía
   que el sitio pareciera una plantilla.
 - **Source Sans 3** (texto): sucesora directa de Source Sans Pro.

@@ -54,7 +54,7 @@ const copy = {
   font-size: clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem);
   line-height: 1.1;
   white-space: nowrap;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: var(--tracking-tight);
 }
 
@@ -68,7 +68,7 @@ const copy = {
   align-items: center;
   gap: 0.5rem;
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .cert__issuer svg {

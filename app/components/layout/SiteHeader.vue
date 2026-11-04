@@ -471,7 +471,7 @@ onKeyStroke('Escape', () => {
   padding: 0 0.625rem 0.25rem;
   font-family: var(--font-display);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
@@ -518,7 +518,7 @@ onKeyStroke('Escape', () => {
 
 .drop__label {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1rem;
 }
 
@@ -589,7 +589,7 @@ onKeyStroke('Escape', () => {
 .sheet__link {
   font-family: var(--font-display);
   font-size: var(--text-2xl);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--tracking-snug);
   color: inherit;
   text-decoration: none;

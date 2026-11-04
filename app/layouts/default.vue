@@ -27,7 +27,7 @@ const skip = { es: 'Saltar al contenido', en: 'Skip to content' }
   padding: 0.75rem 1rem;
   background: var(--color-azul);
   color: var(--color-blanco);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .skip-link:focus {

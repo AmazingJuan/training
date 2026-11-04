@@ -64,7 +64,7 @@ const dot = pt(270, R).split(' ')
 .seal__text {
   font-family: var(--font-display);
   font-size: 27px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.02em;
   fill: var(--color-azul);
 }

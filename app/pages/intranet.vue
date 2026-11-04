@@ -190,7 +190,7 @@ const GAP = 14
   font-family: var(--font-display);
   font-size: var(--text-2xl);
   line-height: var(--text-2xl--line-height);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: var(--tracking-tight);
   color: var(--color-azul);
   transition: color var(--duration-fast) var(--ease-out);
@@ -210,7 +210,7 @@ const GAP = 14
   margin-top: 0.5rem;
   font-family: var(--font-display);
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
   text-decoration: underline;
   text-decoration-thickness: 1px;

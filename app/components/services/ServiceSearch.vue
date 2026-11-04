@@ -167,7 +167,7 @@ function use(s: string) {
   display: block;
   margin-bottom: 0.625rem;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .search__box {
@@ -244,7 +244,7 @@ function use(s: string) {
 
 .search__hint {
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-pizarra);
 }
 
@@ -295,7 +295,7 @@ function use(s: string) {
 }
 
 .result__where {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
@@ -311,7 +311,7 @@ function use(s: string) {
   border-radius: var(--radius-control);
   font-family: var(--font-display);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
   cursor: pointer;
 }

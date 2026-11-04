@@ -72,7 +72,7 @@ const copy = {
 
 .person__name {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.25;
 }
 

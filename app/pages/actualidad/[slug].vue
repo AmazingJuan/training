@@ -95,7 +95,7 @@ useHead({
 
 <style scoped>
 .post__date {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
@@ -139,7 +139,7 @@ useHead({
   display: grid;
   gap: 0.25rem;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
   text-decoration: none;
 }

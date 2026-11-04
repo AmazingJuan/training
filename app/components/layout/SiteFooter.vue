@@ -238,7 +238,7 @@ function toTop() {
   /* The padding is hit area, not indent: the text lines up with the column. */
   margin-left: -0.75rem;
   border-radius: var(--radius-control);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
   cursor: pointer;
 }

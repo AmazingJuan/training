@@ -142,14 +142,14 @@ const copy = {
 
 .presence__abroad strong {
   color: var(--color-tinta);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .presence__list-title {
   margin-top: 2rem;
   font-family: var(--font-display);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
@@ -222,7 +222,7 @@ const copy = {
 .map__labels text {
   font-family: var(--font-display);
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 600;
   fill: var(--color-tinta);
   paint-order: stroke;
   stroke: var(--color-blanco);

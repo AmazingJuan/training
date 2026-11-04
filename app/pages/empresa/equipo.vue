@@ -86,7 +86,7 @@ usePageSeo({
 
 .person__role {
   margin-top: 0.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul);
 }
 

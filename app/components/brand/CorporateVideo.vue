@@ -125,7 +125,7 @@ const src = computed(() => `https://player.vimeo.com/video/${props.id}?autoplay=
   background: var(--color-blanco);
   font-family: var(--font-display);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 

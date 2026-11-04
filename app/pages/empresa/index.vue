@@ -223,7 +223,7 @@ const copy = {
 .tenets__list dt {
   font-family: var(--font-display);
   font-size: var(--text-xl);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--tracking-snug);
 }
 

@@ -51,7 +51,7 @@ const attrs = computed(() =>
   border-radius: var(--radius-control);
   font-family: var(--font-display);
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0;
   text-align: center;

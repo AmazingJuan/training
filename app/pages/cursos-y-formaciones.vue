@@ -189,7 +189,7 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
 }
 
 .facts dt {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
@@ -217,13 +217,13 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
   background: var(--color-azul);
   font-family: var(--font-display);
   font-size: var(--text-xs);
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-blanco);
 }
 
 .module__title {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .module__goal {

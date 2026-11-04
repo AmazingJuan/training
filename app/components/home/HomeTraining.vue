@@ -86,7 +86,7 @@ const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${
 }
 
 .course__facts dt {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-azul-hondo);
 }
 
