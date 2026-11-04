@@ -14,7 +14,8 @@ const open = ref(false)
 const panel = useTemplateRef<HTMLElement>('panel')
 
 const { tr, lang, localePath } = useLang()
-const onContact = computed(() => route.path === localePath('/contacto'))
+// The contact form lists the request itself; the PQRS form is a different conversation.
+const onContact = computed(() => [localePath('/contacto'), localePath('/pqrs')].includes(route.path))
 const copy = {
   region: { es: 'Acciones rápidas', en: 'Quick actions' },
   yours: { es: 'Su solicitud', en: 'Your request' },

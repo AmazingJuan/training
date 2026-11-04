@@ -10,7 +10,7 @@ const permanent = (to: string) => ({ redirect: { to, statusCode: 301 as const } 
 // Old WordPress URLs that moved in the redesign.
 const legacyRedirects = {
   '/contact': permanent('/contacto'),
-  '/pqr': permanent('/contacto'),
+  '/pqr': permanent('/pqrs'),
   // Old job-posting page ("Convocatoria de empleo").
   '/director-regional': permanent('/contacto'),
   '/servicios': permanent('/portafolio-de-servicios'),

@@ -5,7 +5,7 @@ import { news } from '~~/app/data/news'
 // automatically. Internal pages (/sistema) are intentionally left out.
 const staticPaths = [
   '/', '/portafolio-de-servicios', '/cursos-y-formaciones', '/clientes', '/actualidad',
-  '/empresa', '/empresa/equipo', '/empresa/sistema-de-gestion-integrado', '/contratistas', '/contacto',
+  '/empresa', '/empresa/equipo', '/empresa/sistema-de-gestion-integrado', '/contratistas', '/contacto', '/pqrs',
   '/accesibilidad',
 ]
 

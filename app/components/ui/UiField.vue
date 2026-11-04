@@ -7,7 +7,9 @@ const props = withDefaults(
   defineProps<{
     label: string
     name: string
-    type?: 'text' | 'email' | 'tel' | 'textarea' | 'select'
+    type?: 'text' | 'email' | 'tel' | 'date' | 'textarea' | 'select'
+    /** Upper bound for a date field (yyyy-mm-dd). */
+    max?: string
     required?: boolean
     hint?: string
     error?: string
@@ -44,7 +46,7 @@ const shared = computed(() => ({
       <option value="">{{ tr(choose) }}</option>
       <option v-for="o in options" :key="o.value" :value="o.value">{{ o.label }}</option>
     </select>
-    <input v-else v-model="model" v-bind="shared" :type="type" :autocomplete="autocomplete" class="field__control">
+    <input v-else v-model="model" v-bind="shared" :type="type" :autocomplete="autocomplete" :max="max" class="field__control">
     <p v-if="hint" :id="`${id}-hint`" class="field__hint">{{ hint }}</p>
     <p v-if="error" :id="`${id}-error`" class="field__error">{{ error }}</p>
   </div>

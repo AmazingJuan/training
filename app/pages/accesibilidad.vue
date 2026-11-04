@@ -117,7 +117,7 @@ const copy = {
           </div>
           <div>
             <dt>{{ tr(copy.form) }}</dt>
-            <dd><NuxtLinkLocale to="/contacto?asunto=pqr" class="link">{{ tr(copy.formLink) }}</NuxtLinkLocale></dd>
+            <dd><NuxtLinkLocale to="/contacto?asunto=otro" class="link">{{ tr(copy.formLink) }}</NuxtLinkLocale></dd>
           </div>
         </dl>
       </section>

@@ -6,7 +6,6 @@
 export const requestKinds = [
   { value: 'cotizacion', label: { es: 'Cotización de un servicio', en: 'Quotation for a service' } },
   { value: 'formacion', label: { es: 'Información sobre formación', en: 'Information about training' } },
-  { value: 'pqr', label: { es: 'Petición, queja o reclamo', en: 'Request, complaint or claim' } },
   { value: 'otro', label: { es: 'Otro asunto', en: 'Other matter' } },
 ] as const satisfies readonly { value: string, label: Loc }[]
 
