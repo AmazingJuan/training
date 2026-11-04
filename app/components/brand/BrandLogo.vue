@@ -21,8 +21,8 @@ withDefaults(defineProps<{ inverse?: boolean }>(), { inverse: false })
 <style scoped>
 .logo {
   display: block;
-  /* Never wider than a third of a small phone, even at 150 % text. */
-  width: min(7.5rem, 34vw);
+  /* The logo leads the header (acta del 20/10/2026); never wider than ~40 % of a small phone. */
+  width: min(9rem, 40vw);
   height: auto;
 }
 
@@ -32,7 +32,8 @@ withDefaults(defineProps<{ inverse?: boolean }>(), { inverse: false })
 
 @media (width >= 64rem) {
   .logo {
-    width: 8.5rem;
+    /* 160 px: the largest size the 164 px PNG allows without upscaling. */
+    width: 10rem;
   }
 }
 </style>
