@@ -189,7 +189,7 @@ function use(s: string) {
   width: 100%;
   min-height: 3.5rem;
   padding: 0.75rem 3.25rem 0.75rem 3rem;
-  border: 2px solid var(--color-linea);
+  border: 2px solid var(--color-borde);
   border-radius: var(--radius-control);
   background: var(--color-blanco);
   font: inherit;

@@ -72,7 +72,7 @@ const shared = computed(() => ({
   min-height: 3.25rem;
   padding: 0.75rem 1rem;
   background: var(--color-blanco);
-  border: 2px solid var(--color-linea);
+  border: 2px solid var(--color-borde);
   border-radius: var(--radius-control);
   font: inherit;
   color: var(--color-tinta);

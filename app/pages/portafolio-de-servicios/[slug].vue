@@ -278,6 +278,7 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
 
 .benefits__list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* a long word wraps instead of widening the track */
   gap: 1.5rem;
   font-family: var(--font-display);
   font-size: var(--text-xl);

@@ -17,6 +17,9 @@ const copy = {
   contact: { es: 'Contacto', en: 'Contact' },
 } satisfies Record<string, Loc>
 useSeoMeta({ title: notFound.value ? tr(copy.pageTitle) : 'Error | Training Corporation', robots: 'noindex' })
+// The error page renders outside app.vue, so it sets the page language itself (WCAG 3.1.1).
+const i18nHead = useLocaleHead()
+useHead(() => ({ htmlAttrs: { lang: i18nHead.value.htmlAttrs?.lang } }))
 </script>
 
 <template>
