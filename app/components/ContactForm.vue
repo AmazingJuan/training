@@ -157,9 +157,9 @@ async function submit() {
 
       <fieldset class="kinds">
         <legend class="kinds__legend">{{ tr(copy.need) }}</legend>
-        <div class="kinds__options" :aria-describedby="errors.tipo ? 'tipo-error' : undefined">
+        <div class="kinds__options">
           <label v-for="k in requestKinds" :key="k.value" class="kind">
-            <input v-model="form.tipo" type="radio" name="tipo" :value="k.value" class="kind__input">
+            <input v-model="form.tipo" type="radio" name="tipo" :value="k.value" class="kind__input" required :aria-invalid="errors.tipo ? true : undefined" :aria-describedby="errors.tipo ? 'tipo-error' : undefined">
             <span class="kind__label">{{ tr(k.label) }}</span>
           </label>
         </div>
