@@ -14,7 +14,6 @@ usePageSeo({
   <div>
     <HomeHero />
     <LazyHomeCertifications hydrate-on-visible />
-    <LazyHomeServices hydrate-on-visible />
     <LazyHomeSector hydrate-on-visible />
     <LazyHomeCases hydrate-on-visible />
     <LazyHomePresence hydrate-on-visible />
