@@ -44,8 +44,7 @@ function toTop() {
   <footer class="footer field-hielo">
     <div class="frame footer__meta">
       <div class="meta__brand">
-        <BrandLogo />
-        <p class="meta__tagline">{{ tr(company.tagline) }}.</p>
+        <BrandLogo class="meta__logo" />
       </div>
 
       <!-- Contact details, compact: the full contact page carries the form and channels. -->
@@ -135,10 +134,10 @@ function toTop() {
   padding-block: var(--spacing-section-sm) 2.5rem;
 }
 
-.meta__tagline {
-  max-width: 18rem;
-  margin-top: 1rem;
-  color: var(--color-pizarra);
+/* Larger than in the header (client, 2026-11-04). The only logo file is a
+   164 px PNG, so this upscales it ~1.4×; swap in the SVG when it arrives. */
+.meta__brand .meta__logo {
+  width: min(14rem, 60vw);
 }
 
 .footer__label {
@@ -217,7 +216,8 @@ function toTop() {
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem 2rem;
-  padding-block: 1.5rem 2rem;
+  /* Room under the last line for the floating WhatsApp button, so it never covers «Volver arriba». */
+  padding-block: 1.5rem 6rem;
   border-top: 1px solid var(--color-linea);
   color: var(--color-pizarra);
 }
