@@ -6,8 +6,8 @@ const { tr, lang } = useLang()
 const copy = {
   title: { es: 'Contacto', en: 'Contact' },
   lede: {
-    es: 'Solicite una cotización, consulte la próxima cohorte de un programa o radique una petición, queja o reclamo.',
-    en: 'Request a quotation, ask about the next cohort of a program, or submit a request, complaint or claim.',
+    es: 'Solicite una cotización, consulte la próxima cohorte de un programa o escríbanos sobre cualquier otro asunto.',
+    en: 'Request a quotation, ask about the next cohort of a program, or write to us about any other matter.',
   },
   call: { es: 'Llamar', en: 'Call' },
   region: { es: 'Formulario y canales de contacto', en: 'Contact form and channels' },
@@ -19,8 +19,8 @@ const copy = {
 usePageSeo({
   title: tr({ es: 'Contacto y cotizaciones en Medellín', en: 'Contact and quotations, Medellín' }),
   description: tr({
-    es: 'Solicite una cotización o información sobre formación, o radique una petición, queja o reclamo. Teléfonos, WhatsApp, correo electrónico y sede en Medellín.',
-    en: 'Request a quotation or information about training, or submit a request, complaint or claim. Phone, WhatsApp, email and offices in Medellín, Colombia.',
+    es: 'Solicite una cotización o información sobre formación. Teléfonos, WhatsApp, correo electrónico y sede en Medellín.',
+    en: 'Request a quotation or information about training. Phone, WhatsApp, email and offices in Medellín, Colombia.',
   }),
 })
 </script>

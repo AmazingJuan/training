@@ -60,9 +60,13 @@ export const contractorsNav: NavItem = {
   hint: { es: 'Formato de cuenta de cobro y manual de contratistas y proveedores', en: 'Invoice template and suppliers manual' },
 }
 
+/** Customer feedback channel (the company's «Formato PQRS»). */
+export const pqrsNav: NavItem = { label: { es: 'PQRS', en: 'Feedback and complaints (PQRS)' }, to: '/pqrs' }
+
 export const accessibilityNav: NavItem = { label: { es: 'Declaración de accesibilidad', en: 'Accessibility statement' }, to: '/accesibilidad' }
 
 export const secondaryNav: NavItem[] = [
+  pqrsNav,
   contractorsNav,
   { label: { es: 'Sistema de Gestión Integrado', en: 'Integrated Management System' }, to: '/empresa/sistema-de-gestion-integrado' },
   accessibilityNav,

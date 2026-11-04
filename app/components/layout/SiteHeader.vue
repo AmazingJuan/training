@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ChevronDown, LockKeyhole, Menu, X, Phone } from '@lucide/vue'
-import { primaryNav, contactNav, intranetNav } from '~/data/navigation'
+import { ChevronDown, LockKeyhole, Menu, MessagesSquare, X, Phone } from '@lucide/vue'
+import { primaryNav, contactNav, intranetNav, pqrsNav } from '~/data/navigation'
 import { services, countOffers, servicePath } from '~/data/services'
 import type { NavItem } from '~/data/navigation'
 import { courses } from '~/data/courses'
@@ -114,6 +114,10 @@ onKeyStroke('Escape', () => {
           <span><span class="visually-hidden">{{ tr(copy.call) }} </span>{{ company.phones[0].display }}</span>
         </a>
         <SocialLinks class="header__social" />
+        <NuxtLinkLocale :to="pqrsNav.to" class="header__intranet header__pqrs">
+          <MessagesSquare aria-hidden="true" />
+          PQRS
+        </NuxtLinkLocale>
         <NuxtLinkLocale :to="intranetNav.to" class="header__intranet" target="_blank">
           <LockKeyhole aria-hidden="true" />
           {{ tr(intranetNav.label) }}<span class="visually-hidden"> {{ tr(copy.newTab) }}</span>
@@ -223,7 +227,7 @@ onKeyStroke('Escape', () => {
       <div v-show="sheetOpen" id="menu-movil" class="sheet field-azul" data-lenis-prevent>
         <nav class="frame" :aria-label="tr(copy.mainMobile)">
           <ul class="sheet__list">
-            <li v-for="item in [...primaryNav, contactNav, intranetNav]" :key="item.to" class="sheet__item">
+            <li v-for="item in [...primaryNav, contactNav, pqrsNav, intranetNav]" :key="item.to" class="sheet__item">
               <NuxtLinkLocale v-if="item === intranetNav" :to="item.to" class="sheet__link" target="_blank">
                 {{ tr(item.label) }}<span class="visually-hidden"> {{ tr(copy.newTab) }}</span>
               </NuxtLinkLocale>

@@ -32,7 +32,9 @@ const copy = {
   phone: { es: 'Teléfono', en: 'Phone' },
   line: { es: 'Línea de servicio', en: 'Service line' },
   message: { es: 'Mensaje', en: 'Message' },
-  hintPqr: { es: 'Incluya la fecha y el servicio al que se refiere.', en: 'Please include the date and the service it concerns.' },
+  pqrsA: { es: '¿Desea radicar una petición, queja, reclamo o felicitación? Use el', en: 'Would you like to submit a request, complaint, claim or compliment? Please use the' },
+  pqrsLink: { es: 'formulario de PQRS', en: 'PQRS form' },
+  yourDetails: { es: 'Déjenos sus datos y lo contactaremos.', en: 'Leave us your details and we will contact you.' },
   hint: { es: 'Indicar la norma, el alcance o la fecha prevista nos permite responder con mayor precisión.', en: 'Mentioning the standard, scope or expected date helps us reply more precisely.' },
   honeypot: { es: 'No llenar', en: 'Leave blank' },
   consentA: { es: 'Autorizo el tratamiento de mis datos personales para atender esta solicitud, conforme al', en: 'I authorize the processing of my personal data to handle this request, in accordance with the' },
@@ -162,6 +164,7 @@ async function submit() {
           </label>
         </div>
         <p v-if="errors.tipo" id="tipo-error" class="kinds__error">{{ errors.tipo }}</p>
+        <p class="kinds__pqrs">{{ tr(copy.pqrsA) }} <NuxtLinkLocale to="/pqrs" class="link">{{ tr(copy.pqrsLink) }}</NuxtLinkLocale>.</p>
       </fieldset>
 
       <section v-if="quote.count.value" class="picked" aria-labelledby="picked-title">
@@ -180,6 +183,7 @@ async function submit() {
         <NuxtLinkLocale to="/portafolio-de-servicios" class="link picked__more">{{ tr(copy.addMore) }}</NuxtLinkLocale>
       </section>
 
+      <p class="your-details">{{ tr(copy.yourDetails) }}</p>
       <div class="grid2">
         <UiField v-model="form.nombre" :label="tr(copy.name)" name="nombre" required autocomplete="name" :error="errors.nombre" />
         <UiField v-model="form.empresa" :label="tr(copy.org)" name="empresa" autocomplete="organization" />
@@ -187,14 +191,14 @@ async function submit() {
         <UiField v-model="form.telefono" :label="tr(copy.phone)" name="telefono" type="tel" autocomplete="tel" :error="errors.telefono" />
       </div>
 
-      <UiField v-if="form.tipo !== 'pqr' && !quote.count.value" v-model="form.linea" :label="tr(copy.line)" name="linea" type="select" :options="lineOptions" />
+      <UiField v-if="!quote.count.value" v-model="form.linea" :label="tr(copy.line)" name="linea" type="select" :options="lineOptions" />
       <UiField
         v-model="form.mensaje"
         :label="tr(copy.message)"
         name="mensaje"
         type="textarea"
         :required="!quote.count.value"
-        :hint="form.tipo === 'pqr' ? tr(copy.hintPqr) : tr(copy.hint)"
+        :hint="tr(copy.hint)"
         :error="errors.mensaje"
       />
 
@@ -384,6 +388,7 @@ form {
 }
 
 .kind__input {
+  flex: none;
   width: 1.25rem;
   height: 1.25rem;
   accent-color: var(--color-azul);
@@ -391,6 +396,20 @@ form {
 
 .kind__label {
   font-weight: 600;
+}
+
+.kinds__pqrs {
+  margin-top: 0.75rem;
+  font-size: var(--text-sm);
+  color: var(--color-pizarra);
+}
+
+.your-details {
+  margin-bottom: -0.75rem;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: var(--tracking-snug);
 }
 
 .kinds__error {
@@ -430,11 +449,14 @@ form > :deep(.btn) {
   justify-self: start;
 }
 
-@media (width >= 40rem) {
+/* Three kinds of request: one row once they fit, never a lone option on a second row. */
+@media (width >= 48rem) {
   .kinds__options {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
 
+@media (width >= 40rem) {
   .grid2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
