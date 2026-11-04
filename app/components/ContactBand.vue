@@ -40,7 +40,7 @@ const copy = {
 
 .band__grid {
   row-gap: 2rem;
-  align-items: end;
+  align-items: center;
 }
 
 .band__title,
@@ -48,8 +48,12 @@ const copy = {
   grid-column: 1 / -1;
 }
 
+/* A closing prompt, not a section opener: one step below the section heading
+   size (client, 2026-11-04: "muy grande"). */
 .band__title {
-  max-width: 18ch;
+  max-width: 24ch;
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
 }
 
 .band__actions {
