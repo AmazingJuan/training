@@ -44,6 +44,9 @@ useMotion(root, ({ gsap }) => {
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
   tl.fromTo('.seal__ring', { attr: { 'stroke-dasharray': '0 100' } }, { attr: { 'stroke-dasharray': '100 0' }, duration: 1.5, ease: 'power2.inOut' })
     .fromTo('.seal__dot', { scale: 0, transformOrigin: 'center' }, { scale: 1, duration: 0.5, ease: 'back.out(2)' }, 1.2)
+    // The blades swing into place round the centre, like the pinwheel turning.
+    .fromTo('.units__blade', { opacity: 0, rotation: -24, svgOrigin: '500 500' }, { opacity: 1, rotation: 0, svgOrigin: '500 500', duration: 1.1, stagger: 0.12, ease: 'power3.out' }, 0.25)
+    .fromTo('.units__core', { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.15)
     .fromTo('.seal__norm', { opacity: 0 }, { opacity: 1, duration: 0.25, stagger: 0.07, ease: 'none' }, 0.5)
     .fromTo('.hero__line', { yPercent: 30, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.08 }, 0.3)
     .fromTo('.hero__fact', { x: -16, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, stagger: 0.08 }, 1.2)
@@ -55,12 +58,12 @@ useMotion(root, ({ gsap }) => {
     <div class="frame hero__grid">
       <div class="hero__seal">
         <BrandSeal :top="topNorms" :bottom="bottomNorms" class="hero__ring" />
-        <div class="hero__inner">
-          <h1 id="hero-title" class="hero__title">
-            {{ tr(copy.title) }}
-          </h1>
-        </div>
+        <BrandUnits class="hero__ring" />
       </div>
+
+      <h1 id="hero-title" class="hero__title">
+        {{ tr(copy.title) }}
+      </h1>
 
       <div class="hero__side">
         <p class="hero__lede hero__line">
@@ -89,11 +92,13 @@ useMotion(root, ({ gsap }) => {
 
 .hero__grid {
   display: grid;
+  grid-template-areas: 'title' 'seal' 'side';
   gap: 1.5rem;
 }
 
-/* The seal is a square; the title sits in the square inscribed in the ring. */
+/* The seal is a square: the norms ring with the units pinwheel inside. */
 .hero__seal {
+  grid-area: seal;
   position: relative;
   aspect-ratio: 1;
   width: min(100%, 32rem);
@@ -106,29 +111,21 @@ useMotion(root, ({ gsap }) => {
   inset: 0;
 }
 
-/* Centred on the ring's centre: a centred block follows the circle's shape,
-   a left-aligned one looks pushed against the ring. */
-.hero__inner {
-  position: absolute;
-  inset: 20% 19%;
-  display: grid;
-  place-content: center;
-  text-align: center;
-}
-
-/* Sized to the seal, not the viewport, so it fills the ring on every screen. */
 .hero__title {
+  grid-area: title;
   font-family: var(--font-display);
-  font-size: 6.4cqi;
+  font-size: clamp(1.875rem, 1.3rem + 1.9vw, 2.875rem);
   line-height: 1.08;
   font-weight: 700;
   letter-spacing: var(--tracking-tight);
   color: var(--color-tinta);
   text-wrap: balance;
   hyphens: manual;
+  max-width: 22ch;
 }
 
 .hero__side {
+  grid-area: side;
   display: grid;
   gap: 2rem;
   align-content: center;
@@ -187,8 +184,19 @@ useMotion(root, ({ gsap }) => {
 @media (width >= 64rem) {
   .hero__grid {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-areas: 'seal title' 'seal side';
+    grid-template-rows: 1fr auto;
     align-items: center;
+    row-gap: 2rem;
     column-gap: clamp(2rem, 4vw, 4.5rem);
+  }
+
+  .hero__title {
+    align-self: end;
+  }
+
+  .hero__side {
+    align-self: start;
   }
 
   .hero__seal {
@@ -204,7 +212,9 @@ useMotion(root, ({ gsap }) => {
 /* Start state of the load sequence; only when motion is allowed (app.vue). */
 html.motion .hero__line,
 html.motion .hero__fact,
-html.motion .seal__norm {
+html.motion .seal__norm,
+html.motion .units__blade,
+html.motion .units__core {
   opacity: 0;
   /* Safety net: if scripts are slow or fail, show everything anyway. */
   animation: hero-fallback 0.01s 2.5s forwards;
