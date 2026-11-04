@@ -86,7 +86,7 @@ export const certifications: Certification[] = [
     name: { es: 'Miembro corporativo de The Institute of Asset Management', en: 'Corporate member of The Institute of Asset Management' },
     issuer: 'The Institute of Asset Management',
     number: { es: 'Miembro n.º 4000083', en: 'Member no. 4000083' },
-    since: { es: 'Miembros desde agosto de 2024', en: 'Member since August 2024' },
+    since: { es: 'Miembro desde agosto de 2024', en: 'Member since August 2024' },
     until: null,
     document: `${site}/wp-content/uploads/2024/12/Certificado-IAM-2024_page-0001.jpg`,
   },
@@ -199,7 +199,7 @@ export const team: Person[] = [
   {
     slug: 'elsy-quintero',
     name: 'Elsy Amparo Quintero López',
-    role: { es: 'Directora Administrativa y Financiera', en: 'Administrative and Financial Director' },
+    role: { es: 'Directora administrativa y financiera', en: 'Administrative and Financial Director' },
     photo: '/images/equipo/elsy-quintero.jpg',
     profile: {
       es: 'Dirige la adquisición, administración y entrega oportuna de los recursos, espacios, productos y servicios que requiere la operación, para que la gestión del conocimiento que ofrecen los servicios de la compañía cumpla el propósito empresarial.',
@@ -208,8 +208,8 @@ export const team: Person[] = [
   },
   {
     slug: 'jesica-garcia',
-    name: 'Jesica María García Vélez',
-    role: { es: 'Profesional de Aseguramiento del Modelo de Gestión', en: 'Management Model Assurance Professional' },
+    name: 'Jessica María García Vélez',
+    role: { es: 'Profesional de aseguramiento del modelo de gestión', en: 'Management Model Assurance Professional' },
     photo: '/images/equipo/jesica-garcia.jpg',
     profile: {
       es: 'Asegura la oportunidad y la eficacia en el logro y el mejoramiento de los objetivos estratégicos y del sistema de gestión integrado en calidad y en seguridad y salud en el trabajo.',
@@ -219,7 +219,7 @@ export const team: Person[] = [
   {
     slug: 'angela-manrique',
     name: 'Ángela María Manrique Patiño',
-    role: { es: 'Profesional de Gestión del Conocimiento', en: 'Knowledge Management Professional' },
+    role: { es: 'Profesional de gestión del conocimiento', en: 'Knowledge Management Professional' },
     photo: '/images/equipo/angela-manrique.jpg',
     profile: {
       es: 'Ejecuta servicios de auditoría, formación y consultoría para la organización y sus clientes, con una orientación permanente al mejoramiento y a la generación de valor agregado.',
@@ -234,7 +234,7 @@ export const team: Person[] = [
   {
     slug: 'christian-correa',
     name: 'Christian Felipe Correa Arroyave',
-    role: { es: 'Profesional de Innovación', en: 'Innovation Professional' },
+    role: { es: 'Profesional de innovación', en: 'Innovation Professional' },
     photo: '/images/equipo/christian-correa.jpg',
     profile: {
       es: 'Identifica, desde la innovación, nuevas oportunidades de negocio y tecnologías que contribuyan al cumplimiento de los objetivos estratégicos, con la aplicación de las normas NTC 5800 y NTC 5801, la guía PMBOK y la metodología Design Thinking.',
@@ -244,7 +244,7 @@ export const team: Person[] = [
   {
     slug: 'daniela-palacio',
     name: 'Daniela Palacio Moreno',
-    role: { es: 'Asistente Administrativa', en: 'Administrative Assistant' },
+    role: { es: 'Profesional administrativa', en: 'Administrative Professional' },
     photo: '/images/equipo/daniela-palacio.jpg',
     profile: {
       es: 'Presta apoyo administrativo a todas las unidades estratégicas: logística de los servicios, trámites legales y documentales, bases de datos, PQRS y gestión comercial.',

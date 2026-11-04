@@ -35,7 +35,7 @@ const copy = {
   hintPqr: { es: 'Incluya la fecha y el servicio al que se refiere.', en: 'Please include the date and the service it concerns.' },
   hint: { es: 'Indicar la norma, el alcance o la fecha prevista nos permite responder con mayor precisión.', en: 'Mentioning the standard, scope or expected date helps us reply more precisely.' },
   honeypot: { es: 'No llenar', en: 'Leave blank' },
-  consentA: { es: 'Autorizo el tratamiento de mis datos personales para atender esta solicitud, conforme a la', en: 'I authorize the processing of my personal data to handle this request, in accordance with the' },
+  consentA: { es: 'Autorizo el tratamiento de mis datos personales para atender esta solicitud, conforme al', en: 'I authorize the processing of my personal data to handle this request, in accordance with the' },
   consentLink: { es: 'manual de protección de datos personales', en: 'personal data protection manual (in Spanish)' },
   sending: { es: 'Enviando…', en: 'Sending…' },
   sendQuote: { es: 'Enviar solicitud', en: 'Send request' },
