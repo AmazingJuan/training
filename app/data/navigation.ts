@@ -57,7 +57,7 @@ export const intranetNav: NavItem = { label: { es: 'Intranet', en: 'Intranet' },
 export const contractorsNav: NavItem = {
   label: { es: 'Contratistas y proveedores', en: 'Contractors and suppliers' },
   to: '/contratistas',
-  hint: { es: 'Formato de cuenta de cobro y manual de contratistas y proveedores', en: 'Invoice template and suppliers manual' },
+  hint: { es: 'Manual de contratistas y proveedores y formato de cuenta de cobro', en: 'Suppliers manual and invoice template' },
 }
 
 /** Customer feedback channel (the company's «Formato PQRS»). */
