@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { team } from '~/data/company'
+import { network, team } from '~/data/company'
 
 const { tr } = useLang()
 const copy = {
@@ -14,6 +14,7 @@ const copy = {
     <div class="frame grid-page team__grid">
       <div class="team__words">
         <h2 id="team-title" class="heading">{{ tr(copy.title) }}</h2>
+        <p class="lede muted team__network">{{ tr(network.statement) }}</p>
         <UiButton to="/empresa/equipo" variant="outline">{{ tr(copy.cta) }}</UiButton>
       </div>
 
@@ -40,8 +41,8 @@ const copy = {
   grid-column: 1 / -1;
 }
 
-.team__words .heading {
-  margin-bottom: 2rem;
+.team__network {
+  margin-block: 1.25rem 2rem;
 }
 
 .team__people {
