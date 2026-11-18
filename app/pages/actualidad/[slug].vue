@@ -37,8 +37,8 @@ const newer = news[index - 1]
 const older = news[index + 1]
 
 const title = tr(post.title)
-const description = post.blocks[0] ? tr(post.blocks[0].text) : title
-usePageSeo({ title, description, image: post.image, article: { published: post.date } })
+const description = post.description ? tr(post.description) : post.blocks[0] ? tr(post.blocks[0].text) : title
+usePageSeo({ title: post.seoTitle ? tr(post.seoTitle) : title, description, image: post.image, imageSize, article: { published: post.date } })
 
 // Lets search engines read the item as a dated news article by the company.
 const { siteUrl } = useRuntimeConfig().public
@@ -49,12 +49,15 @@ useHead({
       '@context': 'https://schema.org',
       '@type': 'NewsArticle',
       'headline': title.slice(0, 110),
+      'description': description.slice(0, 300),
       'datePublished': post.date,
+      'dateModified': post.date,
       'inLanguage': langTag[lang.value],
       'image': post.image ? [`${siteUrl}${post.image}`] : [`${siteUrl}/og-image.png`],
       'mainEntityOfPage': `${siteUrl}${localePath(`/actualidad/${post.slug}`)}`,
-      'author': { '@type': 'Organization', 'name': 'Training Corporation S.A.S.', 'url': siteUrl },
-      'publisher': { '@id': `${siteUrl}/#organizacion`, '@type': 'Organization', 'name': 'Training Corporation S.A.S.', 'logo': { '@type': 'ImageObject', 'url': `${siteUrl}/brand/logo-training-corporation-cuadrado.png`, 'width': 240, 'height': 240 } },
+      // The organization itself is described once, in the layout's graph.
+      'author': { '@id': `${siteUrl}/#organizacion` },
+      'publisher': { '@id': `${siteUrl}/#organizacion` },
     }),
   }],
 })
@@ -131,6 +134,7 @@ useHead({
 .post__nav {
   display: grid;
   gap: 1rem;
+  max-width: var(--container-measure);
   padding-top: 2rem;
   border-top: 2px solid var(--color-azul);
 }

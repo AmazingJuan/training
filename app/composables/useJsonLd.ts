@@ -32,7 +32,10 @@ export function useOrganizationJsonLd() {
         '@id': org,
         name: company.legalName,
         alternateName: company.shortName,
-        description: tr(company.summary),
+        description: tr({
+          es: 'Diseñamos a la medida soluciones innovadoras en auditoría, consultoría y formación empresarial. Desde Medellín para Colombia y Centroamérica.',
+          en: 'We design tailored, innovative solutions in auditing, consulting and corporate training. From Medellín for Colombia and Central America.',
+        }),
         slogan: tr(company.tagline),
         url: `${siteUrl}/`,
         // Square version (Google asks for at least 112 × 112 px).
@@ -60,8 +63,11 @@ export function useOrganizationJsonLd() {
           ...presence.countries.map((c) => ({ '@type': 'Country', name: tr(c.name) })),
         ],
         knowsAbout: [
+          tr({ es: 'Auditoría empresarial', en: 'Business auditing' }),
+          tr({ es: 'Consultoría empresarial', en: 'Business consulting' }),
+          tr({ es: 'Formación empresarial', en: 'Corporate training' }),
           'ISO 9001', 'ISO 14001', 'ISO 45001', 'ISO 55001', 'ISO/IEC 27001', 'ISO/IEC 17025', 'ISO/IEC 17020',
-          'Gestión de activos', 'Regulación CREG', 'Sistemas de gestión HSEQ', 'Auditoría interna', 'MIPG',
+          tr({ es: 'Gestión de activos', en: 'Asset management' }), tr({ es: 'Regulación CREG', en: 'CREG regulation' }), 'MIPG',
         ],
         hasCredential: iso.map((c) => ({
           '@type': 'EducationalOccupationalCredential',

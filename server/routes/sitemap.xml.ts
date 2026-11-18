@@ -12,8 +12,8 @@ const staticPaths = [
 // English lives under /en with the same slugs; each URL lists both versions.
 const inLang = (path: string, lang: Lang) => (lang === 'es' ? path : path === '/' ? '/en' : `/en${path}`)
 
-// Pages without their own date carry the build date (the site is prerendered).
-const built = new Date().toISOString().slice(0, 10)
+// Only dated entries (news posts) carry <lastmod>; a build date on every deploy
+// would teach search engines to ignore it.
 
 export default defineEventHandler((event) => {
   const { siteUrl } = useRuntimeConfig(event).public
@@ -28,7 +28,7 @@ export default defineEventHandler((event) => {
       const alternates = langs
         .map((l) => `<xhtml:link rel="alternate" hreflang="${langTag[l]}" href="${siteUrl}${inLang(e.path, l)}"/>`)
         .join('') + `<xhtml:link rel="alternate" hreflang="x-default" href="${siteUrl}${e.path}"/>`
-      const lastmod = `<lastmod>${'lastmod' in e ? e.lastmod : built}</lastmod>`
+      const lastmod = 'lastmod' in e ? `<lastmod>${e.lastmod}</lastmod>` : ''
       return `  <url><loc>${siteUrl}${inLang(e.path, lang)}</loc>${lastmod}${alternates}</url>`
     }))
     .join('\n')

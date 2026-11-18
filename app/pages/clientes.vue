@@ -5,8 +5,8 @@ const { tr, lang } = useLang()
 usePageSeo({
   title: tr({ es: 'Clientes', en: 'Clients' }),
   description: tr({
-    es: 'Organizaciones que han confiado en nuestro trabajo: empresas de energía y servicios públicos, gobierno, educación, industria y laboratorios, en Colombia y Centroamérica.',
-    en: 'Organizations that have trusted our work: energy and utility companies, government, education, industry and laboratories, in Colombia and Central America.',
+    es: 'Organizaciones que confían en nuestro trabajo: energía y servicios públicos, gobierno, educación, industria y laboratorios, en Colombia y Centroamérica.',
+    en: 'Organizations that trust our work: energy and utilities, government, education, industry and laboratories, in Colombia and Central America.',
   }),
 })
 

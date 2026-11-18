@@ -19,6 +19,10 @@ export interface NewsPost {
   /** ISO date, as published. */
   date: string
   title: Loc
+  /** Shorter title for search results when `title` passes 60 characters. */
+  seoTitle?: Loc
+  /** Search summary when the first paragraph is not one (e.g. a photo caption). */
+  description?: Loc
   image?: string
   imageAlt?: Loc
   blocks: NewsBlock[]
@@ -170,6 +174,7 @@ export const news: NewsPost[] = [
     legacySlug: 'la-empresa-de-energia-de-boyaca-ebsa-s-a-e-s-p',
     date: '2022-10-23',
     title: { es: 'Primera auditoría interna ISO 55001 de la Empresa de Energía de Boyacá', en: 'First ISO 55001 internal audit for Empresa de Energía de Boyacá' },
+    seoTitle: { es: 'Primera auditoría interna ISO 55001 de EBSA (Boyacá)', en: 'First ISO 55001 internal audit for EBSA (Boyacá)' },
     image: '/images/fotos/ebsa.jpg',
     imageAlt: { es: 'Sede de la Empresa de Energía de Boyacá EBSA', en: 'Headquarters of Empresa de Energía de Boyacá (EBSA)' },
     blocks: [
@@ -195,6 +200,7 @@ export const news: NewsPost[] = [
       es: 'Un nuevo modelo de programación de auditorías para ISA Intercolombia (hoy ISA Energía)',
       en: 'A new audit scheduling model for ISA Intercolombia (now ISA Energía)',
     },
+    seoTitle: { es: 'Nuevo modelo de programación de auditorías para ISA', en: 'New audit scheduling model for ISA' },
     image: '/images/fotos/isa-torre-transmision.jpg',
     imageAlt: { es: 'Torre de transmisión eléctrica', en: 'Electricity transmission tower' },
     blocks: [
@@ -238,6 +244,7 @@ export const news: NewsPost[] = [
     legacySlug: 'certificado-de-nuestro-sistema-de-gestion-seguridad-y-salud-en-el-trabajo',
     date: '2022-06-18',
     title: { es: 'Certificación de nuestro sistema de gestión de seguridad y salud en el trabajo', en: 'Certification of our occupational health and safety management system' },
+    seoTitle: { es: 'Certificación de nuestro sistema de gestión de SST', en: 'Certification of our OHS management system' },
     blocks: [
       p(
         'Training Corporation S.A.S. se complace en compartir la certificación de su sistema de gestión de seguridad y salud en el trabajo, otorgada por Bureau Veritas conforme a la norma NTC-ISO 45001:2018. Este logro forma parte de nuestro compromiso con la mejora de la calidad de vida de nuestros grupos de interés.',
@@ -288,6 +295,7 @@ export const news: NewsPost[] = [
     legacySlug: 'nicia-integracion-de-los-sistemas-de-gestion-de-la-alcaldia-de-girardota',
     date: '2020-11-13',
     title: { es: 'Integración de los sistemas de gestión de la Alcaldía de Girardota', en: 'Integrating the management systems of the Municipality of Girardota' },
+    seoTitle: { es: 'Integración de los sistemas de gestión de Girardota', en: 'Integrating the management systems of Girardota' },
     blocks: [
       p(
         'Entre febrero y agosto de 2020, Training Corporation Ltda. prestó servicios de consultoría y asesoría a la Alcaldía de Girardota para actualizar y unificar el sistema de gestión de la calidad NTC-ISO 9001:2015 y el Modelo Integrado de Planeación y Gestión (MIPG), e implementar el sistema de control interno (SCI), con base en el Decreto Único Reglamentario del Sector Función Pública 1499 de 2017. El propósito fue contribuir a los resultados del Programa de Gobierno 2020-2023 del municipio y atender las necesidades de la ciudadanía con integridad y calidad en el servicio.',
@@ -304,6 +312,10 @@ export const news: NewsPost[] = [
     legacySlug: 'con-exito-lanzamos-nuestro-cursos-de-gestion-de-activos',
     date: '2020-11-13',
     title: { es: 'Lanzamiento de nuestros cursos de gestión de activos', en: 'Launch of our asset management courses' },
+    description: {
+      es: 'En febrero de 2020 realizamos en Medellín los dos primeros cursos de gestión de activos: fundamentos y calificación de auditores internos en ISO 55001.',
+      en: 'In February 2020 we held our first two asset management courses in Medellín: foundations and internal auditor qualification in ISO 55001.',
+    },
     image: '/images/fotos/curso-auditores-iso-55001-2020.jpg',
     imageAlt: {
       es: 'Participantes del curso de fundamentos y calificación de auditores en ISO 55001, Medellín, 2020',
@@ -333,6 +345,7 @@ export const news: NewsPost[] = [
     legacySlug: 'training-corporation-ltda-cada-vez-mas-cerca-de-sus-empresas-clientes',
     date: '2020-11-13',
     title: { es: 'Consultoría virtual: más cerca de nuestras organizaciones clientes', en: 'Remote consulting: closer to our client organizations' },
+    seoTitle: { es: 'Consultoría virtual: más cerca de nuestros clientes', en: 'Remote consulting: closer to our clients' },
     blocks: [
       p(
         'Con el propósito de satisfacer las necesidades y expectativas de sus organizaciones clientes, Training Corporation Ltda. desarrolló el servicio de consultoría virtual, que optimiza los tiempos de atención, flexibiliza las agendas de trabajo y reduce los costos del servicio al eliminar los tiempos y costos de desplazamiento de los consultores.',

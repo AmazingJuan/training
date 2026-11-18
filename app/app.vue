@@ -14,9 +14,11 @@ useHead({
 
 // Language attribute, alternate-language links and og:locale for every page.
 const i18nHead = useLocaleHead()
+const { siteUrl } = useRuntimeConfig().public
 useHead(() => ({
   htmlAttrs: { lang: i18nHead.value.htmlAttrs?.lang },
-  link: i18nHead.value.link,
+  // The home page's alternates end in "/" like its canonical URL.
+  link: i18nHead.value.link?.map((l) => (l.href === siteUrl ? { ...l, href: `${siteUrl}/` } : l)),
   meta: i18nHead.value.meta,
 }))
 </script>

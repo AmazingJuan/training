@@ -41,7 +41,7 @@ const copy = {
   choose: { es: 'Seleccione la línea', en: 'Choose a line' },
   hint: { es: 'Agregue los que le interesen, de esta o de otras líneas, y envíelos en una sola solicitud.', en: 'Add the ones you are interested in, from this or other lines, and send them in a single request.' },
   sendMine: { es: 'Enviar mi solicitud', en: 'Send my request' },
-  proposal: { es: 'Solicitar una propuesta', en: 'Request a proposal' },
+  proposal: { es: 'Solicitar cotización', en: 'Request a quotation' },
   all: { es: 'Todo sobre', en: 'All about' },
   pdf: { es: 'Portafolio (PDF)', en: 'Portfolio (PDF, in Spanish)' },
   otherLines: { es: 'Otras líneas', en: 'Other lines' },
@@ -54,13 +54,26 @@ const seeAll = (n: number) => (lang.value === 'en' ? (n === 1 ? 'View the servic
 const shortName = (l: { short: Loc }) => (l.short.es === 'HSEQ' ? 'HSEQ' : tr(l.short).toLowerCase())
 
 const modeTitles: Record<ModeId, Loc> = {
-  auditoria: { es: 'Auditoría de sistemas de gestión ISO y CREG', en: 'ISO and CREG management system auditing' },
-  consultoria: { es: 'Consultoría en sistemas de gestión ISO', en: 'ISO management system consulting' },
-  formacion: { es: 'Cursos y formación de auditores internos ISO', en: 'ISO courses and internal auditor training' },
+  auditoria: { es: 'Auditoría empresarial: ISO, CREG y evaluación organizacional', en: 'Business auditing: ISO, CREG and organizational assessment' },
+  consultoria: { es: 'Consultoría empresarial en normas ISO y regulación', en: 'Business consulting on ISO standards and regulation' },
+  formacion: { es: 'Formación empresarial y de auditores internos', en: 'Corporate training and internal auditor courses' },
 }
 
 // Search title: unit, line and the standard people search for ("Auditoría en gestión de activos (ISO 55001)").
-const seoTitle = (l: { short: Loc, name: Loc, keyword: Loc }) => `${modeIn(l)} (${tr(l.keyword)})`
+// Long line names fall back to the short name so the title fits in 60 characters.
+const seoTitle = (l: { short: Loc, name: Loc, keyword: Loc }) => {
+  const full = `${modeIn(l)} (${tr(l.keyword)})`
+  return full.length <= 60 ? full : `${mName.value} ${lang.value === 'en' ? 'for' : 'en'} ${shortName(l)} (${tr(l.keyword)})`
+}
+/** Lists offers only while the description still fits in a search result (about 155 characters). */
+const fitList = (prefix: string, items: string[]) => {
+  const out: string[] = []
+  for (const it of items) {
+    if (`${prefix}${[...out, it].join('; ')}.`.length > 155) break
+    out.push(it)
+  }
+  return out.length ? `${prefix}${out.join('; ')}.` : `${prefix.replace(/:\s*$/, '')}.`
+}
 const unitNoun: Record<ModeId, Loc> = {
   auditoria: { es: 'auditoría', en: 'auditing' },
   consultoria: { es: 'consultoría', en: 'consulting' },
@@ -69,15 +82,18 @@ const unitNoun: Record<ModeId, Loc> = {
 usePageSeo(line
   ? {
       title: seoTitle(line),
-      description: lang.value === 'en'
-        ? `${countOffers(line, modeId)} ${unitNoun[modeId].en} ${countOffers(line, modeId) === 1 ? 'service' : 'services'} for ${lineName(line)} (${line.keyword.en}): ${line.offers[modeId].flatMap((g) => g.items).slice(0, 3).map(tr).join('; ')}.`
-        : `${servicesLabel(countOffers(line, modeId))} de ${unitNoun[modeId].es} en ${lineName(line)} (${line.keyword.es}): ${line.offers[modeId].flatMap((g) => g.items).slice(0, 3).map(tr).join('; ')}.`,
+      description: fitList(
+        lang.value === 'en'
+          ? `${countOffers(line, modeId)} ${unitNoun[modeId].en} ${countOffers(line, modeId) === 1 ? 'service' : 'services'} for ${lineName(line)} (${line.keyword.en}): `
+          : `${servicesLabel(countOffers(line, modeId))} de ${unitNoun[modeId].es} en ${lineName(line)} (${line.keyword.es}): `,
+        line.offers[modeId].flatMap((g) => g.items).map(tr),
+      ),
     }
   : {
       title: tr(modeTitles[modeId]),
       description: lang.value === 'en'
-        ? `${tr(mode.summary)} ${total} services in HSEQ, asset management, electricity sector regulation, information security and laboratories.`
-        : `${tr(mode.summary)} ${total} servicios en HSEQ, gestión de activos, regulación del sector eléctrico, seguridad de la información y laboratorios.`,
+        ? `${tr(mode.summary)} ${total} services in five lines.`
+        : `${tr(mode.summary)} ${total} servicios en cinco líneas.`,
     })
 </script>
 

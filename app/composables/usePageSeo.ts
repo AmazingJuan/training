@@ -6,6 +6,8 @@ interface PageSeo {
   fullTitle?: string
   description: string
   image?: string
+  /** Pixel size of `image`, so platforms can show it on the first share. */
+  imageSize?: readonly [number, number]
   noindex?: boolean
   /** News posts: Open Graph article with its publication date. */
   article?: { published: string }
@@ -24,7 +26,7 @@ function clip(text: string, max: number) {
  * the brand suffix is dropped when it would push the title past that, and
  * descriptions are clipped on a word.
  */
-export function usePageSeo({ title, fullTitle: exactTitle, description: rawDescription, image, noindex = false, article }: PageSeo) {
+export function usePageSeo({ title, fullTitle: exactTitle, description: rawDescription, image, imageSize, noindex = false, article }: PageSeo) {
   const route = useRoute()
   const { siteUrl } = useRuntimeConfig().public
   const { lang } = useLang()
@@ -46,6 +48,8 @@ export function usePageSeo({ title, fullTitle: exactTitle, description: rawDescr
     ogSiteName: company.shortName,
     ogLocale: ogLocale[lang.value],
     ogImage,
+    ogImageWidth: image ? imageSize?.[0] : 1200,
+    ogImageHeight: image ? imageSize?.[1] : 630,
     ogImageAlt: image ? title : lang.value === 'en'
       ? 'Training Corporation: auditing, consulting and corporate training'
       : 'Training Corporation: auditoría, consultoría y formación empresarial',

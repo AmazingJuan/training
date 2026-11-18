@@ -2,7 +2,7 @@
 const { tr } = useLang()
 usePageSeo({
   title: tr({ es: 'Auditoría, consultoría y formación empresarial', en: 'Auditing, consulting and corporate training' }),
-  fullTitle: tr({ es: 'Training Corporation: auditoría, consultoría y formación empresarial', en: 'Training Corporation: auditing, consulting and corporate training' }),
+  fullTitle: tr({ es: 'Auditoría, consultoría y formación empresarial en Medellín', en: 'Auditing, consulting and corporate training in Medellín' }),
   description: tr({
     es: 'Diseñamos a la medida soluciones innovadoras en auditoría, consultoría y formación empresarial. Desde Medellín para Colombia y Centroamérica.',
     en: 'We design tailored, innovative solutions in auditing, consulting and corporate training. From Medellín for Colombia and Central America.',

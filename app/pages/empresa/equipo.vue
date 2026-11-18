@@ -19,8 +19,8 @@ const copy = {
 usePageSeo({
   title: tr(copy.title),
   description: tr({
-    es: 'El equipo de Training Corporation: gerencia, asesoría experta, dirección administrativa y financiera, aseguramiento del modelo de gestión, gestión del conocimiento e innovación.',
-    en: 'The Training Corporation team: management, senior advisory, administration and finance, management model assurance, knowledge management and innovation.',
+    es: 'El equipo de planta de Training Corporation y su red de más de 70 profesionales en auditoría, consultoría y formación empresarial.',
+    en: 'Training Corporation’s staff and its network of more than 70 professionals in auditing, consulting and corporate training.',
   }),
   image: '/images/equipo/nancy-rodriguez.jpg',
 })
@@ -50,7 +50,7 @@ usePageSeo({
           <h3 class="person__name">{{ p.name }}</h3>
           <p class="person__role">{{ tr(p.role) }}</p>
           <p class="person__statement">{{ tr(p.profile) }}</p>
-          <ul v-if="p.credentials" class="person__creds" :aria-label="`${tr(copy.creds)} ${p.name}`">
+          <ul v-if="p.credentials" class="person__creds dot-list" :aria-label="`${tr(copy.creds)} ${p.name}`">
             <li v-for="c in p.credentials" :key="c.es">{{ tr(c) }}</li>
           </ul>
         </div>
@@ -133,8 +133,6 @@ usePageSeo({
   display: grid;
   gap: 0.375rem;
   margin-top: 1.25rem;
-  padding-left: 1rem;
-  border-left: 3px solid var(--color-azul-vivo);
   color: var(--color-pizarra);
 }
 
