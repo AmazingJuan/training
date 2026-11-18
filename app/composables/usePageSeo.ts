@@ -47,8 +47,8 @@ export function usePageSeo({ title, fullTitle: exactTitle, description: rawDescr
     ogLocale: ogLocale[lang.value],
     ogImage,
     ogImageAlt: image ? title : lang.value === 'en'
-      ? 'Training Corporation: auditing, consulting and training in management systems'
-      : 'Training Corporation: auditoría, consultoría y formación en sistemas de gestión',
+      ? 'Training Corporation: auditing, consulting and corporate training'
+      : 'Training Corporation: auditoría, consultoría y formación empresarial',
     twitterImage: ogImage,
     twitterCard: 'summary_large_image',
     robots: noindex ? 'noindex, nofollow' : 'index, follow',

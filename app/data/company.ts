@@ -14,8 +14,8 @@ export const company = {
   legalName: 'Training Corporation S.A.S.',
   shortName: 'Training Corporation',
   tagline: {
-    es: 'Auditoría, consultoría y formación en sistemas de gestión',
-    en: 'Auditing, consulting and training in management systems',
+    es: 'Auditoría, consultoría y formación empresarial',
+    en: 'Auditing, consulting and corporate training',
   },
   // Source: home page, "Somos Training".
   summary: {
@@ -166,6 +166,25 @@ export interface Person {
   /** Third-person profile, built from the person's statement on /empresa/equipo/. */
   profile: Loc
   credentials?: Loc[]
+}
+
+/**
+ * The network of contractor professionals (Acta 6, 4 Nov 2026). `statement` is
+ * the client's own wording; `profiles` presents the profiles from the company's
+ * service lines. Contractors are kept apart from `team` (the staff) so the site
+ * always tells them apart; individual profiles go in `members` once the company
+ * sends them.
+ */
+export const network = {
+  statement: {
+    es: 'Contamos con una red de más de 70 profesionales que disponen de la experiencia y los conocimientos del más alto nivel para atender las necesidades de nuestras organizaciones clientes.',
+    en: 'We have a network of more than 70 professionals with the highest level of experience and knowledge to meet the needs of our client organizations.',
+  },
+  profiles: {
+    es: 'La integran auditores líderes, consultores y formadores especializados en calidad, ambiente, seguridad y salud en el trabajo, gestión de activos, regulación del sector eléctrico, seguridad de la información y laboratorios, que se vinculan a cada proyecto según su alcance.',
+    en: 'It brings together lead auditors, consultants and trainers specialised in quality, environment, occupational health and safety, asset management, electricity sector regulation, information security and laboratories, who join each project according to its scope.',
+  },
+  members: [] as Person[],
 }
 
 /** Source: /empresa/equipo/ (portraits from the same page, re-cropped to one standard). */
@@ -357,8 +376,8 @@ export const bulletins: CompanyDocument[] = [
  * here (nuxt.config.ts, legacyRedirects).
  */
 export const contractorDocuments: CompanyDocument[] = [
-  { title: { es: 'Formato de cuenta de cobro', en: 'Invoice (cuenta de cobro) template' }, href: `${site}/docs/formato-cuenta-de-cobro.xls`, kind: 'xls' },
   { title: { es: 'Manual de contratistas y proveedores', en: 'Contractors and suppliers manual' }, href: `${site}/docs/manual-contratistas-proveedores.pdf`, kind: 'pdf' },
+  { title: { es: 'Formato de cuenta de cobro', en: 'Invoice (cuenta de cobro) template' }, href: `${site}/docs/formato-cuenta-de-cobro.xls`, kind: 'xls' },
 ]
 
 /** The personal data policy, linked from the footer and the contact form's consent. */

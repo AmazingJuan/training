@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const { tr } = useLang()
 usePageSeo({
-  title: tr({ es: 'Auditoría, consultoría y formación ISO', en: 'ISO auditing, consulting and training' }),
-  fullTitle: tr({ es: 'Training Corporation: auditoría y formación ISO en Medellín', en: 'Training Corporation: ISO auditing and training in Colombia' }),
+  title: tr({ es: 'Auditoría, consultoría y formación empresarial', en: 'Auditing, consulting and corporate training' }),
+  fullTitle: tr({ es: 'Training Corporation: auditoría, consultoría y formación empresarial', en: 'Training Corporation: auditing, consulting and corporate training' }),
   description: tr({
-    es: 'Auditoría, consultoría y formación en ISO 9001, 45001, 55001 y 27001 y en regulación CREG del sector eléctrico. Desde Medellín para Colombia y Centroamérica.',
-    en: 'Auditing, consulting and training in ISO 9001, 45001, 55001 and 27001 and in CREG electricity regulation. From Medellín for Colombia and Central America.',
+    es: 'Diseñamos a la medida soluciones innovadoras en auditoría, consultoría y formación empresarial. Desde Medellín para Colombia y Centroamérica.',
+    en: 'We design tailored, innovative solutions in auditing, consulting and corporate training. From Medellín for Colombia and Central America.',
   }),
 })
 </script>
@@ -14,8 +14,7 @@ usePageSeo({
   <div>
     <HomeHero />
     <LazyHomeCertifications hydrate-on-visible />
-    <LazyHomeSector hydrate-on-visible />
-    <LazyHomeCases hydrate-on-visible />
+    <LazyHomeNews hydrate-on-visible />
     <LazyHomePresence hydrate-on-visible />
     <LazyHomeTeam hydrate-on-visible />
     <LazyHomeTraining hydrate-on-visible />

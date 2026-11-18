@@ -4,9 +4,8 @@ import { ClipboardCheck, Lightbulb, Users } from '@lucide/vue'
 import { modes, type ModeId } from '~/data/services'
 
 /**
- * The three strategic business units as a pinwheel inside the seal (same
- * 1000×1000 viewBox as BrandSeal, laid over it), after the company's own
- * process map: three twisted blades round a centre that names them. Each blade
+ * The three strategic business units as a pinwheel, after the company's own
+ * process map (geometry in 1000×1000 units, framed to the blades' reach): three twisted blades round a centre that names them. Each blade
  * links to its unit in the services explorer and shows the unit's public name
  * over its name inside the company. Text runs along the blade's twist; on the
  * lower blade it runs the other way so it reads upright.
@@ -122,7 +121,7 @@ const units = computed(() => order.map((id) => modes.find((m) => m.id === id)!).
 </script>
 
 <template>
-  <svg class="units" viewBox="0 0 1000 1000">
+  <svg class="units" viewBox="115 115 770 770">
     <defs>
       <template v-for="u in units" :key="u.id">
         <path :id="`unit-name-${u.id}`" :d="u.nameTrack" />

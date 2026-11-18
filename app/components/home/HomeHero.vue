@@ -1,84 +1,46 @@
 <script setup lang="ts">
-import { clientsIn } from '~/data/clients'
-import { presence } from '~/data/company'
-
 /**
- * Opening: the logo's ring as a certification seal made of the standards the
- * company works with, with the statement inside it. The ring opens toward the
- * verifiable facts. The page's single orchestrated motion: the ring draws round
- * the statement and the standards are "stamped" one by one. The statement itself
- * is painted at once (it is the page's largest element, what Google times).
+ * Opening: the three strategic business units as the company's own pinwheel,
+ * and beside it the single statement agreed with the client (Acta 6, 4 Nov
+ * 2026): no subtitle and no supporting facts. The page's one orchestrated
+ * motion: the blades swing into place round the centre. The statement is
+ * painted at once (it is the page's largest text, what Google times).
  */
-const topNorms = ['ISO 9001', 'ISO 14001', 'ISO 45001', 'ISO 55001', 'ISO/IEC 27001', 'ISO/IEC 17025']
-const bottomNorms = ['CREG 015', 'RETIE', 'RETILAP', 'Decreto 1072', 'MIPG', 'GTC-ISO 19011']
-const utilities = clientsIn('energia').length
-const { tr, lang } = useLang()
-
-const countries = computed(() =>
-  new Intl.ListFormat(langTag[lang.value], { type: 'conjunction' }).format(presence.countries.map((c) => tr(c.name))),
-)
+const { tr } = useLang()
 
 const copy = {
   title: {
-    es: 'Auditoría, consultoría y formación en sistemas de gestión y regulación',
-    en: 'Auditing, consulting and training in management systems and regulation',
-  },
-  lede: {
-    es: 'Sistemas de gestión ISO y regulación del sector eléctrico colombiano, con sede en Medellín.',
-    en: 'ISO management systems and Colombian electricity sector regulation, from our offices in Medellín.',
+    es: 'Diseñamos a la medida soluciones innovadoras en auditoría, consultoría y formación empresarial',
+    en: 'We design tailored, innovative solutions in auditing, consulting and corporate training',
   },
   quote: { es: 'Solicitar una cotización', en: 'Request a quotation' },
   services: { es: 'Conocer los servicios', en: 'Explore our services' },
-  backing: { es: 'Respaldo', en: 'Credentials' },
-  certified: { es: 'Certificados en ISO 9001:2015 e ISO 45001:2018', en: 'Certified to ISO 9001:2015 and ISO 45001:2018' },
-  iam: { es: 'Miembro corporativo de The Institute of Asset Management', en: 'Corporate member of The Institute of Asset Management' },
 } satisfies Record<string, Loc>
-const utilitiesFact = computed(() => (lang.value === 'en' ? `${utilities} energy companies among our clients` : `${utilities} empresas de energía entre nuestros clientes`))
-const presenceFact = computed(() => (lang.value === 'en'
-  ? `Services in ${presence.departments.length} Colombian departments and in ${countries.value}`
-  : `Servicios en ${presence.departments.length} departamentos de Colombia y en ${countries.value}`))
 
 const root = useTemplateRef<HTMLElement>('root')
 
 useMotion(root, ({ gsap }) => {
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-  tl.fromTo('.seal__ring', { attr: { 'stroke-dasharray': '0 100' } }, { attr: { 'stroke-dasharray': '100 0' }, duration: 1.5, ease: 'power2.inOut' })
-    .fromTo('.seal__dot', { scale: 0, transformOrigin: 'center' }, { scale: 1, duration: 0.5, ease: 'back.out(2)' }, 1.2)
-    // The blades swing into place round the centre, like the pinwheel turning.
-    .fromTo('.units__blade', { opacity: 0, rotation: -24, svgOrigin: '500 500' }, { opacity: 1, rotation: 0, svgOrigin: '500 500', duration: 1.1, stagger: 0.12, ease: 'power3.out' }, 0.25)
-    .fromTo('.units__core', { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.15)
-    .fromTo('.seal__norm', { opacity: 0 }, { opacity: 1, duration: 0.25, stagger: 0.07, ease: 'none' }, 0.5)
-    .fromTo('.hero__line', { yPercent: 30, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.08 }, 0.3)
-    .fromTo('.hero__fact', { x: -16, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, stagger: 0.08 }, 1.2)
+  gsap.timeline({ defaults: { ease: 'power3.out' } })
+    .fromTo('.units__core', { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.1)
+    .fromTo('.units__blade', { opacity: 0, rotation: -24, svgOrigin: '500 500' }, { opacity: 1, rotation: 0, svgOrigin: '500 500', duration: 1.1, stagger: 0.12 }, 0.2)
+    .fromTo('.hero__line', { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, 0.6)
 })
 </script>
 
 <template>
   <section ref="root" class="hero" aria-labelledby="hero-title">
     <div class="frame hero__grid">
-      <div class="hero__seal">
-        <BrandSeal :top="topNorms" :bottom="bottomNorms" class="hero__ring" />
-        <BrandUnits class="hero__ring" />
+      <div class="hero__wheel">
+        <BrandUnits />
       </div>
 
       <h1 id="hero-title" class="hero__title">
         {{ tr(copy.title) }}
       </h1>
 
-      <div class="hero__side">
-        <p class="hero__lede hero__line">
-          {{ tr(copy.lede) }}
-        </p>
-        <div class="hero__actions">
-          <UiButton to="/contacto">{{ tr(copy.quote) }}</UiButton>
-          <UiButton to="/portafolio-de-servicios" variant="outline">{{ tr(copy.services) }}</UiButton>
-        </div>
-        <ul class="hero__facts" :aria-label="tr(copy.backing)">
-          <li class="hero__fact"><a href="#certificaciones">{{ tr(copy.certified) }}</a></li>
-          <li class="hero__fact">{{ tr(copy.iam) }}</li>
-          <li class="hero__fact"><a href="#sector-title">{{ utilitiesFact }}</a></li>
-          <li class="hero__fact"><a href="#presence-title">{{ presenceFact }}</a></li>
-        </ul>
+      <div class="hero__actions hero__line">
+        <UiButton to="/contacto">{{ tr(copy.quote) }}</UiButton>
+        <UiButton to="/portafolio-de-servicios" variant="outline">{{ tr(copy.services) }}</UiButton>
       </div>
     </div>
   </section>
@@ -86,93 +48,41 @@ useMotion(root, ({ gsap }) => {
 
 <style scoped>
 .hero {
-  padding-block: clamp(1rem, 0.5rem + 2vw, 2.5rem) clamp(3.5rem, 2rem + 4vw, 6rem);
+  padding-block: clamp(1.5rem, 0.5rem + 3vw, 3.5rem) clamp(3.5rem, 2rem + 4vw, 6rem);
   overflow: hidden;
 }
 
 .hero__grid {
   display: grid;
-  grid-template-areas: 'title' 'seal' 'side';
-  gap: 1.5rem;
+  grid-template-areas: 'title' 'actions' 'wheel';
+  gap: 1.75rem;
 }
 
-/* The seal is a square: the norms ring with the units pinwheel inside. */
-.hero__seal {
-  grid-area: seal;
-  position: relative;
-  aspect-ratio: 1;
-  width: min(100%, 32rem);
+.hero__wheel {
+  grid-area: wheel;
+  width: min(100%, 30rem);
   justify-self: center;
-  container-type: inline-size;
-}
-
-.hero__ring {
-  position: absolute;
-  inset: 0;
+  margin-top: 1rem;
 }
 
 .hero__title {
   grid-area: title;
   font-family: var(--font-display);
-  font-size: clamp(1.875rem, 1.3rem + 1.9vw, 2.875rem);
+  font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3.25rem);
   line-height: 1.08;
   font-weight: 700;
   letter-spacing: var(--tracking-tight);
   color: var(--color-tinta);
   text-wrap: balance;
   hyphens: manual;
-  max-width: 22ch;
-}
-
-.hero__side {
-  grid-area: side;
-  display: grid;
-  gap: 2rem;
-  align-content: center;
-}
-
-.hero__lede {
-  font-size: var(--text-lg);
-  line-height: var(--text-lg--line-height);
-  color: var(--color-pizarra);
-  max-width: 28rem;
+  max-width: 20ch;
 }
 
 .hero__actions {
+  grid-area: actions;
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-}
-
-.hero__facts {
-  display: grid;
-  gap: 0.875rem;
-  padding-top: 1.75rem;
-  border-top: 1px solid var(--color-linea);
-  font-weight: 600;
-}
-
-.hero__fact {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-}
-
-/* The seal's satellite dot as the list marker (an open ring this small reads as a spinner). */
-.hero__fact::before {
-  content: '';
-  flex: none;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: var(--radius-full);
-  background: var(--color-azul-vivo);
-  transform: translateY(-0.1em);
-}
-
-.hero__fact a {
-  color: var(--color-azul);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
 }
 
 @media (width < 30rem) {
@@ -183,27 +93,27 @@ useMotion(root, ({ gsap }) => {
 
 @media (width >= 64rem) {
   .hero__grid {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    grid-template-areas: 'seal title' 'seal side';
-    grid-template-rows: 1fr auto;
-    align-items: center;
-    row-gap: 2rem;
-    column-gap: clamp(2rem, 4vw, 4.5rem);
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    grid-template-areas: 'wheel title' 'wheel actions';
+    grid-template-rows: 1fr 1fr;
+    column-gap: clamp(2.5rem, 5vw, 6rem);
+    row-gap: 2.5rem;
   }
 
   .hero__title {
     align-self: end;
   }
 
-  .hero__side {
+  .hero__actions {
     align-self: start;
   }
 
-  .hero__seal {
+  .hero__wheel {
     width: 100%;
-    max-width: 44rem;
+    max-width: 36rem;
+    margin-top: 0;
     justify-self: start;
-    margin-left: -2%;
+    align-self: center;
   }
 }
 </style>
@@ -211,8 +121,6 @@ useMotion(root, ({ gsap }) => {
 <style>
 /* Start state of the load sequence; only when motion is allowed (app.vue). */
 html.motion .hero__line,
-html.motion .hero__fact,
-html.motion .seal__norm,
 html.motion .units__blade,
 html.motion .units__core {
   opacity: 0;
