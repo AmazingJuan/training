@@ -12,6 +12,7 @@ const copy = {
   footerNav: { es: 'Pie de página', en: 'Footer' },
   site: { es: 'Sitio', en: 'Site' },
   certs: { es: 'Certificaciones', en: 'Certifications' },
+  sgi: { es: 'Ver el Sistema de Gestión Integrado', en: 'View the Integrated Management System' },
   agreements: { es: 'Convenios', en: 'Agreements' },
   top: { es: 'Volver arriba', en: 'Back to top' },
   newTab: { es: '(se abre en una pestaña nueva)', en: '(opens in a new tab)' },
@@ -83,12 +84,9 @@ function toTop() {
 
       <div class="meta__block">
         <h2 class="footer__label">{{ tr(copy.certs) }}</h2>
-        <ul class="meta__certs">
-          <li v-for="c in certifications" :key="c.code">
-            <a :href="c.document" target="_blank" rel="noopener"><strong>{{ c.code }}</strong></a>
-            <span>{{ tr(c.name) }}</span>
-          </li>
-        </ul>
+        <!-- The certificates themselves are on the home page and the SGI page; here, one line and the way there. -->
+        <p class="meta__muted">{{ certifications.map((c) => c.code).join(', ') }}</p>
+        <NuxtLinkLocale to="/empresa/sistema-de-gestion-integrado" class="meta__sgi">{{ tr(copy.sgi) }}</NuxtLinkLocale>
         <h2 class="footer__label meta__gap">{{ tr(copy.agreements) }}</h2>
         <p class="meta__muted">{{ agreements.join(tr(copy.and)) }}</p>
       </div>
@@ -197,20 +195,15 @@ function toTop() {
   color: var(--color-azul-hondo);
 }
 
-.meta__certs {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.meta__certs li {
-  display: grid;
-}
-
-.meta__certs a {
+.meta__sgi {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-weight: 600;
   color: var(--color-azul-hondo);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
-.meta__certs span,
 .meta__muted {
   color: var(--color-pizarra);
 }
