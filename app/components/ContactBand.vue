@@ -9,9 +9,9 @@ import { company } from '~/data/company'
 const props = defineProps<{ title?: string, text?: string }>()
 const { tr } = useLang()
 const copy = {
-  title: { es: 'Indíquenos qué norma o requisito necesita atender', en: 'Tell us which standard or requirement you need to address' },
+  title: { es: 'Cuéntenos qué necesita su organización', en: 'Tell us what your organization needs' },
   text: { es: 'Le responderemos con una propuesta de consultoría, auditoría o formación ajustada a su organización.', en: 'We will reply with a consulting, auditing or training proposal tailored to your organization.' },
-  write: { es: 'Escribir un mensaje', en: 'Send a message' },
+  write: { es: 'Solicitar cotización', en: 'Request a quotation' },
 } satisfies Record<string, Loc>
 </script>
 
@@ -22,7 +22,7 @@ const copy = {
       <div class="band__side">
         <p class="lede">{{ props.text ?? tr(copy.text) }}</p>
         <div class="band__actions">
-          <UiButton to="/contacto" variant="light">{{ tr(copy.write) }}</UiButton>
+          <UiButton to="/contacto?asunto=cotizacion" variant="light">{{ tr(copy.write) }}</UiButton>
           <UiButton :href="company.whatsapp.href" variant="ghost" external>
             <template #icon><MessageCircle aria-hidden="true" /></template>
             WhatsApp
@@ -64,7 +64,13 @@ const copy = {
 }
 
 @media (width >= 64rem) {
-  .band__title { grid-column: 1 / span 7; }
-  .band__side { grid-column: 8 / -1; }
+  .band__title { grid-column: 1 / span 6; }
+  .band__side { grid-column: 7 / -1; }
+}
+
+@media (width < 30rem) {
+  .band__actions > * {
+    flex: 1 1 100%;
+  }
 }
 </style>

@@ -14,7 +14,7 @@ if (!service) {
 
 const copy = {
   services: { es: 'Servicios', en: 'Services' },
-  proposal: { es: 'Solicitar una propuesta', en: 'Request a proposal' },
+  proposal: { es: 'Solicitar cotización', en: 'Request a quotation' },
   frameworks: { es: 'Marco normativo', en: 'Regulatory framework' },
   pdf: { es: 'Portafolio completo (PDF)', en: 'Full portfolio (PDF, in Spanish)' },
   scope: { es: 'Alcance', en: 'Scope' },
@@ -65,7 +65,7 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
       tone="azul"
       :crumbs="[{ label: tr(copy.services), to: '/portafolio-de-servicios' }]"
     >
-      <UiButton :to="{ path: '/contacto', query: { linea: service.slug } }" variant="light">{{ tr(copy.proposal) }}</UiButton>
+      <UiButton :to="{ path: '/contacto', query: { asunto: 'cotizacion', linea: service.slug } }" variant="light">{{ tr(copy.proposal) }}</UiButton>
       <template #aside>
         <aside class="norms" aria-labelledby="normas">
           <h2 id="normas" class="norms__title">{{ tr(copy.frameworks) }}</h2>
@@ -110,7 +110,7 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
     <section class="section field-nube" aria-labelledby="beneficios">
       <div class="frame grid-page benefits">
         <h2 id="beneficios" class="heading benefits__title">{{ tr(copy.benefits) }}</h2>
-        <ul class="benefits__list">
+        <ul class="benefits__list dot-list">
           <li v-for="b in service.benefits" :key="b.es">{{ tr(b) }}</li>
         </ul>
       </div>
@@ -133,7 +133,7 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
             <p class="ev__meta">{{ tr(copy.training) }}</p>
             <h3 class="ev__title">{{ tr(course.name) }}</h3>
             <p class="muted">{{ courseFacts }}</p>
-            <NuxtLinkLocale to="/cursos-y-formaciones" class="link">{{ tr(copy.program) }}</NuxtLinkLocale>
+            <NuxtLinkLocale :to="`/cursos-y-formaciones#${course.slug}`" class="link">{{ tr(copy.program) }}</NuxtLinkLocale>
           </article>
         </div>
       </div>
@@ -287,10 +287,6 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
   letter-spacing: var(--tracking-snug);
 }
 
-.benefits__list li {
-  padding-left: 1.25rem;
-  border-left: 3px solid var(--color-azul-vivo);
-}
 
 /* One item per row, text always in the same column, so a case with a photo
    and the course without one line up. */
@@ -357,13 +353,13 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
 }
 
 @media (width >= 48rem) {
-  /* Photo column only when there is a photo; otherwise the text keeps the left edge. */
-  .ev:has(.ev__ring) {
+  /* Every item keeps the photo column, so all texts share one left edge. */
+  .ev {
     grid-template-columns: 8rem minmax(0, 1fr);
     column-gap: var(--spacing-gutter);
   }
 
-  .ev:has(.ev__ring) > * {
+  .ev > * {
     grid-column: 2;
   }
 

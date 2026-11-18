@@ -66,6 +66,7 @@ export const pqrsNav: NavItem = { label: { es: 'PQRS', en: 'Feedback and complai
 export const accessibilityNav: NavItem = { label: { es: 'Declaración de accesibilidad', en: 'Accessibility statement' }, to: '/accesibilidad' }
 
 export const secondaryNav: NavItem[] = [
+  { label: { es: 'Todos los servicios', en: 'All services' }, to: '/portafolio-de-servicios' },
   pqrsNav,
   contractorsNav,
   { label: { es: 'Sistema de Gestión Integrado', en: 'Integrated Management System' }, to: '/empresa/sistema-de-gestion-integrado' },

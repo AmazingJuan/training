@@ -129,7 +129,7 @@ async function submit() {
     <div v-if="status === 'sent'" ref="done" class="notice notice--ok" tabindex="-1" role="status">
       <CircleCheck aria-hidden="true" />
       <div>
-        <p class="notice__title">{{ form.servicios.length ? tr(copy.sentQuote) : tr(copy.sentMsg) }}</p>
+        <p class="notice__title">{{ form.servicios.length || form.tipo === 'cotizacion' ? tr(copy.sentQuote) : tr(copy.sentMsg) }}</p>
         <p>{{ tr(copy.reply) }} {{ form.correo }}. {{ tr(copy.urgent) }} {{ tr({ es: company.phones[0].display, en: company.phones[0].intl }) }}.</p>
       </div>
     </div>
@@ -218,7 +218,7 @@ async function submit() {
       </div>
 
       <UiButton type="submit" :disabled="status === 'sending'">
-        {{ status === 'sending' ? tr(copy.sending) : quote.count.value ? tr(copy.sendQuote) : tr(copy.sendMsg) }}
+        {{ status === 'sending' ? tr(copy.sending) : quote.count.value || form.tipo === 'cotizacion' ? tr(copy.sendQuote) : tr(copy.sendMsg) }}
       </UiButton>
     </form>
   </div>
@@ -288,6 +288,10 @@ form {
   font-size: var(--text-sm);
 }
 
+.summary-anchor:not(:has(*)) {
+  display: none;
+}
+
 .summary-anchor:focus {
   outline: none;
 }
@@ -297,7 +301,7 @@ form {
   grid-template-columns: 1.5rem 1fr;
   gap: 1rem;
   padding: 1.25rem 1.5rem;
-  border-left: 4px solid;
+  border: 1px solid;
   border-radius: var(--radius-control);
 }
 
@@ -422,6 +426,7 @@ form {
 .grid2 {
   display: grid;
   gap: 1.75rem var(--spacing-gutter);
+  align-items: start;
 }
 
 .hp {

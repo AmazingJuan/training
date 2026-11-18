@@ -12,8 +12,8 @@ const { tr, lang } = useLang()
 usePageSeo({
   title: tr({ es: 'Declaración de accesibilidad', en: 'Accessibility statement' }),
   description: tr({
-    es: 'Compromiso de accesibilidad de Training Corporation: WCAG 2.1 nivel AA conforme a la Resolución 1519 de 2020 de MinTIC, opciones de visualización y canal para reportar barreras.',
-    en: 'Training Corporation’s accessibility commitment: WCAG 2.1 level AA in line with MinTIC Resolution 1519 of 2020, display options and a channel to report barriers.',
+    es: 'Nuestro compromiso de accesibilidad: WCAG 2.1 nivel AA según la Resolución 1519 de 2020 de MinTIC, opciones de visualización y canal para reportar barreras.',
+    en: 'Our accessibility commitment: WCAG 2.1 level AA under MinTIC Resolution 1519 of 2020, display options and a channel to report barriers.',
   }),
 })
 
@@ -75,7 +75,8 @@ const copy = {
   <div>
     <PageHeader :title="tr(copy.title)" :lede="tr(copy.lede)" />
 
-    <div class="frame statement">
+    <div class="frame">
+    <div class="statement">
       <section aria-labelledby="estandar">
         <h2 id="estandar" class="subheading">{{ tr(copy.standardTitle) }}</h2>
         <p>{{ tr(copy.standard) }}</p>
@@ -126,22 +127,17 @@ const copy = {
         {{ tr(copy.reviewed) }} <time :datetime="reviewed">{{ formatDate(reviewed, lang) }}</time>.
       </p>
     </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+/* Inside the page frame, so the body starts on the title's left edge. */
 .statement {
   display: grid;
   gap: 2.5rem;
   max-width: var(--container-measure);
-  margin-inline: auto;
-  padding-block: var(--spacing-section-sm) var(--spacing-section);
-}
-
-@media (width >= 64rem) {
-  .statement {
-    margin-inline: 0;
-  }
+  padding-block: 0 var(--spacing-section);
 }
 
 .statement .subheading {

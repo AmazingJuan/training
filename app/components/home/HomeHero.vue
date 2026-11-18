@@ -13,7 +13,7 @@ const copy = {
     es: 'Diseñamos a la medida soluciones innovadoras en auditoría, consultoría y formación empresarial',
     en: 'We design tailored, innovative solutions in auditing, consulting and corporate training',
   },
-  quote: { es: 'Solicitar una cotización', en: 'Request a quotation' },
+  quote: { es: 'Solicitar cotización', en: 'Request a quotation' },
   services: { es: 'Conocer los servicios', en: 'Explore our services' },
 } satisfies Record<string, Loc>
 
@@ -39,7 +39,7 @@ useMotion(root, ({ gsap }) => {
       </h1>
 
       <div class="hero__actions hero__line">
-        <UiButton to="/contacto">{{ tr(copy.quote) }}</UiButton>
+        <UiButton to="/contacto?asunto=cotizacion">{{ tr(copy.quote) }}</UiButton>
         <UiButton to="/portafolio-de-servicios" variant="outline">{{ tr(copy.services) }}</UiButton>
       </div>
     </div>
@@ -94,18 +94,15 @@ useMotion(root, ({ gsap }) => {
 @media (width >= 64rem) {
   .hero__grid {
     grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
-    grid-template-areas: 'wheel title' 'wheel actions';
-    grid-template-rows: 1fr 1fr;
+    /* Title and actions as one block, centred against the wheel. */
+    grid-template-areas: 'wheel .' 'wheel title' 'wheel actions' 'wheel .';
+    grid-template-rows: 1fr auto auto 1fr;
     column-gap: clamp(2.5rem, 5vw, 6rem);
-    row-gap: 2.5rem;
-  }
-
-  .hero__title {
-    align-self: end;
+    row-gap: 0;
   }
 
   .hero__actions {
-    align-self: start;
+    margin-top: 2.5rem;
   }
 
   .hero__wheel {

@@ -33,7 +33,7 @@ const copy = {
   remove: { es: 'Retirar', en: 'Remove' },
   detailsLede: { es: 'Déjenos sus datos y lo contactaremos.', en: 'Leave us your details and we will contact you.' },
   name: { es: 'Nombre completo', en: 'Full name' },
-  org: { es: 'Empresa', en: 'Company' },
+  org: { es: 'Organización', en: 'Organization' },
   document: { es: 'NIT o cédula', en: 'Tax ID or ID number' },
   email: { es: 'Correo electrónico', en: 'Email' },
   emailHint: { es: 'Le enviaremos aquí el número de su solicitud y la respuesta.', en: 'We will send your request number and our reply here.' },
@@ -583,7 +583,7 @@ async function submit() {
   gap: 1rem;
   padding: 1.25rem 1.5rem;
   background: var(--color-nube);
-  border-left: 4px solid var(--color-azul);
+  border: 1px solid var(--color-azul);
   border-radius: var(--radius-control);
 }
 
@@ -736,7 +736,7 @@ async function submit() {
   grid-template-columns: 1.5rem 1fr;
   gap: 1rem;
   padding: 1.25rem 1.5rem;
-  border-left: 4px solid;
+  border: 1px solid;
   border-radius: var(--radius-control);
 }
 

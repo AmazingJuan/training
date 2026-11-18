@@ -37,9 +37,9 @@ const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${
             <div><dt>{{ tr(copy.awards) }}</dt><dd>{{ c.awards.map(tr).join('; ') }}</dd></div>
           </dl>
           <div class="course__actions">
-            <UiButton :to="{ path: '/contacto', query: { asunto: 'formacion', programa: c.slug } }">{{ tr(copy.next) }}</UiButton>
+            <UiButton :to="{ path: '/contacto', query: { asunto: 'formacion', programa: c.slug } }">{{ tr(copy.next) }}<span class="visually-hidden">: {{ tr(c.name) }}</span></UiButton>
             <a :href="c.brochure" class="link course__pdf" target="_blank" rel="noopener">
-              <Download aria-hidden="true" />{{ tr(copy.brochure) }}
+              <Download aria-hidden="true" />{{ tr(copy.brochure) }}<span class="visually-hidden">: {{ tr(c.name) }}</span>
             </a>
           </div>
         </article>

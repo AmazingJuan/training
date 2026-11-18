@@ -202,7 +202,7 @@ onKeyStroke('Escape', () => {
         </ul>
       </nav>
 
-      <UiButton :to="contactNav.to" class="header__cta">{{ tr(copy.quote) }}</UiButton>
+      <UiButton :to="`${contactNav.to}?asunto=cotizacion`" class="header__cta">{{ tr(copy.quote) }}</UiButton>
 
       <div class="header__compact">
         <LangSwitch compact />
@@ -228,18 +228,25 @@ onKeyStroke('Escape', () => {
         <nav class="frame" :aria-label="tr(copy.mainMobile)">
           <ul class="sheet__list">
             <li v-for="item in [...primaryNav, contactNav, pqrsNav, intranetNav]" :key="item.to" class="sheet__item">
-              <NuxtLinkLocale v-if="item === intranetNav" :to="item.to" class="sheet__link" target="_blank">
+              <NuxtLinkLocale v-if="item === intranetNav" :to="item.to" class="sheet__link" target="_blank" @click="sheetOpen = false">
                 {{ tr(item.label) }}<span class="visually-hidden"> {{ tr(copy.newTab) }}</span>
               </NuxtLinkLocale>
-              <NuxtLinkLocale v-else :to="item.to" class="sheet__link">{{ tr(item.label) }}</NuxtLinkLocale>
+              <NuxtLinkLocale v-else :to="item.to" class="sheet__link" @click="sheetOpen = false">{{ tr(item.label) }}</NuxtLinkLocale>
               <ul v-if="item.children" class="sheet__sub">
                 <li v-for="child in item.children" :key="child.to">
-                  <NuxtLinkLocale :to="child.to" class="sheet__sublink">{{ tr(child.label) }}</NuxtLinkLocale>
+                  <NuxtLinkLocale :to="child.to" class="sheet__sublink" @click="sheetOpen = false">{{ tr(child.label) }}</NuxtLinkLocale>
+                </li>
+              </ul>
+              <!-- Training: the two diploma programs, as in the desktop dropdown. -->
+              <ul v-else-if="item.mode === 'formacion'" class="sheet__sub">
+                <li v-for="c in courses" :key="c.slug">
+                  <NuxtLinkLocale :to="`/cursos-y-formaciones#${c.slug}`" class="sheet__sublink" @click="sheetOpen = false">{{ tr(c.name) }}</NuxtLinkLocale>
                 </li>
               </ul>
             </li>
           </ul>
           <div class="sheet__contact">
+            <UiButton :to="`${contactNav.to}?asunto=cotizacion`" variant="light" class="sheet__cta" @click="sheetOpen = false">{{ tr(copy.quote) }}</UiButton>
             <a v-for="p in company.phones" :key="p.href" :href="p.href">{{ p.display }}</a>
             <a :href="`mailto:${company.email}`">{{ company.email }}</a>
           </div>
@@ -278,6 +285,11 @@ onKeyStroke('Escape', () => {
 }
 
 /* Utility strip (desktop): phone, staff intranet, accessibility, language. */
+/* The last item's text ends on the frame edge, like the button below it. */
+.header__utility :deep(.lang) {
+  margin-right: -0.625rem;
+}
+
 .header__utility {
   display: none;
   border-bottom: 1px solid var(--color-linea);
@@ -623,9 +635,14 @@ onKeyStroke('Escape', () => {
   font-weight: 600;
 }
 
-.sheet__contact a {
+.sheet__contact a:not(.btn) {
   color: inherit;
   overflow-wrap: anywhere;
+}
+
+.sheet__cta {
+  justify-self: stretch;
+  margin-bottom: 0.75rem;
 }
 
 .sheet-enter-active,

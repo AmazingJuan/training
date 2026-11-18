@@ -4,9 +4,9 @@ import { company } from '~/data/company'
 
 const { tr, lang } = useLang()
 usePageSeo({
-  title: tr({ es: 'Servicios de auditoría, consultoría y formación ISO', en: 'ISO auditing, consulting and training services' }),
+  title: tr({ es: 'Servicios de auditoría, consultoría y formación empresarial', en: 'Auditing, consulting and corporate training services' }),
   description: tr({
-    es: 'Auditoría, consultoría y formación en HSEQ, gestión de activos ISO 55001, servicios regulatorios del sector eléctrico, seguridad de la información y laboratorios.',
+    es: 'Auditoría, consultoría y formación en HSEQ, gestión de activos ISO 55001, regulación del sector eléctrico, seguridad de la información y laboratorios.',
     en: 'Auditing, consulting and training in HSEQ, ISO 55001 asset management, electricity sector regulatory services, information security and laboratories.',
   }),
 })
@@ -213,9 +213,12 @@ const modeCards = modes.map((m) => ({
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 6.75rem), 1fr));
   }
 
+  /* Name over count, centred: a deliberate stack rather than a wrap. */
   .svc__mode {
-    justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     row-gap: 0.25rem;
     min-width: 0;
     padding-inline: 0.625rem 0.375rem;
@@ -234,7 +237,7 @@ const modeCards = modes.map((m) => ({
   color: var(--color-azul-hondo);
 }
 
-@media (width >= 48rem) {
+@media (width >= 64rem) {
   .modes {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

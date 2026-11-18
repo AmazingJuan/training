@@ -183,9 +183,14 @@ function toTop() {
 }
 
 .meta__nav {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.375rem 1.5rem;
+  /* Read down each column, so the three units stay together. */
+  columns: 2;
+  column-gap: 1.5rem;
+}
+
+.meta__nav li {
+  break-inside: avoid;
+  padding-bottom: 0.375rem;
 }
 
 .meta__nav a:hover {
@@ -264,9 +269,10 @@ function toTop() {
   }
 }
 
-@media (width >= 64rem) {
+/* Four columns only once the email and the site links fit without breaking. */
+@media (width >= 80rem) {
   .footer__meta {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 3fr) minmax(0, 4fr) minmax(0, 3fr);
+    grid-template-columns: minmax(0, 2.5fr) minmax(0, 3fr) minmax(0, 4.5fr) minmax(0, 3fr);
   }
 }
 </style>

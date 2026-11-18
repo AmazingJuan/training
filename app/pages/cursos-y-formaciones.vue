@@ -8,7 +8,7 @@ usePageSeo({
   title: tr({ es: 'Diplomados en gestión de activos ISO 55001 y sostenibilidad', en: 'Diplomas in ISO 55001 asset management and sustainability' }),
   description: tr({
     es: 'Diplomados virtuales en directo: gestión de activos con certificación de auditor líder ISO 55001 y sostenibilidad con auditor interno en huella de carbono.',
-    en: 'Live online diploma programs (in Spanish): asset management with ISO 55001 lead auditor certification, and sustainability with carbon footprint internal auditor.',
+    en: 'Live online diplomas in Spanish: asset management with ISO 55001 lead auditor certification, and sustainability with carbon footprint auditor.',
   }),
 })
 const copy = {
@@ -30,6 +30,7 @@ const copy = {
   noPrior: { es: 'No se requieren conocimientos previos en el tema.', en: 'No prior knowledge of the subject is required.' },
   content: { es: 'Contenido', en: 'Content' },
   byLine: { es: 'Formación en cada línea de servicio', en: 'Training in each service line' },
+  askLine: { es: 'Solicitar información', en: 'Request information' },
   byLineLede: { es: 'Cursos en programación abierta o diseñados para su organización, en modalidad presencial o virtual.', en: 'Open courses or courses designed for your organization, delivered on site or online.' },
 } satisfies Record<string, Loc>
 const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours, ${n} sessions` : `${h} horas, ${n} sesiones`)
@@ -38,7 +39,9 @@ const modulesOf = (name: string) => (lang.value === 'en' ? `Modules of the ${nam
 useCoursesJsonLd(courses)
 
 // Training offered inside each service line, straight from the portfolios.
-const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offers.formacion.flatMap((g) => g.items) }))
+// The diploma programs already have their own section above, so they are left out here.
+const isDiploma = (it: Loc) => it.es.startsWith('Diplomado')
+const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offers.formacion.flatMap((g) => g.items).filter((it) => !isDiploma(it)) }))
 </script>
 
 <template>
@@ -67,8 +70,8 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
           <UiEnrolment class="course__status" />
           <p class="lede">{{ tr(c.summary) }}</p>
           <div class="course__actions">
-            <UiButton :to="{ path: '/contacto', query: { asunto: 'formacion', programa: c.slug } }">{{ tr(copy.next) }}</UiButton>
-            <a :href="c.brochure" class="link course__pdf" target="_blank" rel="noopener"><Download aria-hidden="true" />{{ tr(copy.brochure) }}</a>
+            <UiButton :to="{ path: '/contacto', query: { asunto: 'formacion', programa: c.slug } }">{{ tr(copy.next) }}<span class="visually-hidden">: {{ tr(c.name) }}</span></UiButton>
+            <a :href="c.brochure" class="link course__pdf" target="_blank" rel="noopener"><Download aria-hidden="true" />{{ tr(copy.brochure) }}<span class="visually-hidden">: {{ tr(c.name) }}</span></a>
           </div>
         </header>
 
@@ -84,7 +87,7 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
 
           <section class="audience" :aria-label="audienceOf(tr(c.name))">
             <h3 class="subheading">{{ tr(copy.audience) }}</h3>
-            <ul>
+            <ul class="dot-list">
               <li v-for="a in c.audience" :key="a.es">{{ tr(a) }}</li>
             </ul>
             <p class="muted audience__note">{{ tr(copy.noPrior) }}</p>
@@ -119,6 +122,9 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
             <ul>
               <li v-for="it in l.items" :key="it.es">{{ tr(it) }}</li>
             </ul>
+            <NuxtLinkLocale :to="{ path: '/contacto', query: { asunto: 'formacion', linea: l.slug } }" class="link by-line__ask">
+              {{ tr(copy.askLine) }}<span class="visually-hidden"> {{ tr(l.name) }}</span>
+            </NuxtLinkLocale>
           </section>
         </div>
       </div>
@@ -185,7 +191,7 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
 
 .facts > div {
   display: grid;
-  grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 6.5rem) minmax(0, 1fr);
   gap: 1rem;
   padding-block: 0.875rem;
   border-bottom: 1px solid var(--color-linea);
@@ -239,11 +245,6 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
   margin-top: 1.25rem;
 }
 
-.audience li {
-  padding-left: 1rem;
-  border-left: 3px solid var(--color-azul-vivo);
-}
-
 .audience__note {
   margin-top: 1.25rem;
 }
@@ -259,8 +260,18 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
 }
 
 .by-line__col {
+  display: flex;
+  flex-direction: column;
   padding-top: 1rem;
   border-top: 2px solid var(--color-blanco);
+}
+
+/* Each line ends in its own next step, aligned at the foot of the column. */
+.by-line__ask {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  align-self: flex-start;
+  font-weight: 600;
 }
 
 .by-line__name {
@@ -283,8 +294,8 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
 }
 
 @media (width >= 64rem) {
-  .course__head { grid-column: 1 / span 7; }
-  .course__side { grid-column: 9 / -1; grid-row: 1 / span 2; }
+  .course__head { grid-column: 1 / span 6; }
+  .course__side { grid-column: 8 / -1; grid-row: 1 / span 2; }
   .modules { grid-column: 1 / span 7; }
   .by-line { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
