@@ -112,6 +112,11 @@ useHead({
   padding-block: clamp(1.5rem, 1rem + 2vw, 3rem) var(--spacing-section-sm);
 }
 
+/* With a side photo or panel the block is centred: equal space above and below. */
+.page-head:has(.page-head__aside) {
+  padding-top: var(--spacing-section-sm);
+}
+
 .page-head__grid {
   position: relative;
   row-gap: 2.5rem;

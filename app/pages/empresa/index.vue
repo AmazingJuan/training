@@ -157,12 +157,12 @@ const copy = {
 
 @media (width >= 64rem) {
   .film__text {
-    grid-column: 1 / span 3;
+    grid-column: 1 / span 4;
     align-self: start;
   }
 
   .film__video {
-    grid-column: 4 / -1;
+    grid-column: 5 / -1;
   }
 }
 
@@ -170,6 +170,12 @@ const copy = {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+}
+
+@media (width < 30rem) {
+  .sub-nav > * {
+    flex: 1 1 100%;
+  }
 }
 
 .purpose {
@@ -269,7 +275,7 @@ const copy = {
   .purpose__text { grid-column: 1 / span 6; }
   .purpose__list { grid-column: 8 / -1; }
   .tenets__col:first-child { grid-column: 1 / span 5; }
-  .tenets__col:last-child { grid-column: 7 / -1; }
+  .tenets__col:last-child { grid-column: 8 / -1; }
 
   /* Values and principles share rows (heading + four items each), so the
      rules between items line up across both columns. */
@@ -287,6 +293,6 @@ const copy = {
     grid-template-rows: subgrid;
   }
   .agreements__col:first-child { grid-column: 1 / span 5; }
-  .agreements__col:last-child { grid-column: 7 / -1; }
+  .agreements__col:last-child { grid-column: 8 / -1; }
 }
 </style>

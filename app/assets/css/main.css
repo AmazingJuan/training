@@ -193,6 +193,16 @@
     padding-block: var(--spacing-section);
   }
 
+  /* Two sections on the same ground read as one block: don't stack both paddings. */
+  .field-nube + .field-nube {
+    padding-top: 0;
+  }
+
+  /* A white page header flows straight into a white first section: one gap, not two. */
+  .page-head:not(.field-azul) + :is(.section, .section-sm):not(.field-nube, .field-azul) {
+    padding-top: var(--spacing-section-sm);
+  }
+
   /* Brand-blue field: the current site's big blue blocks, kept as identity. */
   .field-azul {
     background: var(--color-azul);
@@ -241,6 +251,23 @@
 
   .muted {
     color: var(--color-pizarra);
+  }
+
+  /* List marked with the logo's solid satellite dot, centred on the first line. */
+  .dot-list > li {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+
+  .dot-list > li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: calc(0.5lh - 0.25rem);
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--radius-full);
+    background: var(--color-azul-vivo);
   }
 
   .field-azul .muted { color: var(--color-blanco); opacity: 1; }

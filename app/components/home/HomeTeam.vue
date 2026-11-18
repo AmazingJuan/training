@@ -51,6 +51,13 @@ const copy = {
   gap: 2rem 1.25rem;
 }
 
+/* Phones: smaller portraits, so seven people don't make a very long section. */
+@media (width < 48rem) {
+  .person__link :deep(.orbit) {
+    width: min(100%, 7.5rem);
+  }
+}
+
 .person__link {
   display: grid;
   gap: 0.25rem;
@@ -94,14 +101,24 @@ const copy = {
 
 @media (width >= 64rem) {
   .team__words {
+    grid-column: 1 / span 4;
+  }
+
+  .team__people {
+    grid-column: 5 / -1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    align-self: center;
+  }
+}
+
+@media (width >= 80rem) {
+  .team__words {
     grid-column: 1 / span 5;
   }
 
   .team__people {
     grid-column: 7 / -1;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    column-gap: 1.5rem;
-    align-self: center;
   }
 }
 </style>

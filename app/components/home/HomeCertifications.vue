@@ -60,11 +60,12 @@ const copy = {
 
 @media (width >= 64rem) {
   .certs-band__title {
-    grid-column: 1 / span 5;
+    grid-column: 1 / span 4;
   }
 
+  /* Starts where the second certificate starts, so the band shares its edges. */
   .certs-band__intro {
-    grid-column: 7 / -1;
+    grid-column: 5 / -1;
     align-self: end;
   }
 }
