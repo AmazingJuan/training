@@ -1,8 +1,8 @@
 # Training Corporation — Manual de marca digital (v0.2)
 
 Los tokens viven en `app/assets/css/main.css` (`@theme static`): cada uno es una variable
-CSS (`var(--color-azul)`) y una utilidad Tailwind (`bg-azul`). La página `/sistema`
-(noindex) es el espécimen vivo; revísela después de cualquier cambio.
+CSS (`var(--color-azul)`) y una utilidad Tailwind (`bg-azul`). Las páginas del sitio son
+la referencia viva; revíselas después de cualquier cambio.
 
 > La v0.1 («Bajo norma»: papel crema, serif Newsreader, etiquetas monoespaciadas) se
 > descartó porque abandonaba los colores y la tipografía de la marca. Esta versión parte
