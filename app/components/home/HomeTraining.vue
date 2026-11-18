@@ -12,9 +12,8 @@ const copy = {
   duration: { es: 'Duración', en: 'Duration' },
   mode: { es: 'Modalidad', en: 'Format' },
   awards: { es: 'Certifica', en: 'Credentials' },
-  last: { es: 'Última edición', en: 'Latest edition' },
-  next: { es: 'Consultar la próxima cohorte', en: 'Ask about the next cohort' },
-  brochure: { es: 'Folleto de la última edición (PDF)', en: 'Brochure of the latest edition (PDF, in Spanish)' },
+  next: { es: 'Consultar más información', en: 'Request more information' },
+  brochure: { es: 'Folleto de la edición 2025 (PDF)', en: '2025 edition brochure (PDF, in Spanish)' },
 } satisfies Record<string, Loc>
 const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${n} sessions` : `${h} horas en ${n} sesiones`)
 </script>
@@ -30,12 +29,12 @@ const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${
       <div class="training__list">
         <article v-for="c in courses" :key="c.slug" class="course">
           <h3 class="subheading course__name">{{ tr(c.name) }}</h3>
+          <UiEnrolment />
           <p class="course__summary">{{ tr(c.summary) }}</p>
           <dl class="course__facts">
             <div><dt>{{ tr(copy.duration) }}</dt><dd>{{ hours(c.hours, c.sessions) }}</dd></div>
             <div><dt>{{ tr(copy.mode) }}</dt><dd>{{ tr(c.mode) }}</dd></div>
             <div><dt>{{ tr(copy.awards) }}</dt><dd>{{ c.awards.map(tr).join('; ') }}</dd></div>
-            <div><dt>{{ tr(copy.last) }}</dt><dd>{{ tr(c.lastCohort) }}</dd></div>
           </dl>
           <div class="course__actions">
             <UiButton :to="{ path: '/contacto', query: { asunto: 'formacion', programa: c.slug } }">{{ tr(copy.next) }}</UiButton>
@@ -127,7 +126,7 @@ const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${
   }
 
   .course__facts {
-    grid-row: span 4;
+    grid-row: span 3;
     grid-template-rows: subgrid;
   }
 }

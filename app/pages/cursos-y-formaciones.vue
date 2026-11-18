@@ -19,14 +19,13 @@ const copy = {
   },
   photoAlt: { es: 'Participantes de un curso de formación de auditores posan en grupo', en: 'Participants in an auditor training course pose as a group' },
   caption: { es: 'Fundamentos y calificación de auditores en ISO 55001, Medellín, 2020.', en: 'ISO 55001 foundations and auditor qualification, Medellín, 2020.' },
-  next: { es: 'Consultar la próxima cohorte', en: 'Ask about the next cohort' },
-  brochure: { es: 'Folleto de la última edición (PDF)', en: 'Brochure of the latest edition (PDF, in Spanish)' },
+  next: { es: 'Consultar más información', en: 'Request more information' },
+  brochure: { es: 'Folleto de la edición 2025 (PDF)', en: '2025 edition brochure (PDF, in Spanish)' },
   duration: { es: 'Duración', en: 'Duration' },
   mode: { es: 'Modalidad', en: 'Format' },
   schedule: { es: 'Horario', en: 'Schedule' },
   awards: { es: 'Certificación', en: 'Certification' },
   material: { es: 'Material', en: 'Materials' },
-  last: { es: 'Última edición', en: 'Latest edition' },
   audience: { es: 'Dirigido a', en: 'Intended for' },
   noPrior: { es: 'No se requieren conocimientos previos en el tema.', en: 'No prior knowledge of the subject is required.' },
   content: { es: 'Contenido', en: 'Content' },
@@ -65,6 +64,7 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
       <div class="frame grid-page course__grid">
         <header class="course__head">
           <h2 class="subheading course__name">{{ tr(c.name) }}</h2>
+          <UiEnrolment class="course__status" />
           <p class="lede">{{ tr(c.summary) }}</p>
           <div class="course__actions">
             <UiButton :to="{ path: '/contacto', query: { asunto: 'formacion', programa: c.slug } }">{{ tr(copy.next) }}</UiButton>
@@ -80,7 +80,6 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
             <div><dt>{{ tr(copy.schedule) }}</dt><dd>{{ tr(c.schedule) }}</dd></div>
             <div><dt>{{ tr(copy.awards) }}</dt><dd><ul><li v-for="a in c.awards" :key="a.es">{{ tr(a) }}</li></ul></dd></div>
             <div><dt>{{ tr(copy.material) }}</dt><dd>{{ tr(c.material) }}</dd></div>
-            <div><dt>{{ tr(copy.last) }}</dt><dd>{{ tr(c.lastCohort) }}</dd></div>
           </dl>
 
           <section class="audience" :aria-label="audienceOf(tr(c.name))">
@@ -151,8 +150,12 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
 
 .course__name {
   max-width: 16ch;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
   color: var(--color-tinta);
+}
+
+.course__status {
+  margin-bottom: 1.25rem;
 }
 
 .course__actions {

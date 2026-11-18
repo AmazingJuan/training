@@ -6,8 +6,8 @@ const { tr, lang } = useLang()
 const copy = {
   title: { es: 'Contacto', en: 'Contact' },
   lede: {
-    es: 'Solicite una cotización, consulte la próxima cohorte de un programa o escríbanos sobre cualquier otro asunto.',
-    en: 'Request a quotation, ask about the next cohort of a program, or write to us about any other matter.',
+    es: 'Solicite una cotización, consulte la información de un diplomado o escríbanos sobre cualquier otro asunto.',
+    en: 'Request a quotation, ask about a diploma program, or write to us about any other matter.',
   },
   call: { es: 'Llamar', en: 'Call' },
   region: { es: 'Formulario y canales de contacto', en: 'Contact form and channels' },

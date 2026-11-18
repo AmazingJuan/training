@@ -76,8 +76,8 @@ onMounted(() => {
   else if (programa?.line) form.linea = programa.line
   if (programa) {
     form.mensaje = lang.value === 'en'
-      ? `I would like information about the next cohort of the ${programa.name.en.toLowerCase()}.`
-      : `Quisiera recibir información sobre la próxima cohorte del ${programa.name.es.toLowerCase()}.`
+      ? `I would like more information about the ${programa.name.en.toLowerCase()} and how to enrol.`
+      : `Quisiera recibir más información sobre el ${programa.name.es.toLowerCase()} y sus inscripciones.`
   }
 })
 
