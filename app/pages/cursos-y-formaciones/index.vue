@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { courses } from '~/data/courses'
-import { services } from '~/data/services'
+import { services, countOffers } from '~/data/services'
 
 const { tr, lang } = useLang()
 usePageSeo({
@@ -18,9 +18,8 @@ const copy = {
   },
   photoAlt: { es: 'Participantes de un curso de formación de auditores posan en grupo', en: 'Participants in an auditor training course pose as a group' },
   caption: { es: 'Fundamentos y calificación de auditores en ISO 55001, Medellín, 2020.', en: 'ISO 55001 foundations and auditor qualification, Medellín, 2020.' },
-  byLine: { es: 'Formación en cada línea de servicio', en: 'Training in each service line' },
-  askLine: { es: 'Solicitar información', en: 'Request information' },
-  byLineLede: { es: 'Cursos en programación abierta o diseñados para su organización, en modalidad presencial o virtual.', en: 'Open courses or courses designed for your organization, delivered on site or online.' },
+  byLine: { es: 'Cursos por línea de servicio', en: 'Courses by service line' },
+  diplomasLede: { es: 'Programas virtuales en directo, con la norma original incluida.', en: 'Live online programs, taught in Spanish, with an original copy of the standard included.' },
 } satisfies Record<string, Loc>
 useCoursesJsonLd(courses)
 
@@ -32,10 +31,12 @@ onMounted(() => {
   if (courses.some((c) => c.slug === slug)) navigateTo(localePath(`/cursos-y-formaciones/${slug}`), { replace: true })
 })
 
-// Training offered inside each service line, straight from the portfolios.
-// The diploma programs already have their own section above, so they are left out here.
-const isDiploma = (it: Loc) => it.es.startsWith('Diplomado')
-const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offers.formacion.flatMap((g) => g.items).filter((it) => !isDiploma(it)) }))
+// The courses themselves are listed once, in the training explorer; here, an
+// index of the lines with how many courses each one offers.
+const byLine = services.map((s) => ({ slug: s.slug, name: s.name, count: countOffers(s, 'formacion') }))
+const viewCourses = (n: number) => (lang.value === 'en'
+  ? (n === 1 ? 'View the course' : `View the ${n} courses`)
+  : (n === 1 ? 'Ver el curso' : `Ver los ${n} cursos`))
 </script>
 
 <template>
@@ -57,69 +58,58 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
       </template>
     </PageHeader>
 
-    <HomeTraining />
+    <HomeTraining :lede="tr(copy.diplomasLede)" />
 
     <section class="section field-azul" aria-labelledby="por-linea">
       <div class="frame">
         <h2 id="por-linea" class="heading">{{ tr(copy.byLine) }}</h2>
-        <p class="lede by-line__lede">{{ tr(copy.byLineLede) }}</p>
-        <div class="by-line">
-          <section v-for="l in byLine" :key="l.slug" class="by-line__col" :aria-label="tr(l.name)">
-            <h3 class="by-line__name">
-              <NuxtLinkLocale :to="`/servicios/formacion/${l.slug}`">{{ tr(l.name) }}</NuxtLinkLocale>
-            </h3>
-            <ul>
-              <li v-for="it in l.items" :key="it.es">{{ tr(it) }}</li>
-            </ul>
-            <NuxtLinkLocale :to="{ path: '/contacto', query: { asunto: 'formacion', linea: l.slug } }" class="link by-line__ask">
-              {{ tr(copy.askLine) }}<span class="visually-hidden"> {{ tr(l.name) }}</span>
+        <ul class="by-line">
+          <li v-for="l in byLine" :key="l.slug">
+            <NuxtLinkLocale :to="`/servicios/formacion/${l.slug}`" class="line">
+              <span class="line__name">{{ tr(l.name) }}</span>
+              <span class="line__more">{{ viewCourses(l.count) }}</span>
             </NuxtLinkLocale>
-          </section>
-        </div>
+          </li>
+        </ul>
       </div>
     </section>
   </div>
 </template>
 
 <style scoped>
-.by-line__lede {
-  margin-top: 1rem;
-}
-
 .by-line {
   display: grid;
-  gap: 2.5rem var(--spacing-gutter);
-  margin-top: 3rem;
+  gap: 1rem var(--spacing-gutter);
+  margin-top: 2.5rem;
 }
 
-.by-line__col {
-  display: flex;
-  flex-direction: column;
+.line {
+  display: grid;
+  align-content: space-between;
+  gap: 1rem;
+  height: 100%;
+  min-height: 7.5rem;
   padding-top: 1rem;
   border-top: 2px solid var(--color-blanco);
+  color: inherit;
+  text-decoration: none;
 }
 
-/* Each line ends in its own next step, aligned at the foot of the column. */
-.by-line__ask {
-  margin-top: auto;
-  padding-top: 1.25rem;
-  align-self: flex-start;
+.line__name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  line-height: 1.3;
   font-weight: 600;
 }
 
-.by-line__name {
-  font-size: var(--text-lg);
-  line-height: 1.3;
+.line__more {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
-.by-line__name a {
-  color: inherit;
-}
-
-.by-line ul {
-  display: grid;
-  gap: 0.5rem;
-  margin-top: 1rem;
+.line:hover .line__more {
+  text-decoration-thickness: 2px;
 }
 
 @media (width >= 48rem) {
@@ -129,6 +119,4 @@ const byLine = services.map((s) => ({ slug: s.slug, name: s.name, items: s.offer
 @media (width >= 64rem) {
   .by-line { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-
-/* Narrow screens or large text: label above its value. */
 </style>

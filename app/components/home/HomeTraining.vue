@@ -2,6 +2,8 @@
 import { Download } from '@lucide/vue'
 import { courses } from '~/data/courses'
 
+/** `lede` replaces the default intro where the page around it already says the rest. */
+const props = defineProps<{ lede?: string }>()
 const { tr, lang } = useLang()
 const copy = {
   title: { es: 'Diplomados con certificación de auditor', en: 'Diploma programs with auditor certification' },
@@ -24,7 +26,7 @@ const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${
     <div class="frame">
       <div class="training__head">
         <h2 id="training-title" class="heading">{{ tr(copy.title) }}</h2>
-        <p class="lede muted training__lede">{{ tr(copy.lede) }}</p>
+        <p class="lede muted training__lede">{{ props.lede ?? tr(copy.lede) }}</p>
       </div>
 
       <div class="training__list">
