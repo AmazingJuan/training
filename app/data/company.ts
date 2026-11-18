@@ -35,9 +35,10 @@ export const company = {
     city: 'Medellín',
     region: 'Antioquia',
     country: 'Colombia',
-    /** Edificio Colmena on OpenStreetMap (way 329330383): the map pin and the directions link use it, not the street text, which Google resolved to the wrong place. */
+    /** Edificio Colmena on OpenStreetMap (way 329330383): the map pin and the directions link use it, not the street text. */
     geo: { lat: 6.20258, lng: -75.57253 },
-    mapUrl: 'https://www.google.com/maps/dir/?api=1&destination=6.20258,-75.57253',
+    // A dropped pin on the coordinates: a plain lat,lng destination makes Google snap to a nearby business.
+    mapUrl: 'https://www.google.com/maps/place/6%C2%B012%279.3%22N+75%C2%B034%2721.1%22W/@6.20258,-75.57253,18z',
   },
   phones: [
     { label: { es: 'Fijo', en: 'Landline' }, display: '(604) 574 25 90', intl: '+57 604 574 25 90', href: 'tel:+576045742590' },
