@@ -112,7 +112,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    // Where contact submissions are forwarded (e.g. a Make/Zapier/Formspree webhook).
+    // Where PQRS submissions are forwarded (e.g. a Make/Zapier/Formspree webhook).
     contactWebhook: '',
     public: {
       siteUrl,

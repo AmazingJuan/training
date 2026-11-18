@@ -35,7 +35,9 @@ export const company = {
     city: 'Medellín',
     region: 'Antioquia',
     country: 'Colombia',
-    mapUrl: 'https://www.google.com/maps/search/?api=1&query=Edificio+Colmena+Carrera+43A+1A+Sur+29+Medell%C3%ADn',
+    /** Edificio Colmena on OpenStreetMap (way 329330383): the map pin and the directions link use it, not the street text, which Google resolved to the wrong place. */
+    geo: { lat: 6.20258, lng: -75.57253 },
+    mapUrl: 'https://www.google.com/maps/dir/?api=1&destination=6.20258,-75.57253',
   },
   phones: [
     { label: { es: 'Fijo', en: 'Landline' }, display: '(604) 574 25 90', intl: '+57 604 574 25 90', href: 'tel:+576045742590' },

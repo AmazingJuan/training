@@ -58,8 +58,8 @@ export function useOrganizationJsonLd() {
           addressCountry: 'CO',
         },
         hasMap: company.address.mapUrl,
-        // Edificio Colmena, from OpenStreetMap (way 329330383). Opening hours are left out until the company confirms them.
-        geo: { '@type': 'GeoCoordinates', latitude: 6.20258, longitude: -75.57253 },
+        // Opening hours are left out until the company confirms them.
+        geo: { '@type': 'GeoCoordinates', latitude: company.address.geo.lat, longitude: company.address.geo.lng },
         areaServed: [
           { '@type': 'Country', name: 'Colombia' },
           ...presence.countries.map((c) => ({ '@type': 'Country', name: tr(c.name) })),
