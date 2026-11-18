@@ -221,7 +221,7 @@ export const services: ServiceLine[] = [
     keyword: { es: 'ISO 9001, 14001 y 45001', en: 'ISO 9001, 14001 and 45001' },
     sourcePdf: pdf('PORTAFOLIO-HSEQ-CALIDAD-AMBIENTAL-SEGSST-1.pdf'),
     seo: {
-      title: { es: 'Sistemas de gestión HSEQ: ISO 9001, 14001 y 45001', en: 'HSEQ management systems: ISO 9001, 14001 and 45001' },
+      title: { es: 'Consultoría y auditoría HSEQ: ISO 9001, 14001 y 45001', en: 'HSEQ consulting and auditing: ISO 9001, 14001 and 45001' },
       description: {
         es: 'Auditoría interna, consultoría y formación en ISO 9001, 14001 y 45001, Decreto 1072 y MIPG, para empresas y entidades públicas de toda Colombia.',
         en: 'Internal auditing, consulting and training in ISO 9001, 14001 and 45001, Decree 1072 and MIPG, for companies and public entities throughout Colombia.',
@@ -291,10 +291,10 @@ export const services: ServiceLine[] = [
       { es: 'Resolución 101 013 de 2022', en: 'Resolution 101 013 of 2022' },
       { es: 'Metodología SAM del IAM', en: 'IAM SAM methodology' },
     ],
-    keyword: both('ISO 55001'),
+    keyword: both('ISO 55001:2024'),
     sourcePdf: pdf('Portafolio-de-GA-1.pdf'),
     seo: {
-      title: { es: 'Gestión de activos ISO 55001', en: 'ISO 55001 asset management' },
+      title: { es: 'Gestión de activos ISO 55001:2024: consultoría y auditoría', en: 'ISO 55001:2024 asset management: consulting and auditing' },
       description: {
         es: 'Auditoría, consultoría y formación en gestión de activos ISO 55001 para el sector eléctrico y el alumbrado público: CREG 015 de 2018 y Resolución 101 013.',
         en: 'ISO 55001 asset management auditing, consulting and training for the electricity sector and public lighting: CREG 015 of 2018 and Resolution 101 013.',
@@ -373,7 +373,7 @@ export const services: ServiceLine[] = [
     keyword: both('CREG'),
     sourcePdf: pdf('Portafolio-de-servicios-regulatorios-1.pdf'),
     seo: {
-      title: { es: 'Servicios regulatorios del sector eléctrico (CREG)', en: 'Electricity sector regulatory services (CREG)' },
+      title: { es: 'Verificaciones regulatorias CREG del sector eléctrico', en: 'CREG regulatory verifications for the power sector' },
       description: {
         es: 'Verificaciones regulatorias para operadores de red: calidad del servicio (CREG 101 032), planes de inversión (CREG 101 022), CREG 015, RETIE y RETILAP.',
         en: 'Regulatory verifications for network operators: quality of service (CREG 101 032), investment plans (CREG 101 022), CREG 015, RETIE and RETILAP.',
@@ -435,10 +435,10 @@ export const services: ServiceLine[] = [
       both('NTC-ISO/IEC 27001:2022'), both('NTC-ISO/IEC 27002'), both('NTC-ISO 27701'), both('NTC-ISO/IEC 27005'), both('CEA-3.0-07'),
       { es: 'Ley 1581 de 2012', en: 'Law 1581 of 2012' },
     ],
-    keyword: both('ISO/IEC 27001'),
+    keyword: both('ISO/IEC 27001:2022'),
     sourcePdf: pdf('Portafolio-del-servicio-de-seguridad-de-la-informacion-1.pdf'),
     seo: {
-      title: { es: 'Seguridad de la información ISO/IEC 27001', en: 'ISO/IEC 27001 information security' },
+      title: { es: 'Implementación y auditoría ISO/IEC 27001:2022 en Colombia', en: 'ISO/IEC 27001:2022 implementation and auditing in Colombia' },
       description: {
         es: 'Auditoría, consultoría y formación en seguridad de la información y ciberseguridad: ISO/IEC 27001:2022, guía del C.N.O. y protección de datos (Ley 1581).',
         en: 'Information security and cybersecurity auditing, consulting and training: ISO/IEC 27001:2022, the C.N.O. guideline and data protection (Law 1581).',
@@ -498,7 +498,7 @@ export const services: ServiceLine[] = [
     keyword: { es: 'ISO/IEC 17025 y 17020', en: 'ISO/IEC 17025 and 17020' },
     sourcePdf: pdf('Portafolio-del-servicio-de-laboratorio-1.pdf'),
     seo: {
-      title: { es: 'Laboratorios ISO/IEC 17025 y organismos ISO/IEC 17020', en: 'ISO/IEC 17025 laboratories and ISO/IEC 17020 bodies' },
+      title: { es: 'Laboratorios ISO/IEC 17025 y 17020: auditoría y asesoría', en: 'ISO/IEC 17025 and 17020 laboratories: auditing and advisory' },
       description: {
         es: 'Auditoría, consultoría y formación para laboratorios de ensayo y calibración (ISO/IEC 17025) y organismos de inspección (ISO/IEC 17020).',
         en: 'Auditing, consulting and training for testing and calibration laboratories (ISO/IEC 17025) and inspection bodies (ISO/IEC 17020).',

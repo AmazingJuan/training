@@ -58,9 +58,22 @@ const modeTitles: Record<ModeId, Loc> = {
 
 // Search title: unit, line and the standard people search for ("Auditoría en gestión de activos (ISO 55001)").
 // Long line names fall back to the short name so the title fits in 60 characters.
+// Each unit is named the way it is searched in Colombia (2026 search results):
+// training pages that rank say "cursos", consulting pages say "consultoría y asesoría".
+const searchUnit: Record<ModeId, Loc> = {
+  auditoria: { es: 'Auditoría', en: 'Auditing' },
+  consultoria: { es: 'Consultoría y asesoría', en: 'Consulting and advisory' },
+  formacion: { es: 'Cursos', en: 'Courses' },
+}
 const seoTitle = (l: { short: Loc, name: Loc, keyword: Loc }) => {
-  const full = `${modeIn(l)} (${tr(l.keyword)})`
-  return full.length <= 60 ? full : `${mName.value} ${lang.value === 'en' ? 'for' : 'en'} ${shortName(l)} (${tr(l.keyword)})`
+  const unit = tr(searchUnit[modeId])
+  const prep = lang.value === 'en' ? (modeId === 'formacion' ? 'in' : 'for') : 'en'
+  const options = [
+    `${unit} ${prep} ${lineName(l)} (${tr(l.keyword)})`,
+    `${unit} ${prep} ${shortName(l)} (${tr(l.keyword)})`,
+    `${unit} ${tr(l.keyword)}`,
+  ]
+  return options.find((t) => t.length <= 60) ?? options[2]!
 }
 /** Lists offers only while the description still fits in a search result (about 155 characters). */
 const fitList = (prefix: string, items: string[]) => {

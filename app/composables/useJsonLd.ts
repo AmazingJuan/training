@@ -134,10 +134,10 @@ export function useCoursesJsonLd(list: Course[]) {
   useJsonLd('cursos', {
     '@graph': list.map((c) => ({
       '@type': 'Course',
-      '@id': `${siteUrl}${localePath('/cursos-y-formaciones')}#${c.slug}`,
+      '@id': `${siteUrl}${localePath(`/cursos-y-formaciones/${c.slug}`)}#curso`,
       name: tr(c.name),
       description: tr(c.summary),
-      url: `${siteUrl}${localePath('/cursos-y-formaciones')}#${c.slug}`,
+      url: `${siteUrl}${localePath(`/cursos-y-formaciones/${c.slug}`)}`,
       inLanguage: 'es',
       provider: { '@id': org },
       educationalCredentialAwarded: c.awards.map(tr).join('; '),

@@ -13,6 +13,7 @@ const copy = {
   mode: { es: 'Modalidad', en: 'Format' },
   awards: { es: 'Certifica', en: 'Credentials' },
   next: { es: 'Consultar más información', en: 'Request more information' },
+  program: { es: 'Ver el programa completo', en: 'View the full program' },
   brochure: { es: 'Folleto de la edición 2025 (PDF)', en: '2025 edition brochure (PDF, in Spanish)' },
 } satisfies Record<string, Loc>
 const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${n} sessions` : `${h} horas en ${n} sesiones`)
@@ -28,7 +29,9 @@ const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${
 
       <div class="training__list">
         <article v-for="c in courses" :key="c.slug" class="course">
-          <h3 class="subheading course__name">{{ tr(c.name) }}</h3>
+          <h3 class="subheading course__name">
+            <NuxtLinkLocale :to="`/cursos-y-formaciones/${c.slug}`" class="course__link">{{ tr(c.name) }}</NuxtLinkLocale>
+          </h3>
           <UiEnrolment />
           <p class="course__summary">{{ tr(c.summary) }}</p>
           <dl class="course__facts">
@@ -38,6 +41,7 @@ const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${
           </dl>
           <div class="course__actions">
             <UiButton :to="{ path: '/contacto', query: { asunto: 'formacion', programa: c.slug } }">{{ tr(copy.next) }}<span class="visually-hidden">: {{ tr(c.name) }}</span></UiButton>
+            <NuxtLinkLocale :to="`/cursos-y-formaciones/${c.slug}`" class="link">{{ tr(copy.program) }}<span class="visually-hidden">: {{ tr(c.name) }}</span></NuxtLinkLocale>
             <a :href="c.brochure" class="link course__pdf" target="_blank" rel="noopener">
               <Download aria-hidden="true" />{{ tr(copy.brochure) }}<span class="visually-hidden">: {{ tr(c.name) }}</span>
             </a>
@@ -65,6 +69,17 @@ const hours = (h: number, n: number) => (lang.value === 'en' ? `${h} hours in ${
   gap: 1.25rem;
   padding-top: 1.75rem;
   border-top: 2px solid var(--color-azul);
+}
+
+.course__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.course__link:hover {
+  color: var(--color-azul);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 .course__summary {

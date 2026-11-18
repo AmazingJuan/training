@@ -126,7 +126,7 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
             <p class="ev__meta">{{ tr(copy.training) }}</p>
             <h3 class="ev__title">{{ tr(course.name) }}</h3>
             <p class="muted">{{ courseFacts }}</p>
-            <NuxtLinkLocale :to="`/cursos-y-formaciones#${course.slug}`" class="link">{{ tr(copy.program) }}</NuxtLinkLocale>
+            <NuxtLinkLocale :to="`/cursos-y-formaciones/${course.slug}`" class="link">{{ tr(copy.program) }}</NuxtLinkLocale>
           </article>
         </div>
       </div>

@@ -162,7 +162,7 @@ onKeyStroke('Escape', () => {
                     <p :id="`${menuId(item)}-dip`" class="unit__group">{{ tr(copy.diplomas) }}</p>
                     <ul class="unit__list">
                       <li v-for="c in courses" :key="c.slug">
-                        <NuxtLinkLocale :to="`/cursos-y-formaciones#${c.slug}`" class="drop__link" @click="openMenu = null">
+                        <NuxtLinkLocale :to="`/cursos-y-formaciones/${c.slug}`" class="drop__link" @click="openMenu = null">
                           <span class="drop__label">{{ tr(c.name) }}</span>
                           <span class="drop__hint">{{ courseHint(c) }}</span>
                         </NuxtLinkLocale>
@@ -240,7 +240,7 @@ onKeyStroke('Escape', () => {
               <!-- Training: the two diploma programs, as in the desktop dropdown. -->
               <ul v-else-if="item.mode === 'formacion'" class="sheet__sub">
                 <li v-for="c in courses" :key="c.slug">
-                  <NuxtLinkLocale :to="`/cursos-y-formaciones#${c.slug}`" class="sheet__sublink" @click="sheetOpen = false">{{ tr(c.name) }}</NuxtLinkLocale>
+                  <NuxtLinkLocale :to="`/cursos-y-formaciones/${c.slug}`" class="sheet__sublink" @click="sheetOpen = false">{{ tr(c.name) }}</NuxtLinkLocale>
                 </li>
               </ul>
             </li>

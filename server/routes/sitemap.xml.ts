@@ -1,8 +1,9 @@
 import { services, modes } from '~~/app/data/services'
 import { news } from '~~/app/data/news'
+import { courses } from '~~/app/data/courses'
 
 // Built from the same data as the pages, so a new service or post is listed
-// automatically. Internal pages (/sistema) are intentionally left out.
+// automatically. The internal page (/intranet) is intentionally left out.
 const staticPaths = [
   '/', '/portafolio-de-servicios', '/cursos-y-formaciones', '/clientes', '/actualidad',
   '/empresa', '/empresa/equipo', '/empresa/sistema-de-gestion-integrado', '/contratistas', '/contacto', '/pqrs',
@@ -20,6 +21,7 @@ export default defineEventHandler((event) => {
   const entries = [
     ...staticPaths.map((path) => ({ path })),
     ...services.map((s) => ({ path: `/portafolio-de-servicios/${s.slug}` })),
+    ...courses.map((c) => ({ path: `/cursos-y-formaciones/${c.slug}` })),
     ...modes.flatMap((m) => [{ path: `/servicios/${m.id}` }, ...services.map((s) => ({ path: `/servicios/${m.id}/${s.slug}` }))]),
     ...news.map((n) => ({ path: `/actualidad/${n.slug}`, lastmod: n.date })),
   ]

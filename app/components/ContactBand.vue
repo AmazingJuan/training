@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { RouteLocationRaw } from 'vue-router'
 import { MessageCircle } from '@lucide/vue'
 import { company } from '~/data/company'
 
@@ -6,7 +7,7 @@ import { company } from '~/data/company'
  * Closing call to action. Phones, e-mail and address live in the footer right
  * below, so this block only asks the question and offers the two fastest routes.
  */
-const props = defineProps<{ title?: string, text?: string }>()
+const props = defineProps<{ title?: string, text?: string, action?: string, to?: RouteLocationRaw }>()
 const { tr } = useLang()
 const copy = {
   title: { es: 'Cuéntenos qué necesita su organización', en: 'Tell us what your organization needs' },
@@ -22,7 +23,7 @@ const copy = {
       <div class="band__side">
         <p class="lede">{{ props.text ?? tr(copy.text) }}</p>
         <div class="band__actions">
-          <UiButton to="/contacto?asunto=cotizacion" variant="light">{{ tr(copy.write) }}</UiButton>
+          <UiButton :to="props.to ?? '/contacto?asunto=cotizacion'" variant="light">{{ props.action ?? tr(copy.write) }}</UiButton>
           <UiButton :href="company.whatsapp.href" variant="ghost" external>
             <template #icon><MessageCircle aria-hidden="true" /></template>
             WhatsApp

@@ -22,6 +22,8 @@ export interface Course {
   material: Loc
   brochure: string
   line?: string
+  /** Search title (60 characters at most) and description, worded the way the program is searched. */
+  seo: { title: Loc, description: Loc }
 }
 
 const uploads = '/wp-content/uploads'
@@ -32,6 +34,13 @@ export const courses: Course[] = [
   {
     slug: 'diplomado-gestion-de-activos',
     name: { es: 'Diplomado en gestión de activos', en: 'Diploma program in asset management' },
+    seo: {
+      title: { es: 'Diplomado en gestión de activos ISO 55001:2024 virtual', en: 'ISO 55001:2024 asset management diploma, live online' },
+      description: {
+        es: 'Diplomado virtual en directo de 120 horas en gestión de activos, con certificación opcional de auditor líder ISO 55001:2024. Inscripciones abiertas.',
+        en: 'Live online 120-hour diploma program in asset management, with optional ISO 55001:2024 lead auditor certification. Taught in Spanish.',
+      },
+    },
     summary: {
       es: 'Conocimientos, prácticas y herramientas metodológicas para implementar un sistema de gestión de activos en empresas intensivas en activos, con una segunda titulación opcional como auditor según ISO 55001.',
       en: 'Knowledge, practices and methodological tools for implementing an asset management system in asset-intensive organizations, with an optional second qualification as an ISO 55001 auditor.',
@@ -68,6 +77,13 @@ export const courses: Course[] = [
   {
     slug: 'diplomado-sostenibilidad',
     name: { es: 'Diplomado en sostenibilidad', en: 'Diploma program in sustainability' },
+    seo: {
+      title: { es: 'Diplomado en sostenibilidad virtual con huella de carbono', en: 'Sustainability diploma with carbon footprint, live online' },
+      description: {
+        es: 'Diplomado virtual en directo de 94 horas: gestión ambiental, responsabilidad social, gobernanza y auditoría interna de huella de carbono ISO 14064-1.',
+        en: 'Live online 94-hour diploma program: environmental management, social responsibility, governance and ISO 14064-1 carbon footprint internal audit.',
+      },
+    },
     summary: {
       es: 'Herramientas para implementar estrategias de sostenibilidad en las organizaciones: gestión ambiental, responsabilidad social, gobernanza y medición de la huella de carbono, con la competencia de auditor interno.',
       en: 'Tools for implementing sustainability strategies in organizations: environmental management, social responsibility, governance and carbon footprint measurement, with internal auditor competence.',
