@@ -109,6 +109,8 @@ const fileInput = useTemplateRef<HTMLInputElement>('fileInput')
 const step = computed(() => steps[current.value]!)
 const last = computed(() => current.value === steps.length - 1)
 const apologize = computed(() => !!form.tipo && pqrsApologyKinds.includes(form.tipo))
+// Formal cases need the requester identified; suggestions and compliments don't.
+const needsId = computed(() => !form.tipo || pqrsNeedsId(form.tipo))
 const stepOf = computed(() => tr(copy.stepOf).replace('{n}', String(current.value + 1)).replace('{t}', String(steps.length)))
 
 function stepErrors(i: number): PqrsErrors {
@@ -335,11 +337,11 @@ async function submit() {
           <div class="grid2">
             <UiField v-model="form.nombre" :label="tr(copy.name)" name="nombre" required autocomplete="name" :error="errors.nombre" />
             <UiField v-model="form.empresa" :label="tr(copy.org)" name="empresa" autocomplete="organization" />
-            <UiField v-model="form.documento" :label="tr(copy.document)" name="documento" required :error="errors.documento" />
-            <UiField v-model="form.telefono" :label="tr(copy.phone)" name="telefono" type="tel" required autocomplete="tel" :error="errors.telefono" />
+            <UiField v-model="form.documento" :label="tr(copy.document)" name="documento" :required="needsId" :error="errors.documento" />
+            <UiField v-model="form.telefono" :label="tr(copy.phone)" name="telefono" type="tel" :required="needsId" autocomplete="tel" :error="errors.telefono" />
             <UiField v-model="form.correo" :label="tr(copy.email)" name="correo" type="email" required autocomplete="email" :hint="tr(copy.emailHint)" :error="errors.correo" class="grid2__wide" />
             <UiField v-model="form.direccion" :label="tr(copy.address)" name="direccion" autocomplete="street-address" />
-            <UiField v-model="form.municipio" :label="tr(copy.city)" name="municipio" required autocomplete="address-level2" :error="errors.municipio" />
+            <UiField v-model="form.municipio" :label="tr(copy.city)" name="municipio" :required="needsId" autocomplete="address-level2" :error="errors.municipio" />
           </div>
         </div>
 
@@ -373,9 +375,9 @@ async function submit() {
             <div class="review__row">
               <dt>{{ tr(copy.rContact) }}</dt>
               <dd>
-                {{ form.nombre }}<template v-if="form.empresa">, {{ form.empresa }}</template> ({{ form.documento }})<br>
+                {{ form.nombre }}<template v-if="form.empresa">, {{ form.empresa }}</template><template v-if="form.documento"> ({{ form.documento }})</template><br>
                 {{ form.correo }}<br>
-                {{ form.telefono }}<br>
+                <template v-if="form.telefono">{{ form.telefono }}<br></template>
                 {{ [form.direccion, form.municipio].filter(Boolean).join(', ') }}
               </dd>
               <button type="button" class="link review__edit" @click="show(3)">{{ tr(copy.edit) }}<span class="visually-hidden">: {{ tr(copy.rContact).toLowerCase() }}</span></button>

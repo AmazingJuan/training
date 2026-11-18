@@ -24,6 +24,14 @@ export type PqrsKind = (typeof pqrsKinds)[number]['value']
 /** Kinds that express dissatisfaction: the form apologizes before asking for details. */
 export const pqrsApologyKinds: readonly PqrsKind[] = ['queja', 'reclamo', 'no-conforme']
 
+/**
+ * Kinds that open a formal case (a decision to make or something to fix): they
+ * need the requester fully identified. Suggestions, remarks and compliments
+ * only ask for a name and an email.
+ */
+export const pqrsFormalKinds: readonly PqrsKind[] = ['peticion', 'queja', 'reclamo', 'apelacion', 'no-conforme']
+export const pqrsNeedsId = (tipo: string) => (pqrsFormalKinds as readonly string[]).includes(tipo)
+
 /** «Fuentes» of the format. */
 export const pqrsSources = [
   { value: 'servicio', label: { es: 'La prestación de un servicio', en: 'The delivery of a service' } },
@@ -112,11 +120,12 @@ export function validatePqrs(r: PqrsRequest, lang: Lang = 'es', today = new Date
   const total = r.soportes.reduce((n, f) => n + f.peso, 0)
   if (r.soportes.length > pqrsFiles.max || total > pqrsFiles.totalBytes || r.soportes.some((f) => !(pqrsFiles.types as readonly string[]).includes(f.tipo))) e.soportes = m('soportes')
   if (r.nombre.trim().length < 3) e.nombre = m('nombre')
-  if (!/^[\d.\-\s]{5,20}$/.test(r.documento.trim())) e.documento = m('documento')
+  const formal = pqrsNeedsId(r.tipo)
+  if ((formal || r.documento.trim()) && !/^[\d.\-\s]{5,20}$/.test(r.documento.trim())) e.documento = m('documento')
   if (!emailPattern.test(r.correo.trim())) e.correo = m('correo')
   const digits = r.telefono.replace(/\D/g, '')
-  if (!/^[\d\s()+-]+$/.test(r.telefono) || digits.length < 7 || digits.length > 15) e.telefono = m('telefono')
-  if (r.municipio.trim().length < 2) e.municipio = m('municipio')
+  if ((formal || r.telefono.trim()) && (!/^[\d\s()+-]+$/.test(r.telefono) || digits.length < 7 || digits.length > 15)) e.telefono = m('telefono')
+  if (formal && r.municipio.trim().length < 2) e.municipio = m('municipio')
   if (!r.datos) e.datos = m('datos')
   return e
 }
