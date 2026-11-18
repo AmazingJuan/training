@@ -19,8 +19,8 @@ export interface ContactRequest {
   tipo: RequestKind | ''
   linea: string
   mensaje: string
-  /** Services marked in the explorer, as "Unidad, línea: servicio". */
-  servicios: string[]
+  /** Training requests: the diploma program's slug, "otro" for any other course, or empty. */
+  programa: string
   datos: boolean
   /** Language the visitor wrote in, so the reply can be in the same language. */
   idioma: Lang
@@ -38,7 +38,6 @@ const messages = {
   telefono: { es: 'Escriba solo números, espacios o el signo +.', en: 'Please use only numbers, spaces or the + sign.' },
   tipo: { es: 'Seleccione el tipo de solicitud.', en: 'Please select the type of request.' },
   mensaje: { es: 'Describa en al menos una frase lo que necesita.', en: 'Please describe what you need in at least one sentence.' },
-  servicios: { es: 'La solicitud incluye demasiados servicios; seleccione como máximo 60.', en: 'The request includes too many services; please select no more than 60.' },
   largo: { es: 'El mensaje supera los 4.000 caracteres.', en: 'The message exceeds 4,000 characters.' },
   datos: { es: 'Necesitamos su autorización para responderle.', en: 'We need your authorization in order to reply.' },
 } satisfies Record<string, Loc>
@@ -50,9 +49,7 @@ export function validateContact(r: ContactRequest, lang: Lang = 'es'): ContactEr
   if (!emailPattern.test(r.correo.trim())) e.correo = m('correo')
   if (r.telefono && !/^[\d\s()+-]{7,20}$/.test(r.telefono)) e.telefono = m('telefono')
   if (!requestKinds.some((k) => k.value === r.tipo)) e.tipo = m('tipo')
-  // A message is optional when the request already lists services.
-  if (!r.servicios.length && r.mensaje.trim().length < 10) e.mensaje = m('mensaje')
-  if (r.servicios.length > 60) e.servicios = m('servicios')
+  if (r.mensaje.trim().length < 10) e.mensaje = m('mensaje')
   if (r.mensaje.length > 4000) e.mensaje = m('largo')
   if (!r.datos) e.datos = m('datos')
   return e

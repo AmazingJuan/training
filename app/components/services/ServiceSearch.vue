@@ -6,7 +6,7 @@ import type { ModeId } from '~/data/services'
 /**
  * Find a service by standard, topic or word across the three units and five
  * lines ("45001", "CREG 015", "auditores internos"). Accent- and
- * case-insensitive; every word must match. Results can join the quote request.
+ * case-insensitive; every word must match. Each result links to its line in the explorer.
  */
 const props = withDefaults(defineProps<{ mode?: ModeId, tone?: 'blanco' | 'azul', syncUrl?: boolean }>(), { tone: 'blanco', syncUrl: true })
 
@@ -153,7 +153,6 @@ function use(s: string) {
           </p>
           <p class="result__text">{{ tr(r.text) }}</p>
         </div>
-        <QuoteToggle :mode="r.mode" :line="r.line" :text="r.text.es" />
       </li>
     </ul>
     <button v-if="matches.length > shown.length" type="button" class="search__more" @click="expand">
@@ -282,9 +281,7 @@ function use(s: string) {
 
 .result {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
-  align-items: center;
+  gap: 0.25rem;
   padding-block: 0.875rem;
   border-bottom: 1px solid var(--color-linea);
 }

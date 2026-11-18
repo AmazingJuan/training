@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import { CircleCheck, CircleAlert, X } from '@lucide/vue'
-import { services, findMode, findService, servicePath, offerText } from '~/data/services'
+import { CircleCheck, CircleAlert } from '@lucide/vue'
+import { services } from '~/data/services'
 import { courses } from '~/data/courses'
 import { company, dataPolicy } from '~/data/company'
 
 const route = useRoute()
-const quote = useQuote()
 const { tr, lang } = useLang()
-const quoteLabel = (mode: string, line: string, l: Lang = lang.value) => {
-  const m = findMode(mode)
-  const s = findService(line)
-  return `${m ? m.name[l] : ''}, ${s ? s.short[l] : ''}`
-}
 
 const copy = {
   sentQuote: { es: 'Solicitud enviada', en: 'Request sent' },
@@ -23,9 +17,8 @@ const copy = {
   orCall: { es: 'o comuníquese al', en: 'or call' },
   kept: { es: 'Sus datos se conservan en el formulario.', en: 'Your details are still in the form.' },
   need: { es: '¿Qué necesita?', en: 'What do you need?' },
-  picked: { es: 'Servicios de su solicitud', en: 'Services in your request' },
-  remove: { es: 'Retirar', en: 'Remove' },
-  addMore: { es: 'Agregar más servicios', en: 'Add more services' },
+  program: { es: 'Programa', en: 'Program' },
+  otherCourse: { es: 'Otro curso o formación a la medida', en: 'Another course or tailored training' },
   name: { es: 'Nombre', en: 'Name' },
   org: { es: 'Organización', en: 'Organization' },
   email: { es: 'Correo electrónico', en: 'Email' },
@@ -58,7 +51,7 @@ const form = reactive<ContactRequest>({
   tipo: '',
   linea: '',
   mensaje: '',
-  servicios: [],
+  programa: '',
   datos: false,
   idioma: 'es',
   web: '',
@@ -75,14 +68,12 @@ onMounted(() => {
   if (services.some((s) => s.slug === q.linea)) form.linea = String(q.linea)
   else if (programa?.line) form.linea = programa.line
   if (programa) {
+    form.programa = programa.slug
     form.mensaje = lang.value === 'en'
       ? `I would like more information about the ${programa.name.en.toLowerCase()} and how to enrol.`
       : `Quisiera recibir más información sobre el ${programa.name.es.toLowerCase()} y sus inscripciones.`
   }
 })
-
-// Services marked while browsing make this a quote request.
-watch(quote.count, (n) => { if (n && !form.tipo) form.tipo = 'cotizacion' }, { immediate: true })
 
 const errors = ref<ContactErrors>({})
 const status = ref<'idle' | 'sending' | 'sent' | 'failed'>('idle')
@@ -97,10 +88,16 @@ function focusField(name: string) {
 const done = useTemplateRef<HTMLElement>('done')
 
 const lineOptions = computed(() => services.map((s) => ({ value: s.slug, label: tr(s.name) })))
+const programOptions = computed(() => [
+  ...courses.map((c) => ({ value: c.slug, label: tr(c.name) })),
+  { value: 'otro', label: tr(copy.otherCourse) },
+])
+const isTraining = computed(() => form.tipo === 'formacion')
 
 async function submit() {
-  // The company receives the services in Spanish, whatever language the visitor uses.
-  form.servicios = quote.items.value.map((i) => `${quoteLabel(i.mode, i.line, 'es')}: ${i.text}`)
+  // Each request carries only the field that applies to its type.
+  if (isTraining.value) form.linea = ''
+  else form.programa = ''
   form.idioma = lang.value
   errors.value = validateContact(form, lang.value)
   if (Object.keys(errors.value).length) {
@@ -112,7 +109,6 @@ async function submit() {
   try {
     await $fetch('/api/contacto', { method: 'POST', body: form })
     status.value = 'sent'
-    quote.clear()
     await nextTick()
     done.value?.focus()
   }
@@ -129,7 +125,7 @@ async function submit() {
     <div v-if="status === 'sent'" ref="done" class="notice notice--ok" tabindex="-1" role="status">
       <CircleCheck aria-hidden="true" />
       <div>
-        <p class="notice__title">{{ form.servicios.length || form.tipo === 'cotizacion' ? tr(copy.sentQuote) : tr(copy.sentMsg) }}</p>
+        <p class="notice__title">{{ form.tipo === 'cotizacion' ? tr(copy.sentQuote) : tr(copy.sentMsg) }}</p>
         <p>{{ tr(copy.reply) }} {{ form.correo }}. {{ tr(copy.urgent) }} {{ tr({ es: company.phones[0].display, en: company.phones[0].intl }) }}.</p>
       </div>
     </div>
@@ -167,22 +163,6 @@ async function submit() {
         <p class="kinds__pqrs">{{ tr(copy.pqrsA) }} <NuxtLinkLocale to="/pqrs" class="link">{{ tr(copy.pqrsLink) }}</NuxtLinkLocale>.</p>
       </fieldset>
 
-      <section v-if="quote.count.value" class="picked" aria-labelledby="picked-title">
-        <h2 id="picked-title" class="picked__title">{{ tr(copy.picked) }} ({{ quote.count.value }})</h2>
-        <ul class="picked__list">
-          <li v-for="i in quote.items.value" :key="`${i.mode}${i.line}${i.text}`" class="picked__item">
-            <span>
-              <NuxtLinkLocale :to="servicePath(i.mode, i.line)" class="picked__meta">{{ quoteLabel(i.mode, i.line) }}</NuxtLinkLocale>
-              {{ offerText(i.text, lang) }}
-            </span>
-            <button type="button" class="picked__remove" @click="quote.remove(i)">
-              <X aria-hidden="true" /><span class="visually-hidden">{{ tr(copy.remove) }} {{ offerText(i.text, lang) }}</span>
-            </button>
-          </li>
-        </ul>
-        <NuxtLinkLocale to="/portafolio-de-servicios" class="link picked__more">{{ tr(copy.addMore) }}</NuxtLinkLocale>
-      </section>
-
       <p class="your-details">{{ tr(copy.yourDetails) }}</p>
       <div class="grid2">
         <UiField v-model="form.nombre" :label="tr(copy.name)" name="nombre" required autocomplete="name" :error="errors.nombre" />
@@ -191,13 +171,15 @@ async function submit() {
         <UiField v-model="form.telefono" :label="tr(copy.phone)" name="telefono" type="tel" autocomplete="tel" :error="errors.telefono" />
       </div>
 
-      <UiField v-if="!quote.count.value" v-model="form.linea" :label="tr(copy.line)" name="linea" type="select" :options="lineOptions" />
+      <!-- Training asks which program; every other request, which service line. -->
+      <UiField v-if="isTraining" v-model="form.programa" :label="tr(copy.program)" name="programa" type="select" :options="programOptions" />
+      <UiField v-else v-model="form.linea" :label="tr(copy.line)" name="linea" type="select" :options="lineOptions" />
       <UiField
         v-model="form.mensaje"
         :label="tr(copy.message)"
         name="mensaje"
         type="textarea"
-        :required="!quote.count.value"
+        required
         :hint="tr(copy.hint)"
         :error="errors.mensaje"
       />
@@ -218,7 +200,7 @@ async function submit() {
       </div>
 
       <UiButton type="submit" :disabled="status === 'sending'">
-        {{ status === 'sending' ? tr(copy.sending) : quote.count.value || form.tipo === 'cotizacion' ? tr(copy.sendQuote) : tr(copy.sendMsg) }}
+        {{ status === 'sending' ? tr(copy.sending) : form.tipo === 'cotizacion' ? tr(copy.sendQuote) : tr(copy.sendMsg) }}
       </UiButton>
     </form>
   </div>
@@ -230,63 +212,14 @@ form {
   gap: 1.75rem;
 }
 
-.picked {
-  padding: 1.25rem 1.5rem;
-  border: 2px solid var(--color-azul);
-  border-radius: 10px;
-}
 
-.picked__title {
-  font-size: var(--text-lg);
-  letter-spacing: 0;
-  color: var(--color-azul-hondo);
-}
 
-.picked__list {
-  margin-top: 0.75rem;
-}
 
-.picked__item {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1rem;
-  align-items: center;
-  padding-block: 0.625rem;
-  border-bottom: 1px solid var(--color-linea);
-}
 
-.picked__meta {
-  display: block;
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--color-azul-hondo);
-}
 
-.picked__remove {
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--radius-full);
-  color: var(--color-pizarra);
-  cursor: pointer;
-}
 
-.picked__remove:hover {
-  background: var(--color-nube);
-  color: var(--color-error);
-}
 
-.picked__remove svg {
-  width: 1.125rem;
-  height: 1.125rem;
-}
 
-.picked__more {
-  display: inline-block;
-  margin-top: 1rem;
-  font-size: var(--text-sm);
-}
 
 .summary-anchor:not(:has(*)) {
   display: none;

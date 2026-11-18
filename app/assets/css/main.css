@@ -263,7 +263,8 @@
     content: '';
     position: absolute;
     left: 0;
-    top: calc(0.5lh - 0.25rem);
+    /* --dot-offset: the item's top padding, when it has one. */
+    top: calc(var(--dot-offset, 0px) + 0.5lh - 0.25rem);
     width: 0.5rem;
     height: 0.5rem;
     border-radius: var(--radius-full);

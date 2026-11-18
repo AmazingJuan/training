@@ -4,7 +4,7 @@ import { company } from '~/data/company'
 
 /**
  * The staff intranet is its own application, not a page of the public site:
- * no site navigation, footer, WhatsApp button or quote bar. It opens in a new
+ * no site navigation, footer or WhatsApp button. It opens in a new
  * tab from the site and keeps only what staff need here: the brand, the
  * accessibility options, the language and a way back to the public site.
  */

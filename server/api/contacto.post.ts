@@ -1,3 +1,5 @@
+import { courses } from '~~/app/data/courses'
+
 /**
  * Receives the contact form and forwards it to NUXT_CONTACT_WEBHOOK (any
  * service that accepts a JSON POST: Make, Zapier, Formspree, Power Automate…).
@@ -15,7 +17,7 @@ export default defineEventHandler(async (event) => {
     tipo: (body?.tipo ?? '') as ContactRequest['tipo'],
     linea: String(body?.linea ?? '').slice(0, 100),
     mensaje: String(body?.mensaje ?? '').slice(0, 4000),
-    servicios: Array.isArray(body?.servicios) ? body.servicios.slice(0, 61).map((x) => String(x).slice(0, 300)) : [],
+    programa: String(body?.programa ?? '').slice(0, 100),
     datos: body?.datos === true,
     idioma: body?.idioma === 'en' ? 'en' : 'es',
     web: String(body?.web ?? ''),
@@ -35,9 +37,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const { web: _, ...payload } = request
+  // The company reads the program's name, in Spanish, not its slug.
+  const course = courses.find((c) => c.slug === request.programa)
+  const programaNombre = course ? course.name.es : request.programa === 'otro' ? 'Otro curso o formación a la medida' : ''
   await $fetch(contactWebhook, {
     method: 'POST',
-    body: { ...payload, recibido: new Date().toISOString(), origen: 'trainingcorporation.com.co/contacto' },
+    body: { ...payload, programa: programaNombre, recibido: new Date().toISOString(), origen: 'trainingcorporation.com.co/contacto' },
     timeout: 10000,
   }).catch(() => {
     throw createError({ statusCode: 502, statusMessage: 'No se pudo entregar el mensaje' })

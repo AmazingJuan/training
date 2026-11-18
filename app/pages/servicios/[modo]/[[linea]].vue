@@ -33,14 +33,11 @@ const at = line ? lines.findIndex((l) => l.slug === line.slug) : -1
 const prev = at > 0 ? lines[at - 1] : undefined
 const next = at >= 0 && at < lines.length - 1 ? lines[at + 1] : undefined
 
-const quote = useQuote()
-
 const copy = {
   services: { es: 'Servicios', en: 'Services' },
   type: { es: 'Tipo de servicio', en: 'Type of service' },
   choose: { es: 'Seleccione la línea', en: 'Choose a line' },
-  hint: { es: 'Agregue los que le interesen, de esta o de otras líneas, y envíelos en una sola solicitud.', en: 'Add the ones you are interested in, from this or other lines, and send them in a single request.' },
-  sendMine: { es: 'Enviar mi solicitud', en: 'Send my request' },
+  hint: { es: 'Para recibir una propuesta, solicite una cotización y cuéntenos qué necesita.', en: 'For a proposal, request a quotation and tell us what you need.' },
   proposal: { es: 'Solicitar cotización', en: 'Request a quotation' },
   all: { es: 'Todo sobre', en: 'All about' },
   pdf: { es: 'Portafolio (PDF)', en: 'Portfolio (PDF, in Spanish)' },
@@ -151,10 +148,7 @@ usePageSeo(line
         </p>
         <OfferList :mode="modeId" :line="line.slug" :line-name="tr(line.name)" :groups="line.offers[modeId]" class="panel__offers" />
         <div class="panel__actions">
-          <UiButton v-if="quote.count.value" to="/contacto?asunto=cotizacion">
-            {{ tr(copy.sendMine) }} ({{ quote.count.value }})
-          </UiButton>
-          <UiButton v-else :to="{ path: '/contacto', query: { asunto: modeId === 'formacion' ? 'formacion' : 'cotizacion', linea: line.slug } }">
+          <UiButton :to="{ path: '/contacto', query: { asunto: 'cotizacion', linea: line.slug } }">
             {{ tr(copy.proposal) }}
           </UiButton>
           <NuxtLinkLocale :to="`/portafolio-de-servicios/${line.slug}`" class="link">{{ tr(copy.all) }} {{ shortName(line) }}</NuxtLinkLocale>

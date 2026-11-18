@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import type { ModeId, OfferGroup } from '~/data/services'
 
-/** The services of one line in one unit; each row can join the quote request. */
-const props = defineProps<{ mode: ModeId, line: string, groups: OfferGroup[], lineName: string }>()
+/** The services of one line in one unit, to read; quotes go through the contact form. */
+defineProps<{ mode: ModeId, line: string, groups: OfferGroup[], lineName: string }>()
 
-const quote = useQuote()
-const added = (text: string) => quote.has({ mode: props.mode, line: props.line, text })
 const { tr } = useLang()
 </script>
 
@@ -13,11 +11,8 @@ const { tr } = useLang()
   <div class="offers">
     <div v-for="g in groups" :key="g.area?.es ?? 'all'" class="offers__group">
       <h3 v-if="g.area" class="offers__area">{{ tr(g.area) }}</h3>
-      <ul class="offers__list">
-        <li v-for="item in g.items" :key="item.es" class="offer" :class="{ 'is-added': added(item.es) }">
-          <span class="offer__text">{{ tr(item) }}</span>
-          <QuoteToggle :mode="mode" :line="line" :text="item.es" />
-        </li>
+      <ul class="offers__list dot-list">
+        <li v-for="item in g.items" :key="item.es" class="offer">{{ tr(item) }}</li>
       </ul>
     </div>
   </div>
@@ -37,26 +32,8 @@ const { tr } = useLang()
 }
 
 .offer {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.5rem 1.25rem;
-  align-items: center;
-  padding-block: 0.875rem;
+  --dot-offset: 0.75rem;
+  padding-block: 0.75rem;
   border-bottom: 1px solid var(--color-linea);
-  transition: background-color var(--duration-fast) var(--ease-out);
-}
-
-.offer.is-added {
-  background: var(--color-nube);
-}
-
-.offer__text {
-  padding-left: 0.75rem;
-  border-left: 3px solid transparent;
-  transition: border-color var(--duration-fast) var(--ease-out);
-}
-
-.offer.is-added .offer__text {
-  border-left-color: var(--color-azul);
 }
 </style>

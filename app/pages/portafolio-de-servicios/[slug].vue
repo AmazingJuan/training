@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Download } from '@lucide/vue'
-import { findService, services, modes, countOffers, servicePath } from '~/data/services'
+import { findService, services, modes, countOffers, servicePath, type ModeId } from '~/data/services'
 import { cases } from '~/data/company'
 import { courses } from '~/data/courses'
 
@@ -18,7 +18,6 @@ const copy = {
   frameworks: { es: 'Marco normativo', en: 'Regulatory framework' },
   pdf: { es: 'Portafolio completo (PDF)', en: 'Full portfolio (PDF, in Spanish)' },
   scope: { es: 'Alcance', en: 'Scope' },
-  jump: { es: 'Ir a un tipo de servicio', en: 'Go to a type of service' },
   benefits: { es: 'Beneficios para su organización', en: 'Benefits for your organization' },
   practice: { es: 'En la práctica', en: 'In practice' },
   read: { es: 'Leer la publicación', en: 'Read the article' },
@@ -33,9 +32,13 @@ const pageTitle = computed(() => {
   const kw = tr(service.keyword)
   return name.includes(kw) ? name : `${name} ${kw}`
 })
-const otherLines = (m: { name: Loc }) => (lang.value === 'en'
-  ? `See ${tr(m.name).toLowerCase()} in other lines`
-  : `Ver ${tr(m.name).toLowerCase()} en otras líneas`)
+const viewAll = (m: { id: ModeId, name: Loc }) => {
+  const n = countOffers(service, m.id)
+  const unit = tr(m.name).toLowerCase()
+  return lang.value === 'en'
+    ? `View the ${n} ${unit} ${n === 1 ? 'service' : 'services'}`
+    : `Ver ${n === 1 ? 'el servicio' : `los ${n} servicios`} de ${unit}`
+}
 const courseFacts = computed(() => {
   if (!course) return ''
   const awards = course.awards.map(tr).join('; ')
@@ -86,24 +89,14 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
           <p class="lede">{{ tr(service.context) }}</p>
         </div>
 
-        <nav class="jump" :aria-label="tr(copy.jump)">
-          <a v-for="m in modes" :key="m.id" :href="`#${m.id}`" class="jump__link">
-            {{ tr(m.name) }} <span class="jump__n">{{ countOffers(service, m.id) }}</span>
-          </a>
-        </nav>
-
-        <div class="by-mode">
-          <section v-for="m in modes" :id="m.id" :key="m.id" class="mode-block" :aria-labelledby="`${m.id}-t`">
-            <header class="mode-block__head">
-              <h3 :id="`${m.id}-t`" class="mode-block__title">{{ tr(m.name) }}</h3>
-              <p class="muted">{{ tr(m.summary) }}</p>
-              <NuxtLinkLocale :to="servicePath(m.id, service.slug)" class="link mode-block__link">
-                {{ otherLines(m) }}
-              </NuxtLinkLocale>
-            </header>
-            <OfferList :mode="m.id" :line="service.slug" :line-name="tr(service.name)" :groups="service.offers[m.id]" />
-          </section>
-        </div>
+        <!-- The services themselves are listed once, in the explorer; here, one way into each unit. -->
+        <ul class="units">
+          <li v-for="m in modes" :id="m.id" :key="m.id" class="unit">
+            <h3 class="unit__title">{{ tr(m.name) }}</h3>
+            <p class="muted">{{ tr(m.summary) }}</p>
+            <NuxtLinkLocale :to="servicePath(m.id, service.slug)" class="link unit__link">{{ viewAll(m) }}</NuxtLinkLocale>
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -201,70 +194,36 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
   height: 1.125rem;
 }
 
-.jump {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.jump__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 2.75rem;
-  padding: 0.375rem 0.5rem 0.375rem 1rem;
-  border: 2px solid var(--color-azul);
-  border-radius: var(--radius-control);
-  font-family: var(--font-display);
-  font-weight: 600;
-  color: var(--color-azul);
-  text-decoration: none;
-}
-
-.jump__link:hover {
-  background: var(--color-azul);
-  color: var(--color-blanco);
-}
-
-.jump__n {
-  display: grid;
-  place-items: center;
-  min-width: 1.75rem;
-  height: 1.75rem;
-  border-radius: var(--radius-full);
-  background: var(--color-nube);
-  font-size: 0.8125rem;
-  color: var(--color-azul-hondo);
-}
-
-.by-mode {
+.units {
   grid-column: 1 / -1;
   display: grid;
-  gap: 3.5rem;
+  gap: 1.5rem var(--spacing-gutter);
 }
 
-.mode-block {
+.unit {
   display: grid;
-  gap: 1.5rem;
-  padding-top: 1.75rem;
+  align-content: start;
+  gap: 0.5rem;
+  padding-top: 1.5rem;
   border-top: 2px solid var(--color-azul);
   scroll-margin-top: calc(var(--header-offset) + 1.5rem);
 }
 
-.mode-block__title {
+.unit__title {
   font-size: var(--text-2xl);
   line-height: var(--text-2xl--line-height);
   color: var(--color-tinta);
 }
 
-.mode-block__head .muted {
-  margin-block: 0.5rem 0.75rem;
-  max-width: 26rem;
+.unit__link {
+  margin-top: 0.5rem;
+  font-weight: 600;
 }
 
-.mode-block__link {
-  font-size: var(--text-sm);
+@media (width >= 48rem) {
+  .units {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .benefits {
@@ -372,17 +331,6 @@ useServiceJsonLd(service, `/portafolio-de-servicios/${service.slug}`)
 @media (width >= 64rem) {
   .detail__context {
     grid-column: 1 / span 8;
-  }
-
-  .mode-block {
-    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-    column-gap: var(--spacing-gutter);
-  }
-
-  .mode-block__head {
-    position: sticky;
-    top: calc(var(--header-offset) + 1.5rem);
-    align-self: start;
   }
 
   .benefits__title {
