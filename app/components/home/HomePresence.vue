@@ -47,7 +47,8 @@ const copy = {
   deptList: { es: 'Departamentos de Colombia con servicios', en: 'Colombian departments served' },
   served: { es: 'con servicios', en: 'served' },
   notServed: { es: 'sin servicios registrados', en: 'no services on record' },
-  legendServed: { es: 'Con servicios', en: 'Served' },
+  legendColombia: { es: 'Departamentos de Colombia con servicios', en: 'Colombian departments served' },
+  legendAbroad: { es: 'Países de Centroamérica con servicios', en: 'Central American countries served' },
   legendOther: { es: 'Sin servicios registrados', en: 'No services on record' },
 } satisfies Record<string, Loc>
 
@@ -103,10 +104,11 @@ const copy = {
         </svg>
 
         <figcaption class="map__caption">
-          <span class="map__legend" aria-hidden="true">
-            <span class="map__key map__key--lit" />{{ tr(copy.legendServed) }}
-            <span class="map__key" />{{ tr(copy.legendOther) }}
-          </span>
+          <ul class="map__legend" aria-hidden="true">
+            <li><span class="map__key map__key--colombia" />{{ tr(copy.legendColombia) }}</li>
+            <li><span class="map__key map__key--abroad" />{{ tr(copy.legendAbroad) }}</li>
+            <li><span class="map__key" />{{ tr(copy.legendOther) }}</li>
+          </ul>
           <span class="map__readout" aria-hidden="true">
             <template v-if="hovered">{{ hovered.name }}: {{ hovered.lit ? tr(copy.served) : tr(copy.notServed) }}</template>
           </span>
@@ -166,8 +168,10 @@ const copy = {
 }
 
 /* The map: a technical chart in the brand's own inks on a light ground.
-   Served territory in logo blue (3.5:1 against unserved land, WCAG 1.4.11);
-   neighbouring countries lighter still, as context. */
+   Two regions, two inks (Acta 6): Colombian departments served in logo blue
+   (3.5:1 against unserved land, WCAG 1.4.11); Central American countries
+   served in sky blue, edged in deep blue so their outline holds 3:1. Unserved
+   land stays grey-blue, neighbouring countries lighter still, as context. */
 .presence__map {
   margin: 0;
 }
@@ -199,12 +203,22 @@ const copy = {
   fill: var(--color-mapa);
 }
 
-.map__shape.is-lit {
+.map__shape--dept.is-lit {
   fill: var(--color-azul);
 }
 
-.map__shape.is-lit:hover {
+.map__shape--dept.is-lit:hover {
   fill: var(--color-azul-hondo);
+}
+
+.map__shape--country.is-lit {
+  fill: var(--color-cielo);
+  stroke: var(--color-azul-hondo);
+  stroke-width: 2;
+}
+
+.map__shape--country.is-lit:hover {
+  fill: #5cc0ee;
 }
 
 .map__shape--dept:not(.is-lit):hover {
@@ -248,26 +262,32 @@ const copy = {
 }
 
 .map__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 1.25rem;
+}
+
+.map__legend li {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .map__key {
-  display: inline-block;
+  flex: none;
   width: 0.875rem;
   height: 0.875rem;
-  margin-left: 0.5rem;
   border-radius: 0.2rem;
   background: var(--color-mapa);
 }
 
-.map__key:first-child {
-  margin-left: 0;
+.map__key--colombia {
+  background: var(--color-azul);
 }
 
-.map__key--lit {
-  background: var(--color-azul);
+.map__key--abroad {
+  background: var(--color-cielo);
+  box-shadow: inset 0 0 0 2px var(--color-azul-hondo);
 }
 
 .map__readout {
@@ -300,5 +320,14 @@ const copy = {
 
 :global(html.a11y-contrast .map__key) {
   border: 1px solid #000;
+}
+
+/* Sky blue turns white in this mode; served countries take a mid grey instead. */
+:global(html.a11y-contrast .map__shape--country.is-lit) {
+  fill: #9cb3c4;
+}
+
+:global(html.a11y-contrast .map__key--abroad) {
+  background: #9cb3c4;
 }
 </style>
