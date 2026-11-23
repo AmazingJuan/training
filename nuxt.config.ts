@@ -19,11 +19,11 @@ const legacyRedirects = {
   '/portafolio-de-servicios/gestion-organizacional': permanent('/servicios/consultoria'),
   '/gestion-de-activos': permanent('/portafolio-de-servicios/gestion-de-activos'),
   // Documents replaced by the versions the company sent on 2026-11-02.
-  '/docs/licenciaSST.pdf': permanent('/docs/licencia-sst-2025.pdf'),
-  '/docs/Proteccion-datos.pdf': permanent('/docs/manual-proteccion-datos-personales.pdf'),
-  '/docs/REGLAMENTO DE HIGIENE Y SEGURIDAD - 2024.pdf': permanent('/docs/reglamento-higiene-seguridad-2026.pdf'),
-  '/wp-content/uploads/2024/07/Formato-Cuenta-de-Cobro-Ext-TC.xls': permanent('/docs/formato-cuenta-de-cobro.xls'),
-  '/wp-content/uploads/2024/12/Manual de contratistas y proveedores V1 (2).pdf': permanent('/docs/manual-contratistas-proveedores.pdf'),
+  '/docs/licenciaSST.pdf': permanent('/docs/certificados/licencia-sst-2025.pdf'),
+  '/docs/Proteccion-datos.pdf': permanent('/docs/sgi/manual-proteccion-datos-personales.pdf'),
+  '/docs/REGLAMENTO DE HIGIENE Y SEGURIDAD - 2024.pdf': permanent('/docs/sgi/reglamento-higiene-seguridad-2026.pdf'),
+  '/wp-content/uploads/2024/07/Formato-Cuenta-de-Cobro-Ext-TC.xls': permanent('/docs/contratistas/formato-cuenta-de-cobro.xls'),
+  '/wp-content/uploads/2024/12/Manual de contratistas y proveedores V1 (2).pdf': permanent('/docs/contratistas/manual-contratistas-proveedores.pdf'),
   // WordPress category archives.
   '/category/actualidad': permanent('/actualidad'),
   '/category/sin-categoria': permanent('/actualidad'),

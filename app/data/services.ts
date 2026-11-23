@@ -81,7 +81,7 @@ export interface ServiceLine {
   keyword: Loc
 }
 
-const pdf = (file: string) => `/wp-content/uploads/2024/03/${file}`
+const pdf = (file: string) => `/docs/portafolios/${file}`
 
 const area = {
   calidad: { es: 'Calidad', en: 'Quality' },
@@ -219,7 +219,7 @@ export const services: ServiceLine[] = [
       both('GTC-ISO 19011'),
     ],
     keyword: { es: 'ISO 9001, 14001 y 45001', en: 'ISO 9001, 14001 and 45001' },
-    sourcePdf: pdf('PORTAFOLIO-HSEQ-CALIDAD-AMBIENTAL-SEGSST-1.pdf'),
+    sourcePdf: pdf('hseq.pdf'),
     seo: {
       title: { es: 'Consultoría y auditoría HSEQ: ISO 9001, 14001 y 45001', en: 'HSEQ consulting and auditing: ISO 9001, 14001 and 45001' },
       description: {
@@ -292,7 +292,7 @@ export const services: ServiceLine[] = [
       { es: 'Metodología SAM del IAM', en: 'IAM SAM methodology' },
     ],
     keyword: both('ISO 55001:2024'),
-    sourcePdf: pdf('Portafolio-de-GA-1.pdf'),
+    sourcePdf: pdf('gestion-de-activos.pdf'),
     seo: {
       title: { es: 'Gestión de activos ISO 55001:2024: consultoría y auditoría', en: 'ISO 55001:2024 asset management: consulting and auditing' },
       description: {
@@ -371,7 +371,7 @@ export const services: ServiceLine[] = [
       both('RETIE'), both('RETILAP'),
     ],
     keyword: both('CREG'),
-    sourcePdf: pdf('Portafolio-de-servicios-regulatorios-1.pdf'),
+    sourcePdf: pdf('servicios-regulatorios.pdf'),
     seo: {
       title: { es: 'Verificaciones regulatorias CREG del sector eléctrico', en: 'CREG regulatory verifications for the power sector' },
       description: {
@@ -436,7 +436,7 @@ export const services: ServiceLine[] = [
       { es: 'Ley 1581 de 2012', en: 'Law 1581 of 2012' },
     ],
     keyword: both('ISO/IEC 27001:2022'),
-    sourcePdf: pdf('Portafolio-del-servicio-de-seguridad-de-la-informacion-1.pdf'),
+    sourcePdf: pdf('seguridad-de-la-informacion.pdf'),
     seo: {
       title: { es: 'Implementación y auditoría ISO/IEC 27001:2022 en Colombia', en: 'ISO/IEC 27001:2022 implementation and auditing in Colombia' },
       description: {
@@ -496,7 +496,7 @@ export const services: ServiceLine[] = [
     ],
     frameworks: [both('NTC-ISO/IEC 17025'), both('NTC-ISO/IEC 17020'), both('GTC-ISO 19011')],
     keyword: { es: 'ISO/IEC 17025 y 17020', en: 'ISO/IEC 17025 and 17020' },
-    sourcePdf: pdf('Portafolio-del-servicio-de-laboratorio-1.pdf'),
+    sourcePdf: pdf('laboratorio.pdf'),
     seo: {
       title: { es: 'Laboratorios ISO/IEC 17025 y 17020: auditoría y asesoría', en: 'ISO/IEC 17025 and 17020 laboratories: auditing and advisory' },
       description: {

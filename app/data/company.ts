@@ -6,8 +6,8 @@
  * Texts are bilingual (`Loc`): Spanish is the original, English the translation.
  */
 
-// Documents are served from this site at the paths they had on the old WordPress
-// site (public/docs, public/wp-content), so existing links to them keep working.
+// Documents are served from this site, under public/docs by kind: certificados,
+// sgi, contratistas, boletines, portafolios, formacion, empresa, referencias.
 const site = ''
 
 export const company = {
@@ -73,7 +73,7 @@ export const certifications: Certification[] = [
     number: { es: 'Certificado CO24.05728', en: 'Certificate CO24.05728' },
     since: { es: 'Certificados desde marzo de 2021', en: 'Certified since March 2021' },
     until: { es: 'Vigente hasta el 10 de marzo de 2027', en: 'Valid until March 10, 2027' },
-    document: `${site}/docs/TC-9001-NUEVO.pdf`,
+    document: `${site}/docs/certificados/iso-9001.pdf`,
   },
   {
     code: 'ISO 45001:2018',
@@ -82,7 +82,7 @@ export const certifications: Certification[] = [
     number: { es: 'Certificado CO24.05730', en: 'Certificate CO24.05730' },
     since: { es: 'Certificados desde marzo de 2021', en: 'Certified since March 2021' },
     until: { es: 'Vigente hasta el 10 de marzo de 2027', en: 'Valid until March 10, 2027' },
-    document: `${site}/docs/TC-45001-NUEVO.pdf`,
+    document: `${site}/docs/certificados/iso-45001.pdf`,
   },
   {
     code: 'IAM',
@@ -91,7 +91,7 @@ export const certifications: Certification[] = [
     number: { es: 'Miembro n.º 4000083', en: 'Member no. 4000083' },
     since: { es: 'Miembro desde agosto de 2024', en: 'Member since August 2024' },
     until: null,
-    document: `${site}/wp-content/uploads/2024/12/Certificado-IAM-2024_page-0001.jpg`,
+    document: `${site}/docs/certificados/iam-miembro-corporativo-2024.jpg`,
   },
 ]
 
@@ -353,24 +353,24 @@ export interface CompanyDocument {
 
 /** Source: /empresa/sistema-de-gestion-integrado/ and /empresa/. */
 export const sgiDocuments: CompanyDocument[] = [
-  { title: { es: 'Certificado ISO 9001:2015', en: 'ISO 9001:2015 certificate' }, href: `${site}/docs/TC-9001-NUEVO.pdf`, kind: 'pdf' },
-  { title: { es: 'Certificado ISO 45001:2018', en: 'ISO 45001:2018 certificate' }, href: `${site}/docs/TC-45001-NUEVO.pdf`, kind: 'pdf' },
-  { title: { es: 'Licencia de seguridad y salud en el trabajo', en: 'Occupational health and safety license' }, href: `${site}/docs/licencia-sst-2025.pdf`, kind: 'pdf' },
-  { title: { es: 'Manual de protección de datos personales', en: 'Personal data protection manual' }, href: `${site}/docs/manual-proteccion-datos-personales.pdf`, kind: 'pdf' },
-  { title: { es: 'Reglamento de higiene y seguridad industrial', en: 'Industrial hygiene and safety regulations' }, href: `${site}/docs/reglamento-higiene-seguridad-2026.pdf`, kind: 'pdf' },
+  { title: { es: 'Certificado ISO 9001:2015', en: 'ISO 9001:2015 certificate' }, href: `${site}/docs/certificados/iso-9001.pdf`, kind: 'pdf' },
+  { title: { es: 'Certificado ISO 45001:2018', en: 'ISO 45001:2018 certificate' }, href: `${site}/docs/certificados/iso-45001.pdf`, kind: 'pdf' },
+  { title: { es: 'Licencia de seguridad y salud en el trabajo', en: 'Occupational health and safety license' }, href: `${site}/docs/certificados/licencia-sst-2025.pdf`, kind: 'pdf' },
+  { title: { es: 'Manual de protección de datos personales', en: 'Personal data protection manual' }, href: `${site}/docs/sgi/manual-proteccion-datos-personales.pdf`, kind: 'pdf' },
+  { title: { es: 'Reglamento de higiene y seguridad industrial', en: 'Industrial hygiene and safety regulations' }, href: `${site}/docs/sgi/reglamento-higiene-seguridad-2026.pdf`, kind: 'pdf' },
 ]
 
-const bulletin = (file: string) => `${site}/wp-content/uploads/2024/12/${file}`
+const bulletin = (file: string) => `${site}/docs/boletines/${file}`
 
 /** Source: /empresa/sistema-de-gestion-integrado/ "Boletín informativo". */
 export const bulletins: CompanyDocument[] = [
-  { title: { es: 'Propósito empresarial y objetivos del SGI', en: 'Corporate purpose and IMS objectives' }, href: bulletin('BI%20-%2001%20-%202024%20-%20Prop%C3%B3sito%20empresarial%20y%20Objetivos%20SGI.%20(1).pdf'), kind: 'pdf' },
-  { title: { es: 'Importancia del orden y el aseo', en: 'The importance of order and cleanliness' }, href: bulletin('BI%20-%2002%20-%202024%20-%20Importancia%20Orden%20y%20Aseo_.pdf'), kind: 'pdf' },
-  { title: { es: 'Protocolo de emergencias', en: 'Emergency protocol' }, href: bulletin('BI%20-%2003%20-%202024%20-%20Protocolo%20de%20emergencias.pdf'), kind: 'pdf' },
-  { title: { es: 'Manejo de sustancias químicas', en: 'Handling chemical substances' }, href: bulletin('BI%20-%2004%20-%202024%20-%20Manejo%20de%20sustancias%20qu%C3%ADmicas.%20.pdf'), kind: 'pdf' },
-  { title: { es: 'Pausas activas', en: 'Active breaks' }, href: bulletin('BI%20-%2005%20-%202024%20-%20Pausas%20activas.pdf'), kind: 'pdf' },
-  { title: { es: '¿Cómo gestionar el estrés?', en: 'How to manage stress' }, href: bulletin('BI%20-%2006%20-%202024%20-%20%C2%BFC%C3%B3mo%20gestionar%20el%20estr%C3%A9s.pdf'), kind: 'pdf' },
-  { title: { es: 'Riesgos asociados al ruido y la iluminación', en: 'Risks associated with noise and lighting' }, href: bulletin('BI%20-%2007%20-%202024%20-%20Riesgos%20y%20peligros%20asociados%20a%20Ruido%20e%20Iluminaci%C3%B3n.pdf'), kind: 'pdf' },
+  { title: { es: 'Propósito empresarial y objetivos del SGI', en: 'Corporate purpose and IMS objectives' }, href: bulletin('2024-01-proposito-empresarial-y-objetivos-sgi.pdf'), kind: 'pdf' },
+  { title: { es: 'Importancia del orden y el aseo', en: 'The importance of order and cleanliness' }, href: bulletin('2024-02-orden-y-aseo.pdf'), kind: 'pdf' },
+  { title: { es: 'Protocolo de emergencias', en: 'Emergency protocol' }, href: bulletin('2024-03-protocolo-de-emergencias.pdf'), kind: 'pdf' },
+  { title: { es: 'Manejo de sustancias químicas', en: 'Handling chemical substances' }, href: bulletin('2024-04-manejo-de-sustancias-quimicas.pdf'), kind: 'pdf' },
+  { title: { es: 'Pausas activas', en: 'Active breaks' }, href: bulletin('2024-05-pausas-activas.pdf'), kind: 'pdf' },
+  { title: { es: '¿Cómo gestionar el estrés?', en: 'How to manage stress' }, href: bulletin('2024-06-gestion-del-estres.pdf'), kind: 'pdf' },
+  { title: { es: 'Riesgos asociados al ruido y la iluminación', en: 'Risks associated with noise and lighting' }, href: bulletin('2024-07-ruido-e-iluminacion.pdf'), kind: 'pdf' },
 ]
 
 /**
@@ -379,12 +379,12 @@ export const bulletins: CompanyDocument[] = [
  * here (nuxt.config.ts, legacyRedirects).
  */
 export const contractorDocuments: CompanyDocument[] = [
-  { title: { es: 'Manual de contratistas y proveedores', en: 'Contractors and suppliers manual' }, href: `${site}/docs/manual-contratistas-proveedores.pdf`, kind: 'pdf' },
-  { title: { es: 'Formato de cuenta de cobro', en: 'Invoice (cuenta de cobro) template' }, href: `${site}/docs/formato-cuenta-de-cobro.xls`, kind: 'xls' },
+  { title: { es: 'Manual de contratistas y proveedores', en: 'Contractors and suppliers manual' }, href: `${site}/docs/contratistas/manual-contratistas-proveedores.pdf`, kind: 'pdf' },
+  { title: { es: 'Formato de cuenta de cobro', en: 'Invoice (cuenta de cobro) template' }, href: `${site}/docs/contratistas/formato-cuenta-de-cobro.xls`, kind: 'xls' },
 ]
 
 /** The personal data policy, linked from the footer and the contact form's consent. */
-export const dataPolicy = `${site}/docs/manual-proteccion-datos-personales.pdf`
+export const dataPolicy = `${site}/docs/sgi/manual-proteccion-datos-personales.pdf`
 
 /** Documents are published in Spanish only; English pages say so next to each link. */
 export const documentsLanguage: Loc = { es: '', en: 'In Spanish' }

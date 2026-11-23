@@ -26,7 +26,7 @@ export interface Course {
   seo: { title: Loc, description: Loc }
 }
 
-const uploads = '/wp-content/uploads'
+const brochures = '/docs/formacion'
 
 const live = { es: 'Virtual, en directo (en español)', en: 'Online, live (taught in Spanish)' }
 
@@ -71,7 +71,7 @@ export const courses: Course[] = [
       { title: { es: 'Auditoría a sistemas de gestión de activos', en: 'Auditing asset management systems' }, goal: { es: 'Auditar según ISO 19011 e ISO/IEC 17021 y comprender la certificación de tercera parte.', en: 'Audit in accordance with ISO 19011 and ISO/IEC 17021, and understand third-party certification.' } },
     ],
     material: { es: 'Norma ISO 55001:2024 original', en: 'Original copy of ISO 55001:2024' },
-    brochure: `${uploads}/2025/03/Brochure_Diplomado_Gesti%C3%B3n_de_Activos_2025.pdf`,
+    brochure: `${brochures}/diplomado-gestion-de-activos-2025.pdf`,
     line: 'gestion-de-activos',
   },
   {
@@ -114,7 +114,7 @@ export const courses: Course[] = [
       { title: { es: 'Auditoría interna de huella de carbono', en: 'Carbon footprint internal audit' }, goal: { es: 'Planificar y ejecutar auditorías según ISO 14064 y GTC 19011.', en: 'Plan and conduct audits in accordance with ISO 14064 and GTC 19011.' } },
     ],
     material: { es: 'Norma ISO 14064-1 original', en: 'Original copy of ISO 14064-1' },
-    brochure: `${uploads}/2025/05/Brochure-Diplomado-de-sostenibilidad-2025.pdf`,
+    brochure: `${brochures}/diplomado-sostenibilidad-2025.pdf`,
     line: 'hseq',
   },
 ]
