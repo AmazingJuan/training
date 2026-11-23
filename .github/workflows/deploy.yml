@@ -1,0 +1,52 @@
+# Every push to main prerenders the site and uploads it to the cPanel host
+# (public_html) over FTPS. Only changed files are sent; files the deploy did not
+# upload (.well-known for SSL, the Microsoft 365 verification file) are left alone.
+#
+# Repository secrets: FTP_USERNAME, FTP_PASSWORD (an FTP account whose home is
+# public_html). Optional repository variables: NUXT_PUBLIC_INTRANET_*.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time; a newer push waits instead of interrupting an upload.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.trainingcorporation.com.co
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm generate
+        env:
+          NUXT_PUBLIC_INTRANET_LICITDATA: ${{ vars.NUXT_PUBLIC_INTRANET_LICITDATA }}
+          NUXT_PUBLIC_INTRANET_COTIZADOR: ${{ vars.NUXT_PUBLIC_INTRANET_COTIZADOR }}
+          NUXT_PUBLIC_INTRANET_PRESUPUESTOS: ${{ vars.NUXT_PUBLIC_INTRANET_PRESUPUESTOS }}
+
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: server36.rootservers.co
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./.output/public/
+          server-dir: ./
