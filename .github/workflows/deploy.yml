@@ -1,6 +1,10 @@
 # Every push to main prerenders the site and uploads it to the cPanel host
-# (public_html) over FTPS. Only changed files are sent; files the deploy did not
+# (public_html) over FTP. Only changed files are sent; files the deploy did not
 # upload (.well-known for SSL, the Microsoft 365 verification file) are left alone.
+#
+# Plain FTP, not FTPS: the host's firewall opens passive data ports by reading
+# the FTP control channel, which it cannot do once TLS encrypts it, so FTPS logs
+# in but every transfer times out. Switch back to ftps if the host fixes that.
 #
 # Repository secrets: FTP_USERNAME, FTP_PASSWORD (an FTP account whose home is
 # public_html). Optional repository variables: NUXT_PUBLIC_INTRANET_*.
@@ -47,6 +51,6 @@ jobs:
           server: server36.rootservers.co
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
+          protocol: ftp
           local-dir: ./.output/public/
           server-dir: ./
