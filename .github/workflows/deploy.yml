@@ -7,7 +7,9 @@
 # in but every transfer times out. Switch back to ftps if the host fixes that.
 #
 # Repository secrets: FTP_USERNAME, FTP_PASSWORD (an FTP account whose home is
-# public_html). Optional repository variables: NUXT_PUBLIC_INTRANET_*.
+# public_html). Optional repository variables: NUXT_PUBLIC_INTRANET_*,
+# NUXT_PUBLIC_ANALYTICS_GA_ID, NUXT_PUBLIC_ANALYTICS_CLARITY_ID and
+# NUXT_PUBLIC_VERIFICATION_GOOGLE, _BING.
 name: Deploy
 
 on:
@@ -45,6 +47,10 @@ jobs:
           NUXT_PUBLIC_INTRANET_LICITDATA: ${{ vars.NUXT_PUBLIC_INTRANET_LICITDATA }}
           NUXT_PUBLIC_INTRANET_COTIZADOR: ${{ vars.NUXT_PUBLIC_INTRANET_COTIZADOR }}
           NUXT_PUBLIC_INTRANET_PRESUPUESTOS: ${{ vars.NUXT_PUBLIC_INTRANET_PRESUPUESTOS }}
+          NUXT_PUBLIC_ANALYTICS_GA_ID: ${{ vars.NUXT_PUBLIC_ANALYTICS_GA_ID }}
+          NUXT_PUBLIC_ANALYTICS_CLARITY_ID: ${{ vars.NUXT_PUBLIC_ANALYTICS_CLARITY_ID }}
+          NUXT_PUBLIC_VERIFICATION_GOOGLE: ${{ vars.NUXT_PUBLIC_VERIFICATION_GOOGLE }}
+          NUXT_PUBLIC_VERIFICATION_BING: ${{ vars.NUXT_PUBLIC_VERIFICATION_BING }}
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -54,3 +60,17 @@ jobs:
           protocol: ftp
           local-dir: ./.output/public/
           server-dir: ./
+
+      # Tell Bing (and the other IndexNow engines) that the pages changed, so the
+      # new content is crawled within days instead of weeks. The key file
+      # public/<key>.txt proves the site owns the key. A failed ping never fails the deploy.
+      - name: Notify IndexNow
+        continue-on-error: true
+        run: |
+          KEY=fcd72ac595601674d276f14d3ec9dc6b
+          HOST=www.trainingcorporation.com.co
+          jq -n --arg host "$HOST" --arg key "$KEY" \
+            --argjson urls "$(grep -oP '(?<=<loc>)[^<]+' .output/public/sitemap.xml | jq -R . | jq -s .)" \
+            '{host: $host, key: $key, keyLocation: "https://\($host)/\($key).txt", urlList: $urls}' > indexnow.json
+          curl -sS -o /dev/null -w 'IndexNow: HTTP %{http_code}\n' -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' --data @indexnow.json

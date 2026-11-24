@@ -143,6 +143,12 @@ export default defineNuxtConfig({
       // Staff tools linked from /intranet. Set at build time with
       // NUXT_PUBLIC_INTRANET_LICITDATA, _COTIZADOR and _PRESUPUESTOS.
       intranet: { licitdata: '', cotizador: '', presupuestos: '' },
+      // Visit measurement (plugins/analytics.client.ts). Set at build time with
+      // NUXT_PUBLIC_ANALYTICS_GA_ID (G-XXXXXXX) and NUXT_PUBLIC_ANALYTICS_CLARITY_ID.
+      analytics: { gaId: '', clarityId: '' },
+      // Ownership tags for Google Search Console and Bing Webmaster Tools (the
+      // content value of their HTML-tag method). NUXT_PUBLIC_VERIFICATION_GOOGLE, _BING.
+      verification: { google: '', bing: '' },
     },
   },
 

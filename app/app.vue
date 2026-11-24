@@ -14,12 +14,17 @@ useHead({
 
 // Language attribute, alternate-language links and og:locale for every page.
 const i18nHead = useLocaleHead()
-const { siteUrl } = useRuntimeConfig().public
+const { siteUrl, verification } = useRuntimeConfig().public
+// Search Console and Bing Webmaster Tools ownership tags, when set.
+const verificationMeta = [
+  verification.google && { name: 'google-site-verification', content: verification.google },
+  verification.bing && { name: 'msvalidate.01', content: verification.bing },
+].filter((m): m is { name: string; content: string } => !!m)
 useHead(() => ({
   htmlAttrs: { lang: i18nHead.value.htmlAttrs?.lang },
   // The home page's alternates end in "/" like its canonical URL.
   link: i18nHead.value.link?.map((l) => (l.href === siteUrl ? { ...l, href: `${siteUrl}/` } : l)),
-  meta: i18nHead.value.meta,
+  meta: [...(i18nHead.value.meta ?? []), ...verificationMeta],
 }))
 </script>
 
