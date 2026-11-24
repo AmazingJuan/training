@@ -18,6 +18,7 @@ const copy = {
   newTab: { es: '(se abre en una pestaña nueva)', en: '(opens in a new tab)' },
   whatsapp: { es: 'Escribir por WhatsApp', en: 'Message us on WhatsApp' },
   and: { es: ' y ', en: ' and ' },
+  cookies: { es: 'Política de cookies', en: 'Cookie policy' },
 } satisfies Record<string, Loc>
 // Break the long address only after the @, never inside the domain.
 const [emailUser, emailDomain] = company.email.split('@')
@@ -96,6 +97,7 @@ function toTop() {
       <div class="colophon">
         <p>© {{ year }} {{ company.legalName }}</p>
         <ul class="colophon__links">
+          <li><NuxtLinkLocale to="/politica-de-cookies">{{ tr(copy.cookies) }}</NuxtLinkLocale></li>
           <li v-for="l in legal" :key="l.href"><a :href="l.href" target="_blank" rel="noopener">{{ tr(l.label) }}</a></li>
         </ul>
         <button type="button" class="colophon__top" @click="toTop">

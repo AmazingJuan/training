@@ -7,7 +7,7 @@ import { courses } from '~~/app/data/courses'
 const staticPaths = [
   '/', '/portafolio-de-servicios', '/cursos-y-formaciones', '/clientes', '/actualidad',
   '/empresa', '/empresa/equipo', '/empresa/sistema-de-gestion-integrado', '/contratistas', '/contacto', '/pqrs',
-  '/accesibilidad',
+  '/accesibilidad', '/politica-de-cookies',
 ]
 
 // English lives under /en with the same slugs; each URL lists both versions.

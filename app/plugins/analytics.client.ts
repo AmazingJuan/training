@@ -9,6 +9,8 @@
  * - Page changes inside the site are picked up by both tools from the browser
  *   history (GA4 enhanced measurement, Clarity by default).
  * - The staff intranet is not measured.
+ * - Visitors are told about every tool and cookie on /politica-de-cookies:
+ *   update that page when a tool is added or removed.
  */
 export default defineNuxtPlugin(() => {
   const { gaId, clarityId } = useRuntimeConfig().public.analytics
