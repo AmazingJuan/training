@@ -1,4 +1,4 @@
-import { writeFile } from 'node:fs/promises'
+import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import { news } from './app/data/news'
@@ -53,6 +53,14 @@ function htaccess() {
     `RewriteCond %{HTTP_HOST} !^${host.replace(/\./g, '\\.')}$ [NC]`,
     `RewriteRule ^ https://${host}%{REQUEST_URI} [R=301,L]`,
     '',
+    '# Nuxt Image keeps the source extension (.jpg/.png) on its WebP copies.',
+    'RewriteRule ^_ipx/[^/]*f_webp - [T=image/webp]',
+    '',
+    '# Pages are revalidated on every visit so a deploy shows up at once.',
+    '<FilesMatch "\\.html$">',
+    '  Header set Cache-Control "no-cache"',
+    '</FilesMatch>',
+    '',
     '# Old WordPress URLs.',
     ...legacy,
     '',
@@ -68,6 +76,19 @@ function htaccess() {
     'RewriteRule ^(.+)$ /$1/index.html [L]',
     '',
   ].join('\n')
+}
+
+/**
+ * Browser cache lifetimes, one .htaccess per folder. Files under _nuxt and
+ * _fonts have content hashes in their names, so they never change in place;
+ * images and documents keep their names when replaced, so they expire sooner.
+ */
+const cacheLifetimes: Record<string, string> = {
+  _nuxt: 'public, max-age=31536000, immutable',
+  _fonts: 'public, max-age=31536000, immutable',
+  _ipx: 'public, max-age=2592000',
+  images: 'public, max-age=2592000',
+  docs: 'public, max-age=86400',
 }
 
 export default defineNuxtConfig({
@@ -162,7 +183,12 @@ export default defineNuxtConfig({
   hooks: {
     'nitro:init'(nitro) {
       nitro.hooks.hook('prerender:done', async () => {
-        await writeFile(join(nitro.options.output.publicDir, '.htaccess'), htaccess())
+        const publicDir = nitro.options.output.publicDir
+        await writeFile(join(publicDir, '.htaccess'), htaccess())
+        for (const [dir, value] of Object.entries(cacheLifetimes)) {
+          await mkdir(join(publicDir, dir), { recursive: true })
+          await writeFile(join(publicDir, dir, '.htaccess'), `Header set Cache-Control "${value}"\nHeader unset Expires\n`)
+        }
       })
     },
   },
